@@ -1,0 +1,37 @@
+#include "ParticleExtractor.fcl"
+#include "simulationservices_dune.fcl"
+#include "services_dune.fcl"
+#include "geometry_dune.fcl"
+#include "singles_dune.fcl"
+#include "detsim_dune10kt_wirecell_refactored.fcl"
+
+process_name:   ParticleExtractor
+
+source:
+{
+    module_type:    RootInput
+    maxEvents:      -1
+}
+services:
+{
+    TFileService:   { fileName: "output.root" }
+    TimeTracker:    {}
+    RandomNumberGenerator:  {}
+    MemoryTracker:          {}
+    @table::dunefdvd_1x6x6_3view_simulation_services
+    FileCatalogMetadata:    @local::art_file_catalog_mc
+    Geometry:       @local::dunevd10kt_1x6x6_3view_geo
+}
+
+physics:
+{
+    analyzers:
+    {
+        ana: @local::ParticleExtractor
+    }
+    analysis:  [ ana ]
+    end_paths: [ analysis ]
+}
+
+source.fileNames:                       ["example.root"]
+source.maxEvents:                       10
