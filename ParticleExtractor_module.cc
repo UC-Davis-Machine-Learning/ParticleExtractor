@@ -140,10 +140,13 @@ namespace extractor
         bool checkEventIds(EventList eventList, Int_t trackId);
 
     private:
+        std::vector<Int_t> fPdgCodes;
         art::InputTag fLArGeantProducerLabel;
         art::InputTag fLArGeantEnergyDepositProducerLabel;
         art::InputTag fIonAndScintProducerLabel;
         art::InputTag fOutputFileArt;
+        bool fCollectDaughters;
+        bool fCollectAll;
         // geometry information
         DetectorGeometry* fGeometry = DetectorGeometry::getInstance("ParticleExtractor");
         // ROOT
@@ -154,12 +157,11 @@ namespace extractor
         int fRun;
         int fSubRun;
         int fEvent;
-        bool fCollectDaughters;
-        bool fCollectAll;
+
 
         // number of events
         Int_t fNumberOfEvents;
-        std::vector<Int_t> fPdgCodes;
+        
         std::vector<EventList> fEventList;
     };
 
