@@ -168,11 +168,11 @@ namespace extractor
     // constructor
     ParticleExtractor::ParticleExtractor(Parameters const& config)
     : EDAnalyzer(config)
+    , fPdgCodes(config().PDGCodes())
     , fLArGeantProducerLabel(config().LArGeantProducerLabel())
     , fLArGeantEnergyDepositProducerLabel(config().LArGeantEnergyDepositProducerLabel())
     , fIonAndScintProducerLabel(config().IonAndScintProducerLabel())
     , fOutputFileArt(config().OutputFile())
-    , fPdgCodes(config().PDGCodes())
     , fCollectDaughters(config().CollectDaughters())
     , fCollectAll(config().CollectAll())
     {
