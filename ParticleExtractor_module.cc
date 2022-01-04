@@ -246,13 +246,13 @@ namespace extractor
                             std::vector<Int_t> daughters;
                             if (fCollectDaughters)
                             {
-                                for (size_t k = 0; k < particle.NumberDaughters(); k++) {
+                                for (int k = 0; k < particle.NumberDaughters(); k++) {
                                     eventList.ids.emplace_back(particle.Daughter(k));
                                     daughters.emplace_back(particle.Daughter(k));
                                 }
                             }
                             eventList.particle_daughters.emplace_back(daughters);
-                            for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
+                            for (int k = 0; k < particle.NumberTrajectoryPoints(); k++)
                             {
                                 DetectorVolume currentVolume = fGeometry->getVolume(
                                     particle.Vx(), particle.Vy(), particle.Vz()
