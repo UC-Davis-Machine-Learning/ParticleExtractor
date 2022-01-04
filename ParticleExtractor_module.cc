@@ -207,6 +207,7 @@ namespace extractor
                 }
             }
         }
+        return -1;
     }
 
     // analyze function
