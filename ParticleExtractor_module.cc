@@ -262,9 +262,9 @@ namespace extractor
                                     eventList.particle_pdgs.emplace_back(particle.PdgCode());
                                     eventList.particle_ids.emplace_back(particle.TrackId());
                                     eventList.particle_parent_ids.emplace_back(particle.Mother());
-                                    eventList.particle_x.emplace_back(particle.Vx(k))
-                                    eventList.particle_y.emplace_back(particle.Vy(k))
-                                    eventList.particle_z.emplace_back(particle.Vz(k))
+                                    eventList.particle_x.emplace_back(particle.Vx(k));
+                                    eventList.particle_y.emplace_back(particle.Vy(k));
+                                    eventList.particle_z.emplace_back(particle.Vz(k));
                                     eventList.particle_edep_energy.emplace_back(-1.);
                                     eventList.particle_edep_num_electrons.emplace_back(-1);
                                 }
@@ -321,7 +321,7 @@ namespace extractor
         fParticleTree->Branch("particle_y", &event_list.particle_y);
         fParticleTree->Branch("particle_z", &event_list.particle_z);
         fParticleTree->Branch("particle_edep_energy", &event_list.particle_edep_energy);
-        fParticleTree->Branch("particle_num_electrons", &event_list.particle_num_electrons);
+        fParticleTree->Branch("particle_edep_num_electrons", &event_list.particle_edep_num_electrons);
         for (size_t i = 0; i < fEventList.size(); i++) 
         {
             if (fEventList[i].edep_x.size() > 0)
