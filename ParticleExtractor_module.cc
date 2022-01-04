@@ -138,6 +138,7 @@ namespace extractor
         // special functions
         void FillTTree();
         bool checkEventIds(EventList eventList, Int_t trackId);
+        int findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z)
 
     private:
         std::vector<Int_t> fPdgCodes;
@@ -190,6 +191,22 @@ namespace extractor
             }
         }
         return false;
+    }
+
+    int ParticleExtractor::findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z)
+    {
+        for (size_t k = 0; k < eventList.particle_ids.size(); k++)
+        {
+            if (eventList.particle_ids[k] == trackId) {
+                if((eventList.particle_x[k] == x) &&
+                   (eventList.particle_y[k] == y) &&
+                   (eventList.particle_z[k] == z)
+                )
+                {
+                    return k;
+                }
+            }
+        }
     }
 
     // analyze function
