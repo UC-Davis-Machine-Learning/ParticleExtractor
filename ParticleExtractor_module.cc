@@ -252,7 +252,7 @@ namespace extractor
                                 }
                             }
                             eventList.particle_daughters.emplace_back(daughters);
-                            for (int k = 0; k < particle.NumberTrajectoryPoints(); k++)
+                            for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                             {
                                 DetectorVolume currentVolume = fGeometry->getVolume(
                                     particle.Vx(), particle.Vy(), particle.Vz()
