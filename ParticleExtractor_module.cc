@@ -154,6 +154,8 @@ namespace extractor
         int fRun;
         int fSubRun;
         int fEvent;
+        bool fCollectDaughters;
+        bool fCollectAll;
 
         // number of events
         Int_t fNumberOfEvents;
