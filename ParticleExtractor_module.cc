@@ -324,7 +324,7 @@ namespace extractor
         fParticleTree->Branch("particle_edep_num_electrons", &event_list.particle_edep_num_electrons);
         for (size_t i = 0; i < fEventList.size(); i++) 
         {
-            if (fEventList[i].edep_x.size() > 0)
+            if (fEventList[i].particle_x.size() > 0)
             {
                 event_list.event_id = fEventList[i].event_id;
                 event_list.ids = fEventList[i].ids;
