@@ -138,7 +138,7 @@ namespace extractor
         // special functions
         void FillTTree();
         bool checkEventIds(EventList eventList, Int_t trackId);
-        int findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z)
+        int findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z);
 
     private:
         std::vector<Int_t> fPdgCodes;
