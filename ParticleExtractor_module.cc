@@ -232,7 +232,7 @@ namespace extractor
             for (auto particle : *mcParticles)
             {
                 // check if the particle is the right pdg code
-                for (int j = 0; j < fPdgCodes; j++)
+                for (int j = 0; j < fPdgCodes.size(); j++)
                 {
                     if (particle.PdgCode() == fPdgCodes[j])
                     {
