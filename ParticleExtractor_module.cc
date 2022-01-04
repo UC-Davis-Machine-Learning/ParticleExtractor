@@ -86,7 +86,7 @@ namespace extractor
     public:
         struct Config
         {
-            fhicl::Atom<art::Sequence<int>> PDGCodes
+            fhicl::Sequence<int> PDGCodes
             {
                 fhicl::Name("PDGCodes"),
                 fhicl::Comment("particle type pdg codes to look for")
