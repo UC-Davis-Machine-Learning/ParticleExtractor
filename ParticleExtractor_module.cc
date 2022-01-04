@@ -238,7 +238,7 @@ namespace extractor
                     {
                         // check if particle should be recorded
                         if (particle.Mother() == 0 ||
-                            (fCollectDaughters && checkEventIds(eventList,particle.TrackId()) ||
+                            (fCollectDaughters && checkEventIds(eventList,particle.TrackId())) ||
                             fCollectAll
                         )
                         {
