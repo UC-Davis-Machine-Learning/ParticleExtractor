@@ -18,9 +18,9 @@ services:
     TimeTracker:    {}
     RandomNumberGenerator:  {}
     MemoryTracker:          {}
-    @table::dunefdvd_1x6x6_3view_simulation_services
+    @table::dunefd_1x2x6_simulation_services_refactored
     FileCatalogMetadata:    @local::art_file_catalog_mc
-    Geometry:       @local::dunevd10kt_1x6x6_3view_geo
+    Geometry:       @local::dune10kt_1x2x6_v4_refactored_geo
 }
 
 physics:
@@ -33,5 +33,5 @@ physics:
     end_paths: [ analysis ]
 }
 
-source.fileNames:                       ["/dune/data/users/ncarrara/NeutronCalibrationFDSP/fcl/VerticalDrift/g4_output/center_3view/FDVD_1x6x6_center_3view_500_1_1.root"]
-source.maxEvents:                       10
+source.fileNames:                       ["outputs/g4_output.root"]
+source.maxEvents:                       1000
