@@ -168,12 +168,10 @@ namespace extractor
         int fSubRun;
         int fEvent;
 
-
         // number of events
         Int_t fNumberOfEvents;
-        
-        std::vector<EventList> fEventList;
-        std::vector<ParticleParentList> fParticleParentList;
+        EventList fTempEventList(0);
+        ParticleParentList fTempParticleParentList;
     };
 
     // constructor
@@ -187,10 +185,27 @@ namespace extractor
     , fCollectDaughters(config().CollectDaughters())
     , fCollectAll(config().CollectAll())
     {
+        // here we initiate the TFile services for each of the trees
+        // we're going to create.  
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
-        fParticleTree = fTFileService->make<TTree>("neutron", "neutron");
+        fParticleTree = fTFileService->make<TTree>("particle", "particle");
         fParticleParentTree = fFileService->make<TTree>("particle_parent", "particle_parent");
         consumes<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
+
+        fParticleTree->Branch("event_id", &fTempEventList.event_id);
+        fParticleTree->Branch("ids", &fTempEventList.ids);
+        fParticleTree->Branch("particle_daughters", &fTempEventList.particle_daughters);
+        fParticleTree->Branch("particle_pdgs", &fTempEventList.particle_pdgs);
+        fParticleTree->Branch("particle_ids", &fTempEventList.particle_ids);
+        fParticleTree->Branch("particle_parent_ids", &fTempEventList.particle_parent_ids);
+        fParticleTree->Branch("particle_x", &fTempEventList.particle_x);
+        fParticleTree->Branch("particle_y", &fTempEventList.particle_y);
+        fParticleTree->Branch("particle_z", &fTempEventList.particle_z);
+        fParticleTree->Branch("particle_edep_energy", &fTempEventList.particle_edep_energy);
+        fParticleTree->Branch("particle_edep_num_electrons", &fTempEventList.particle_edep_num_electrons);
+
+        fParticleParentTree->Branch("track_ids", &fTempParticleParentList.tracks);
+        fParticleParentTree->Branch("mothers", &fTempParticleParentList.mothers);
     }
 
     bool ParticleExtractor::checkEventIds(EventList eventList, Int_t trackId)
@@ -253,9 +268,8 @@ namespace extractor
         ParticleParentList particleParentList();
         // get the list of MC particles from Geant4
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
-        // iterate over all MC particles and grab all neutrons, all gammas
-        // which come from neutron captures regardless of where they happen and
-        // all electrons generated from the gammas.
+        // iterate over all MC particles and grab all particles specified 
+        // in the pdg code list.  
         if (mcParticles.isValid())
         {
             for (auto particle : *mcParticles)
@@ -328,8 +342,22 @@ namespace extractor
                 }   
             }
         }
-        fEventList.emplace_back(eventList);
-        fParticleParentList.emplace_back(particleParentList);
+        fTempEventList.event_id = eventList[i].event_id;
+        fTempEventList.ids = eventList[i].ids;
+        fTempEventList.particle_daughters = eventList[i].particle_daughters;
+        fTempEventList.particle_pdgs = eventList[i].particle_pdgs;
+        fTempEventList.particle_ids = eventList[i].particle_ids;
+        fTempEventList.particle_parent_ids = eventList[i].particle_parent_ids;
+        fTempEventList.particle_x = eventList[i].particle_x;
+        fTempEventList.particle_y = eventList[i].particle_y;
+        fTempEventList.particle_z = eventList[i].particle_z;
+        fTempEventList.particle_edep_energy = eventList[i].particle_edep_energy;
+        fTempEventList.particle_edep_num_electrons = eventList[i].particle_edep_num_electrons;
+        fParticleTree->Fill();
+
+        fTempParticleParentList.tracks = particleParentList[i].tracks;
+        fTempParticleParentList.mothers = particleParentList[i].mothers;
+        fParticleParentTree->Fill();
     }
     // begin job
     void ParticleExtractor::beginJob()
@@ -342,50 +370,7 @@ namespace extractor
     {
         // global neutron info
         fMetaTree->Branch("number_of_events", &fNumberOfEvents);
-
-        EventList event_list(0);
-        fParticleTree->Branch("event_id", &event_list.event_id);
-        fParticleTree->Branch("ids", &event_list.ids);
-        fParticleTree->Branch("particle_daughters", &event_list.particle_daughters);
-        fParticleTree->Branch("particle_pdgs", &event_list.particle_pdgs);
-        fParticleTree->Branch("particle_ids", &event_list.particle_ids);
-        fParticleTree->Branch("particle_parent_ids", &event_list.particle_parent_ids);
-        fParticleTree->Branch("particle_x", &event_list.particle_x);
-        fParticleTree->Branch("particle_y", &event_list.particle_y);
-        fParticleTree->Branch("particle_z", &event_list.particle_z);
-        fParticleTree->Branch("particle_edep_energy", &event_list.particle_edep_energy);
-        fParticleTree->Branch("particle_edep_num_electrons", &event_list.particle_edep_num_electrons);
-        for (size_t i = 0; i < fEventList.size(); i++) 
-        {
-            if (fEventList[i].particle_x.size() > 0)
-            {
-                event_list.event_id = fEventList[i].event_id;
-                event_list.ids = fEventList[i].ids;
-                event_list.particle_daughters = fEventList[i].particle_daughters;
-                event_list.particle_pdgs = fEventList[i].particle_pdgs;
-                event_list.particle_ids = fEventList[i].particle_ids;
-                event_list.particle_parent_ids = fEventList[i].particle_parent_ids;
-                event_list.particle_x = fEventList[i].particle_x;
-                event_list.particle_y = fEventList[i].particle_y;
-                event_list.particle_z = fEventList[i].particle_z;
-                event_list.particle_edep_energy = fEventList[i].particle_edep_energy;
-                event_list.particle_edep_num_electrons = fEventList[i].particle_edep_num_electrons;
-                fParticleTree->Fill();
-            }
-        }
-        ParticleParentList particle_parent_list();
-        fParticleParentTree->Branch("track_ids", &particle_parent_list.tracks);
-        fParticleParentTree->Branch("mothers", &particle_parent_list.mothers);
-        for (size_t i = 0; i < fParticleParentList.size(); i++)
-        {
-            particle_parent_list.tracks = fParticleParentList[i].tracks;
-            particle_parent_list.mothers = fParticleParentList[i].mothers;
-            fParticleParentTree->Fill();
-        }
         fMetaTree->Fill();
-        fEventTree->Write();
-        fMetaTree->Write();
-        fParticleParentTree->Write();
     }
 }
 
