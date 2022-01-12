@@ -188,7 +188,7 @@ namespace extractor
         // we're going to create.  
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
         fParticleTree = fTFileService->make<TTree>("particle", "particle");
-        fParticleParentTree = fFileService->make<TTree>("particle_parent", "particle_parent");
+        fParticleParentTree = fTFileService->make<TTree>("particle_parent", "particle_parent");
         consumes<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
 
         fParticleTree->Branch("event_id", &fTempEventList.event_id);
@@ -341,21 +341,21 @@ namespace extractor
                 }   
             }
         }
-        fTempEventList.event_id = eventList[i].event_id;
-        fTempEventList.ids = eventList[i].ids;
-        fTempEventList.particle_daughters = eventList[i].particle_daughters;
-        fTempEventList.particle_pdgs = eventList[i].particle_pdgs;
-        fTempEventList.particle_ids = eventList[i].particle_ids;
-        fTempEventList.particle_parent_ids = eventList[i].particle_parent_ids;
-        fTempEventList.particle_x = eventList[i].particle_x;
-        fTempEventList.particle_y = eventList[i].particle_y;
-        fTempEventList.particle_z = eventList[i].particle_z;
-        fTempEventList.particle_edep_energy = eventList[i].particle_edep_energy;
-        fTempEventList.particle_edep_num_electrons = eventList[i].particle_edep_num_electrons;
+        fTempEventList.event_id = eventList.event_id;
+        fTempEventList.ids = eventList.ids;
+        fTempEventList.particle_daughters = eventList.particle_daughters;
+        fTempEventList.particle_pdgs = eventList.particle_pdgs;
+        fTempEventList.particle_ids = eventList.particle_ids;
+        fTempEventList.particle_parent_ids = eventList.particle_parent_ids;
+        fTempEventList.particle_x = eventList.particle_x;
+        fTempEventList.particle_y = eventList.particle_y;
+        fTempEventList.particle_z = eventList.particle_z;
+        fTempEventList.particle_edep_energy = eventList.particle_edep_energy;
+        fTempEventList.particle_edep_num_electrons = eventList.particle_edep_num_electrons;
         fParticleTree->Fill();
 
-        fTempParticleParentList.tracks = particleParentList[i].tracks;
-        fTempParticleParentList.mothers = particleParentList[i].mothers;
+        fTempParticleParentList.tracks = particleParentList.tracks;
+        fTempParticleParentList.mothers = particleParentList.mothers;
         fParticleParentTree->Fill();
     }
     // begin job
