@@ -156,6 +156,7 @@ namespace extractor
         void FillTTree();
         bool checkEventIds(EventList eventList, Int_t trackId);
         int findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z);
+        Int_t getParent(ParticleParentList particleParentList, Int_t trackId);
 
     private:
         std::vector<Int_t> fPdgCodes;
@@ -365,7 +366,7 @@ namespace extractor
                                 // first record the mother
                                 ancestors.emplace_back(mother);
                                 // now look for the next mother
-                                Int_t particle = getParent(mother);
+                                Int_t particle = getParent(particleParentList, mother);
                                 mother = particle;
                             }
                             ancestors.emplace_back(mother);
@@ -375,8 +376,6 @@ namespace extractor
                 }
             }
         }
-        
-
         // now we loop over all of the energy deposits and check to see
         // which particles correspond to each deposit.
         auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
