@@ -227,6 +227,5 @@ namespace extractor
         fGeometryTree->Branch("total_active_tpc_box_ranges", &(fTotalActiveTPCBox), "x_min/D:x_max/D:y_min/D:y_max/D:z_min/D:z_max/D");
         fGeometryTree->Branch("total_tpc_mass", &fTotalTPCMass);
         fGeometryTree->Fill();
-        fGEometryTree->Write();
     }
 }
