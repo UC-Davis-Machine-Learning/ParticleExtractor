@@ -251,7 +251,7 @@ namespace extractor
 
     Int_t ParticleExtractor::getParent(ParticleParentList particleParentList, Int_t trackId)
     {
-        for (size_t k = 0; k < particleParentList.size(); k++)
+        for (size_t k = 0; k < particleParentList.tracks.size(); k++)
         {
             if (particleParentList.tracks[k] == trackId)
             {
