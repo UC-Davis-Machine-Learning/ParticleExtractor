@@ -66,12 +66,21 @@ namespace extractor
 {
     struct EventList
     {
+        // event level information
         Int_t event_id;
-        std::vector<Int_t> ids;     // list holding all unique id values
-        std::vector<std::vector<Int_t>> particle_daughters;
+        // all the unique particle ids for this event
+        std::vector<Int_t> ids;
+        // all the pdg codes for each unique particle id
         std::vector<Int_t> particle_pdgs;
-        std::vector<Int_t> particle_ids;
+        // all of the parent ids for each unique particle id
         std::vector<Int_t> particle_parent_ids;
+        // the daughter particle ids for each unique particle id
+        std::vector<std::vector<Int_t>> particle_daughters;
+        // the list of ancestors for each particle
+        std::vector<std::vector<Int_t>> particle_ancestors;
+
+        // individual trajectory information
+        std::vector<Int_t> particle_ids;
         std::vector<Double_t> particle_x;
         std::vector<Double_t> particle_y;
         std::vector<Double_t> particle_z;
@@ -205,6 +214,7 @@ namespace extractor
         fParticleTree->Branch("particle_z", &fTempEventList.particle_z);
         fParticleTree->Branch("particle_edep_energy", &fTempEventList.particle_edep_energy);
         fParticleTree->Branch("particle_edep_num_electrons", &fTempEventList.particle_edep_num_electrons);
+        fParticleTree->Branch("particle_ancestors", &fTempEventList.particle_ancestors);
 
         fParticleParentTree->Branch("track_ids", &fTempParticleParentList.tracks);
         fParticleParentTree->Branch("mothers", &fTempParticleParentList.mothers);
@@ -233,6 +243,18 @@ namespace extractor
                 {
                     return k;
                 }
+            }
+        }
+        return -1;
+    }
+
+    Int_t ParticleExtractor::getParent(ParticleParentList particleParentList, Int_t trackId)
+    {
+        for (size_t k = 0; k < particleParentList.size(); k++)
+        {
+            if (particleParentList.tracks[k] == trackId)
+            {
+                return particleParentList.mothers[k];
             }
         }
         return -1;
@@ -268,6 +290,12 @@ namespace extractor
         // create a new event list
         EventList eventList(fNumberOfEvents-1);
         ParticleParentList particleParentList(fNumberOfEvents-1);
+        // main loop
+        /*  this part of the code loops over several data products starting
+         *  with simb::MCParticle, from which it extracts trajectory information
+         *  for all particles with pdg codes listed in the PDGCodes config variable.
+         *  
+         */
         // get the list of MC particles from Geant4
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
         // iterate over all MC particles and grab all particles specified 
@@ -285,12 +313,21 @@ namespace extractor
                     if (particle.PdgCode() == fPdgCodes[j])
                     {
                         // check if particle should be recorded
+                        // either the particle is a primary (Mother() == 0)
+                        // or its a daughter particle of a primary and
+                        // fCollectDaughters has been set to True
+                        // or fCollectAll has been set to True.
                         if (particle.Mother() == 0 ||
                             (fCollectDaughters && checkEventIds(eventList,particle.TrackId())) ||
                             fCollectAll
                         )
                         {
+                            // first we collect the trackid of the particle
+                            // we are keeping and the pdg code and parent ids
+                            // as well as all of the trackid's of its daughters.
                             eventList.ids.emplace_back(particle.TrackId());
+                            eventList.particle_pdgs.emplace_back(particle.PdgCode());
+                            eventList.particle_parent_ids.emplace_back(particle.Mother());
                             std::vector<Int_t> daughters;
                             if (fCollectDaughters)
                             {
@@ -300,6 +337,8 @@ namespace extractor
                                 }
                             }
                             eventList.particle_daughters.emplace_back(daughters);
+                            // now we loop over all trajectory points and add them to the 
+                            // the event list
                             for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                             {
                                 DetectorVolume currentVolume = fGeometry->getVolume(
@@ -307,9 +346,7 @@ namespace extractor
                                 );
                                 if (currentVolume.material_name == "LAr")
                                 {
-                                    eventList.particle_pdgs.emplace_back(particle.PdgCode());
                                     eventList.particle_ids.emplace_back(particle.TrackId());
-                                    eventList.particle_parent_ids.emplace_back(particle.Mother());
                                     eventList.particle_x.emplace_back(particle.Vx(k));
                                     eventList.particle_y.emplace_back(particle.Vy(k));
                                     eventList.particle_z.emplace_back(particle.Vz(k));
@@ -317,11 +354,31 @@ namespace extractor
                                     eventList.particle_edep_num_electrons.emplace_back(-1);
                                 }
                             }
+                            // now we loop over the set of particle ids to 
+                            // find the ancestors of each particle until we
+                            // reach a primary.
+                            std::vector<Int_t> ancestors;
+                            Int_t mother = particle.Mother();
+                            // search until we reach a primary
+                            while (mother != 0)
+                            {
+                                // first record the mother
+                                ancestors.emplace_back(mother);
+                                // now look for the next mother
+                                Int_t particle = getParent(mother);
+                                mother = particle;
+                            }
+                            ancestors.emplace_back(mother);
+                            eventList.particle_ancestors.emplace_back(ancestors);
                         }
                     }
                 }
             }
         }
+        
+
+        // now we loop over all of the energy deposits and check to see
+        // which particles correspond to each deposit.
         auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
         if (mcEnergyDeposit.isValid())
         {
