@@ -182,6 +182,7 @@ namespace extractor
     , fOutputFileArt(config().OutputFile())
     , fCollectDaughters(config().CollectDaughters())
     , fCollectAll(config().CollectAll())
+    , fTempEventList(0)
     {
         // here we initiate the TFile services for each of the trees
         // we're going to create.  
