@@ -81,6 +81,14 @@ namespace extractor
         EventList(Int_t event) : event_id(event){}
     };
 
+    struct ParentParticleList
+    {
+        std::vector<Int_t> tracks;
+        std::vector<Int_t> mothers;
+
+        ParticleParentList(){}
+    };
+
     class ParticleExtractor : public art::EDAnalyzer
     {
     public:
@@ -154,6 +162,7 @@ namespace extractor
         art::ServiceHandle<art::TFileService> fTFileService;
         TTree *fMetaTree;
         TTree *fParticleTree;
+        TTree *fParentParticleTree;
         // event variables
         int fRun;
         int fSubRun;
@@ -164,6 +173,7 @@ namespace extractor
         Int_t fNumberOfEvents;
         
         std::vector<EventList> fEventList;
+        std::vector<ParticleParentList> fParticleParentList;
     };
 
     // constructor
@@ -179,6 +189,7 @@ namespace extractor
     {
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
         fParticleTree = fTFileService->make<TTree>("neutron", "neutron");
+        fParticleParentTree = fFileService->make<TTree>("particle_parent", "particle_parent");
         consumes<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
     }
 
@@ -239,7 +250,7 @@ namespace extractor
         fNumberOfEvents++;
         // create a new event list
         EventList eventList(fNumberOfEvents-1);
-
+        ParticleParentList particleParentList();
         // get the list of MC particles from Geant4
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
         // iterate over all MC particles and grab all neutrons, all gammas
@@ -249,6 +260,9 @@ namespace extractor
         {
             for (auto particle : *mcParticles)
             {
+                // add particle/parent pair to list
+                particleParentList.tracks.emplace_back(particle.TrackId());
+                particleParentList.mothers.emplace_back(particle.Mother());
                 // check if the particle is the right pdg code
                 for (size_t j = 0; j < fPdgCodes.size(); j++)
                 {
@@ -315,6 +329,7 @@ namespace extractor
             }
         }
         fEventList.emplace_back(eventList);
+        fParticleParentList.emplace_back(particleParentList);
     }
     // begin job
     void ParticleExtractor::beginJob()
@@ -358,7 +373,19 @@ namespace extractor
                 fParticleTree->Fill();
             }
         }
+        ParticleParentList particle_parent_list();
+        fParticleParentTree->Branch("track_ids", &particle_parent_list.tracks);
+        fParticleParentTree->Branch("mothers", &particle_parent_list.mothers);
+        for (size_t i = 0; i < fParticleParentList.size(); i++)
+        {
+            particle_parent_list.tracks = fParticleParentList[i].tracks;
+            particle_parent_list.mothers = fParticleParentList[i].mothers;
+            fParticleParentTree->Fill();
+        }
         fMetaTree->Fill();
+        fEventTree->Write();
+        fMetaTree->Write();
+        fParticleParentTree->Write();
     }
 }
 
