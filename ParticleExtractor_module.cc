@@ -83,8 +83,10 @@ namespace extractor
 
     struct ParticleParentList
     {
+        Int_t event_id;
         std::vector<Int_t> tracks;
         std::vector<Int_t> mothers;
+        ParticleParentList(Int_t event) : event_id(event){}
     };
 
     class ParticleExtractor : public art::EDAnalyzer
@@ -183,6 +185,7 @@ namespace extractor
     , fCollectDaughters(config().CollectDaughters())
     , fCollectAll(config().CollectAll())
     , fTempEventList(0)
+    , fTempParticleParentList(0)
     {
         // here we initiate the TFile services for each of the trees
         // we're going to create.  
@@ -264,7 +267,7 @@ namespace extractor
         fNumberOfEvents++;
         // create a new event list
         EventList eventList(fNumberOfEvents-1);
-        ParticleParentList particleParentList();
+        ParticleParentList particleParentList(fNumberOfEvents-1);
         // get the list of MC particles from Geant4
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
         // iterate over all MC particles and grab all particles specified 
