@@ -81,12 +81,10 @@ namespace extractor
         EventList(Int_t event) : event_id(event){}
     };
 
-    struct ParentParticleList
+    struct ParticleParentList
     {
         std::vector<Int_t> tracks;
         std::vector<Int_t> mothers;
-
-        ParticleParentList(){}
     };
 
     class ParticleExtractor : public art::EDAnalyzer
@@ -162,7 +160,7 @@ namespace extractor
         art::ServiceHandle<art::TFileService> fTFileService;
         TTree *fMetaTree;
         TTree *fParticleTree;
-        TTree *fParentParticleTree;
+        TTree *fParticleParentTree;
         // event variables
         int fRun;
         int fSubRun;
@@ -170,7 +168,7 @@ namespace extractor
 
         // number of events
         Int_t fNumberOfEvents;
-        EventList fTempEventList(0);
+        EventList fTempEventList;
         ParticleParentList fTempParticleParentList;
     };
 
