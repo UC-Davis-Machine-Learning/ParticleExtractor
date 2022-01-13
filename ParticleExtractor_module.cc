@@ -424,6 +424,23 @@ namespace extractor
                         particle.Vz(0)
                     );
                     std::cout << "tree: " << parent_tree << ", traj: " << traj_point << std::endl;
+                    for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
+                    {
+                        fParticleTreeList[parent_tree].track_id.emplace_back(particle.TrackId());
+                        fParticleTreeList[parent_tree].mother.emplace_back(particle.Mother());
+                        fParticleTreeList[parent_tree].pdg.emplace_back(particle.PdgCode());
+                        fParticleTreeList[parent_tree].t.emplace_back(particle.T(k));
+                        fParticleTreeList[parent_tree].x.emplace_back(particle.Vx(k));
+                        fParticleTreeList[parent_tree].y.emplace_back(particle.Vy(k));
+                        fParticleTreeList[parent_tree].z.emplace_back(particle.Vz(k));
+                        fParticleTreeList[parent_tree].edep_energy.emplace_back(-1.);
+                        fParticleTreeList[parent_tree].edep_num_electrons.emplace_back(-1);
+                        if (k > 0)
+                        {
+                            fParticleTreeList[parent_tree].edge_start.emplace_back(k-1);
+                            fParticleTreeList[parent_tree].edge_end.emplace_back(k);
+                        }
+                    }
                 }
                 // check if the particle is the right pdg code
                 for (size_t j = 0; j < fPdgCodes.size(); j++)
