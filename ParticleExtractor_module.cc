@@ -318,6 +318,19 @@ namespace extractor
         return -1;
     }
 
+    Int_t ParticleExtractor::findParentTree(std::vector<ParticleTree> particleTree,
+        Int_t track_id)
+    {
+        for (size_t k == 0; k < particleTree.size(); k++) {
+            for (size_t j = 0; j < particleTree[k].track_id.size(); j++) {
+                if (particleTree[k].track_id[j] == track_id) {
+                    return k;
+                }
+            }
+        }
+        return -1;
+    }
+
     // analyze function
     void ParticleExtractor::analyze(art::Event const& event)
     {
@@ -401,9 +414,14 @@ namespace extractor
                         fParticleTreeList[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
                         if (k == 0)
                         {
+                            // find the tree that contains the parent
+                            Int_t tree_index = findParentTree(
+                                fParticleTreeList,
+                                particle.Mother()
+                            );
                             // find the parent and the starting location
                             Int_t starting_index = findParentLocation(
-                                fParticleTreeList[fNumberOfPrimaries],
+                                fParticleTreeList[tree_index],
                                 particle.Mother(),
                                 particle.Vx(0),
                                 particle.Vy(0),
