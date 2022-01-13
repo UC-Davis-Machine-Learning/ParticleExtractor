@@ -249,7 +249,7 @@ namespace extractor
         fParticleTree->Branch("track_id", &fTempParticleTree.track_id);
         fParticleTree->Branch("mother", &fTempParticleTree.mother);
         fParticleTree->Branch("pdg", &fTempParticleTree.pdg);
-        fParticleTree->Branch("t", &TempParticleTree.t);
+        fParticleTree->Branch("t", &fTempParticleTree.t);
         fParticleTree->Branch("x", &fTempParticleTree.x);
         fParticleTree->Branch("y", &fTempParticleTree.y);
         fParticleTree->Branch("z", &fTempParticleTree.z);
