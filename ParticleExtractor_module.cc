@@ -186,7 +186,7 @@ namespace extractor
         Int_t findParentLocation(ParticleTree particleTree, Int_t track_id, Double_t t, Double_t x, Double_t y, Double_t z);        
         Int_t findParentTree(std::vector<ParticleTree> particleTree, Int_t track_id);
         Int_t findParentTrajectory(std::vector<ParticleTree> particleTree, Int_t track_id);
-        Int_t findClosestTime(ParticleTrajectory particleTrajectory, Double_t time);
+        std::vector<Double_t>::iterator findClosestTime(ParticleTrajectory particleTrajectory, Double_t time);
     
     private:
         std::vector<Int_t> fPdgCodes;
@@ -369,7 +369,7 @@ namespace extractor
         return -1;
     }
 
-    Int_t ParticleExtractor::findClosestTime(ParticleTrajectory particleTrajectory, Double_t time)
+    std::vector<Double_t>::iterator ParticleExtractor::findClosestTime(ParticleTrajectory particleTrajectory, Double_t time)
     {
         for (size_t k = 1; k < particleTrajectory.t.size(); k++)
         {
@@ -465,7 +465,7 @@ namespace extractor
                         Int_t traj = findParentTrajectory(fParticleTreeList, particle.Mother());
                         // find closest time to start time of particle
                         // this will return the location of t < T
-                        Int_t insert_time = findClosestTime(fParticleTreeList[parent_tree].particles[traj],
+                        std::vector<Double_t>::iterator insert_time = findClosestTime(fParticleTreeList[parent_tree].particles[traj],
                             particle.T(0)
                         );
                         fParticleTreeList[parent_tree].particles[traj].t.insert(insert_time+1,particle.T(0),1);
