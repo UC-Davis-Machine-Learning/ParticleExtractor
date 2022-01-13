@@ -98,6 +98,20 @@ namespace extractor
         ParticleParentList(Int_t event) : event_id(event){}
     };
 
+    struct ParticleTree
+    {
+        Int_t event_id;
+        std::vector<Int_t> track_id;
+        std::vector<Double_t> x;
+        std::vector<Double_t> y;
+        std::vector<Double_t> z;
+        std::vector<Double_t> edep_energy;
+        std::vector<Double_t> edep_num_electrons;
+        std::vector<Int_t> edge_start;
+        std::vector<Int_t> edge_end;
+        ParticleTree(Int_t event) : event_id(event){}
+    };
+
     class ParticleExtractor : public art::EDAnalyzer
     {
     public:
@@ -155,9 +169,11 @@ namespace extractor
         // special functions
         void FillTTree();
         bool checkEventIds(EventList eventList, Int_t trackId);
-        int findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z);
+        Int_t findTrackId(EventList eventList, Int_t trackId);
+        Int_t findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z);
         Int_t getParent(ParticleParentList particleParentList, Int_t trackId);
-
+        Int_t findParentLocation(ParticleTree particleTree, Int_t track_id, Double_t x, Double_t y, Double_t z)
+        
     private:
         std::vector<Int_t> fPdgCodes;
         art::InputTag fLArGeantProducerLabel;
@@ -180,8 +196,11 @@ namespace extractor
 
         // number of events
         Int_t fNumberOfEvents;
+        Int_t fNumberOfPrimaries;
+
         EventList fTempEventList;
         ParticleParentList fTempParticleParentList;
+        std::vector<ParticleTree> fTempParticleTree;
     };
 
     // constructor
@@ -223,19 +242,27 @@ namespace extractor
 
     bool ParticleExtractor::checkEventIds(EventList eventList, Int_t trackId)
     {
-        for (size_t k = 0; k < eventList.ids.size(); k++)
-        {
-            if (eventList.ids[k] == trackId) {
+        for (size_t k = 0; k < eventList.ids.size(); k++) {
+            if (eventList.ids[k] == trackId)  {
                 return true;
             }
         }
         return false;
     }
 
-    int ParticleExtractor::findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z)
+    Int_t ParticleExtractor::findTrackId(EventList eventList, Int_t trackId)
     {
-        for (size_t k = 0; k < eventList.particle_ids.size(); k++)
-        {
+        for (size_t k = 0; k < eventList.ids.size(); k++) {
+            if (eventList.ids[k] == trackId)  {
+                return k;
+            }
+        }
+        return -1;
+    }
+
+    Int ParticleExtractor::findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z)
+    {
+        for (size_t k = 0; k < eventList.particle_ids.size(); k++) {
             if (eventList.particle_ids[k] == trackId) {
                 if((eventList.particle_x[k] == x) &&
                    (eventList.particle_y[k] == y) &&
@@ -251,11 +278,26 @@ namespace extractor
 
     Int_t ParticleExtractor::getParent(ParticleParentList particleParentList, Int_t trackId)
     {
-        for (size_t k = 0; k < particleParentList.tracks.size(); k++)
-        {
-            if (particleParentList.tracks[k] == trackId)
-            {
+        for (size_t k = 0; k < particleParentList.tracks.size(); k++) {
+            if (particleParentList.tracks[k] == trackId) {
                 return particleParentList.mothers[k];
+            }
+        }
+        return -1;
+    }
+
+    Int_t ParticleExtractor::findParentLocation(ParticleTree particleTree, 
+        Int_t track_id, Double_t x, Double_t y, Double_t z)
+    {
+        for (size_t k = 0; k < particleTree.track_id.size(); k++) {
+            if (particleTree.id[k] == track_id) {
+                if((particleTree.x[k] == x) &&
+                   (particleTree.y[k] == y) &&
+                   (particleTree.z[k] == z)
+                )
+                {
+                    return k;
+                }
             }
         }
         return -1;
@@ -288,6 +330,7 @@ namespace extractor
         fEvent  = event.id().event();
 
         fNumberOfEvents++;
+        fNumberOfPrimaries=-1;
         // create a new event list
         EventList eventList(fNumberOfEvents-1);
         ParticleParentList particleParentList(fNumberOfEvents-1);
@@ -308,6 +351,73 @@ namespace extractor
                 // add particle/parent pair to list
                 particleParentList.tracks.emplace_back(particle.TrackId());
                 particleParentList.mothers.emplace_back(particle.Mother());
+                // generate vertices and edges
+                if (particle.Mother() == 0)
+                {
+                    // if a primary, create a new tree
+                    fTempParticleTree.emplace_back(ParticleTree(fEvent));
+                    fNumberOfPrimaries++;
+                    // fill primary tree with vertices
+                    for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
+                    {
+                        fTempParticleTree[fNumberOfPrimaries].track_ids.emplace_back(particle.TrackId());
+                        fTempParticleTree[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
+                        fTempParticleTree[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
+                        fTempParticleTree[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
+                        fTempParticleTree[fNumberOfPrimaries].edep_energy.emplace_back(-1.);
+                        fTempParticleTree[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
+                        if (k > 0)
+                        {
+                            fTempParticleTree[fNumberOfPrimaries].edge_start.emplace_back(k-1);
+                            fTempParticleTree[fNumberOfPrimaries].edge_end.emplace_back(k);
+                        }
+                    }
+                }
+                else
+                {
+                    for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
+                    {
+                        fTempParticleTree[fNumberOfPrimaries].track_ids.emplace_back(particle.TrackId());
+                        fTempParticleTree[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
+                        fTempParticleTree[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
+                        fTempParticleTree[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
+                        fTempParticleTree[fNumberOfPrimaries].edep_energy.emplace_back(-1.);
+                        fTempParticleTree[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
+                        if (k == 0)
+                        {
+                            // find the parent and the starting location
+                            starting_index = findParentLocation(
+                                fTempParticleTree[fNumberOfPrimaries],
+                                particle.Mother(),
+                                particle.Vx(0),
+                                particle.Vy(0),
+                                particle.Vz(0)
+                            );
+                            if (starting_index != -1)
+                            {
+                                fTempParticleTree[fNumberOfPrimaries].edge_start.(
+                                    starting_index
+                                );
+                            }
+                            else
+                            {
+                                std::cout << "Problem with something here..." << std::endl;
+                            }
+                            fTempParticleTree[fNumberOfPrimaries].edge_end.(
+                                fTempParticleTree[fNumberOfPrimaries].track_ids.size()-1
+                            );
+                        }
+                        else
+                        {
+                            fTempParticleTree[fNumberOfPrimaries].edge_start.(
+                                fTempParticleTree[fNumberOfPrimaries].track_ids.size()-1
+                            );
+                            fTempParticleTree[fNumberOfPrimaries].edge_end.(
+                                fTempParticleTree[fNumberOfPrimaries].track_ids.size()
+                            );
+                        }
+                    }
+                }
                 // check if the particle is the right pdg code
                 for (size_t j = 0; j < fPdgCodes.size(); j++)
                 {
@@ -385,6 +495,13 @@ namespace extractor
             {
                 if (checkEventIds(eventList, energyDeposit.TrackID()))
                 {
+                    // if the particle is an electron, find the closest ancestor which
+                    // is of another type.
+                    Int_t eventIndex = findTrackId(eventList, energyDeposit.TrackID());
+                    if (eventList.particle_pdgs[eventIndex] == 11)
+                    {
+
+                    }
                     int index = findEdepPosition(
                         eventList, 
                         energyDeposit.TrackID(), 
