@@ -275,7 +275,7 @@ namespace extractor
         return -1;
     }
 
-    Int ParticleExtractor::findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z)
+    Int_t ParticleExtractor::findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z)
     {
         for (size_t k = 0; k < eventList.particle_ids.size(); k++) {
             if (eventList.particle_ids[k] == trackId) {
