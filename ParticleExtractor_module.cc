@@ -186,6 +186,7 @@ namespace extractor
         Int_t findParentLocation(ParticleTree particleTree, Int_t track_id, Double_t t, Double_t x, Double_t y, Double_t z);        
         Int_t findParentTree(std::vector<ParticleTree> particleTree, Int_t track_id);
         Int_t findParentTrajectory(std::vector<ParticleTree> particleTree, Int_t track_id);
+        Int_t findClosestTime(ParticleTrajectory particleTrajectory, Double_t time);
     
     private:
         std::vector<Int_t> fPdgCodes;
@@ -468,9 +469,9 @@ namespace extractor
                             particle.T(0)
                         );
                         fParticleTreeList[parent_tree].particles[traj].t.insert(insert_time+1,particle.T(0),1);
-                        fParticleTreeList[parent_tree].particles[traj].x.insert(insert_time+1,particle.X(0),1);
-                        fParticleTreeList[parent_tree].particles[traj].y.insert(insert_time+1,particle.Y(0),1);
-                        fParticleTreeList[parent_tree].particles[traj].z.insert(insert_time+1,particle.Z(0),1);
+                        fParticleTreeList[parent_tree].particles[traj].x.insert(insert_time+1,particle.Vx(0),1);
+                        fParticleTreeList[parent_tree].particles[traj].y.insert(insert_time+1,particle.Vy(0),1);
+                        fParticleTreeList[parent_tree].particles[traj].z.insert(insert_time+1,particle.Vz(0),1);
                     } 
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
