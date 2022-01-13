@@ -402,7 +402,7 @@ namespace extractor
                         if (k == 0)
                         {
                             // find the parent and the starting location
-                            starting_index = findParentLocation(
+                            Int_t starting_index = findParentLocation(
                                 fParticleTreeList[fNumberOfPrimaries],
                                 particle.Mother(),
                                 particle.Vx(0),
@@ -419,16 +419,16 @@ namespace extractor
                             {
                                 std::cout << "Problem with something here..." << std::endl;
                             }
-                            fParticleTreeList[fNumberOfPrimaries].edge_end.(
+                            fParticleTreeList[fNumberOfPrimaries].edge_end.emplace_back(
                                 fParticleTreeList[fNumberOfPrimaries].track_id.size()-1
                             );
                         }
                         else
                         {
-                            fParticleTreeList[fNumberOfPrimaries].edge_start.(
+                            fParticleTreeList[fNumberOfPrimaries].edge_start.emplace_back(
                                 fParticleTreeList[fNumberOfPrimaries].track_id.size()-1
                             );
-                            fParticleTreeList[fNumberOfPrimaries].edge_end.(
+                            fParticleTreeList[fNumberOfPrimaries].edge_end.emplace_back(
                                 fParticleTreeList[fNumberOfPrimaries].track_id.size()
                             );
                         }
