@@ -378,7 +378,7 @@ namespace extractor
                 return k-1;
             }
         }
-        return particleTrajectory.t.size()-1;
+        return particleTrajectory.t.end();
     }
 
     // analyze function
