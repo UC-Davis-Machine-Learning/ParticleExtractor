@@ -411,7 +411,7 @@ namespace extractor
                             );
                             if (starting_index != -1)
                             {
-                                fParticleTreeList[fNumberOfPrimaries].edge_start.(
+                                fParticleTreeList[fNumberOfPrimaries].edge_start.emplace_back(
                                     starting_index
                                 );
                             }
