@@ -173,6 +173,7 @@ namespace extractor
         Int_t findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z);
         Int_t getParent(ParticleParentList particleParentList, Int_t trackId);
         Int_t findParentLocation(ParticleTree particleTree, Int_t track_id, Double_t x, Double_t y, Double_t z);        
+        Int_t findParentTree(std::vector<ParticleTree> particleTree, Int_t track_id);
     
     private:
         std::vector<Int_t> fPdgCodes;
