@@ -399,6 +399,7 @@ namespace extractor
                 // fill primary tree with vertices
                 if (particle.Mother() == 0)
                 {
+                    std::cout << "particle: " << particle.TrackId() << ", pdg: " << particle.PdgCode() << ", process: " << particle.Process() << ", mother: " << particle.Mother() << "\n";
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
                         fParticleTreeList[fNumberOfPrimaries].track_id.emplace_back(particle.TrackId());
@@ -423,6 +424,7 @@ namespace extractor
                             fParticleTreeList[fNumberOfPrimaries].edge_start.emplace_back(k-1);
                             fParticleTreeList[fNumberOfPrimaries].edge_end.emplace_back(k);
                         }
+                        std::cout << "t(" << k << "): " << particle.T(k) << std::endl;
                     }
                 }
                 else
