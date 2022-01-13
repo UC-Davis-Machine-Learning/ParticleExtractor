@@ -420,6 +420,7 @@ namespace extractor
                                 fParticleTreeList,
                                 particle.Mother()
                             );
+                            std::cout << "id: " << particle.TrackId() << ", mother: " << particle.Mother() << std::endl;
                             // find the parent and the starting location
                             Int_t starting_index = findParentLocation(
                                 fParticleTreeList[tree_index],
