@@ -391,7 +391,7 @@ namespace extractor
                 fParticleTreeList.emplace_back(ParticleTree(fEvent));
                 fNumberOfPrimaries++;
                 // fill primary tree with vertices
-                if (particle.Mother == 0)
+                if (particle.Mother() == 0)
                 {
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
