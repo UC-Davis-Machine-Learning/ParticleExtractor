@@ -408,7 +408,14 @@ namespace extractor
                         fParticleTreeList[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
-                        fParticleTreeList[fNumberOfPrimaries].process.emplace_back(particle.Process());
+                        if (k < particle.NumberTrajectoryPoints()-1; k++)
+                        {
+                            fParticleTreeList[fNumberOfPrimaries].process.emplace_back(particle.Process());
+                        }
+                        else 
+                        {
+                            fParticleTreeList[fNumberOfPrimaries].process.emplace_back(particle.EndProcess());
+                        }
                         fParticleTreeList[fNumberOfPrimaries].edep_energy.emplace_back(-1.);
                         fParticleTreeList[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
                         if (k > 0)
@@ -445,7 +452,14 @@ namespace extractor
                         fParticleTreeList[parent_tree].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[parent_tree].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[parent_tree].z.emplace_back(particle.Vz(k));
-                        fParticleTreeList[parent_tree].process.emplace_back(particle.Process(k));
+                        if (k < particle.NumberTrajectoryPoints()-1; k++)
+                        {
+                            fParticleTreeList[parent_tree].process.emplace_back(particle.Process());
+                        }
+                        else 
+                        {
+                            fParticleTreeList[parent_tree].process.emplace_back(particle.EndProcess());
+                        }
                         fParticleTreeList[parent_tree].edep_energy.emplace_back(-1.);
                         fParticleTreeList[parent_tree].edep_num_electrons.emplace_back(-1);
                         if (k == 0)
