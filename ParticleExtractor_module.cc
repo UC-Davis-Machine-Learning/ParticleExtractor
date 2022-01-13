@@ -415,7 +415,7 @@ namespace extractor
                 {
                     // find parent tree
                     Int_t parent_tree = findParentTree(fParticleTreeList, particle.Mother());
-                    std::cout << "particle: " << particle.TrackId() << ", mother: " << particle.Mother() << "\n";
+                    std::cout << "particle: " << particle.TrackId() << ", pdg: " << particle.PdgCode() << ", mother: " << particle.Mother() << "\n";
                     Int_t traj_point = findParentLocation(
                         fParticleTreeList[parent_tree],
                         particle.Mother(),
