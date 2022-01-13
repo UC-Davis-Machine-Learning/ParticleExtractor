@@ -442,6 +442,9 @@ namespace extractor
                     if (traj_point != -1) {
                         std::cout << ", traj_process: " << fParticleTreeList[parent_tree].process[traj_point];
                     } 
+                    else {
+                        std::cout << ", time: " << particle.T(0);
+                    }
                     std::cout << std::endl;
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
