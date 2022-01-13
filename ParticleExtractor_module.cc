@@ -172,8 +172,8 @@ namespace extractor
         Int_t findTrackId(EventList eventList, Int_t trackId);
         Int_t findEdepPosition(EventList eventList, Int_t trackId, Double_t x, Double_t y, Double_t z);
         Int_t getParent(ParticleParentList particleParentList, Int_t trackId);
-        Int_t findParentLocation(ParticleTree particleTree, Int_t track_id, Double_t x, Double_t y, Double_t z)
-        
+        Int_t findParentLocation(ParticleTree particleTree, Int_t track_id, Double_t x, Double_t y, Double_t z);        
+    
     private:
         std::vector<Int_t> fPdgCodes;
         art::InputTag fLArGeantProducerLabel;
@@ -224,7 +224,7 @@ namespace extractor
         // we're going to create.  
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
         fEventTree = fTFileService->make<TTree>("event", "event");
-        fParticleTree = fTFileService->make<TTree>("particle", "particle")
+        fParticleTree = fTFileService->make<TTree>("particle", "particle");
         fParticleParentTree = fTFileService->make<TTree>("particle_parent", "particle_parent");
         consumes<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
 
@@ -305,7 +305,7 @@ namespace extractor
         Int_t track_id, Double_t x, Double_t y, Double_t z)
     {
         for (size_t k = 0; k < particleTree.track_id.size(); k++) {
-            if (particleTree.id[k] == track_id) {
+            if (particleTree.track_id[k] == track_id) {
                 if((particleTree.x[k] == x) &&
                    (particleTree.y[k] == y) &&
                    (particleTree.z[k] == z)
@@ -349,7 +349,7 @@ namespace extractor
         // create a new event list
         EventList eventList(fNumberOfEvents-1);
         ParticleParentList particleParentList(fNumberOfEvents-1);
-        fParticleTree.clear();
+        fParticleTreeList.clear();
         // main loop
         /*  this part of the code loops over several data products starting
          *  with simb::MCParticle, from which it extracts trajectory information
@@ -376,7 +376,7 @@ namespace extractor
                     // fill primary tree with vertices
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
-                        fParticleTreeList[fNumberOfPrimaries].track_ids.emplace_back(particle.TrackId());
+                        fParticleTreeList[fNumberOfPrimaries].track_id.emplace_back(particle.TrackId());
                         fParticleTreeList[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
@@ -393,7 +393,7 @@ namespace extractor
                 {
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
-                        fParticleTreeList[fNumberOfPrimaries].track_ids.emplace_back(particle.TrackId());
+                        fParticleTreeList[fNumberOfPrimaries].track_id.emplace_back(particle.TrackId());
                         fParticleTreeList[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
@@ -420,16 +420,16 @@ namespace extractor
                                 std::cout << "Problem with something here..." << std::endl;
                             }
                             fParticleTreeList[fNumberOfPrimaries].edge_end.(
-                                fParticleTreeList[fNumberOfPrimaries].track_ids.size()-1
+                                fParticleTreeList[fNumberOfPrimaries].track_id.size()-1
                             );
                         }
                         else
                         {
                             fParticleTreeList[fNumberOfPrimaries].edge_start.(
-                                fParticleTreeList[fNumberOfPrimaries].track_ids.size()-1
+                                fParticleTreeList[fNumberOfPrimaries].track_id.size()-1
                             );
                             fParticleTreeList[fNumberOfPrimaries].edge_end.(
-                                fParticleTreeList[fNumberOfPrimaries].track_ids.size()
+                                fParticleTreeList[fNumberOfPrimaries].track_id.size()
                             );
                         }
                     }
