@@ -108,6 +108,7 @@ namespace extractor
         std::vector<Double_t> x;
         std::vector<Double_t> y;
         std::vector<Double_t> z;
+        std::vector<std::string> process;
         std::vector<Double_t> edep_energy;
         std::vector<Double_t> edep_num_electrons;
         std::vector<Int_t> edge_start;
@@ -253,6 +254,7 @@ namespace extractor
         fParticleTree->Branch("x", &fTempParticleTree.x);
         fParticleTree->Branch("y", &fTempParticleTree.y);
         fParticleTree->Branch("z", &fTempParticleTree.z);
+        fParticleTree->Branch("process", &fTempParticleTree.process);
         fParticleTree->Branch("edep_energy", &fTempParticleTree.edep_energy);
         fParticleTree->Branch("edep_num_electrons", &fTempParticleTree.edep_num_electrons);
         fParticleTree->Branch("edge_start", &fTempParticleTree.edge_start);
@@ -406,6 +408,7 @@ namespace extractor
                         fParticleTreeList[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
+                        fParticleTreeList[fNumberOfPrimaries].process.emplace_back(particle.Process());
                         fParticleTreeList[fNumberOfPrimaries].edep_energy.emplace_back(-1.);
                         fParticleTreeList[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
                         if (k > 0)
@@ -438,12 +441,22 @@ namespace extractor
                         fParticleTreeList[parent_tree].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[parent_tree].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[parent_tree].z.emplace_back(particle.Vz(k));
+                        fParticleTreeList[parent_tree].process.emplace_back(particle.Process());
                         fParticleTreeList[parent_tree].edep_energy.emplace_back(-1.);
                         fParticleTreeList[parent_tree].edep_num_electrons.emplace_back(-1);
+                        if (k == 0)
+                        {
+                            fParticleTreeList[parent_tree].edge_start.emplace_back(traj_point);
+                            fParticleTreeList[parent_tree].edge_end.emplace_back(traj_point+1);
+                        }
                         if (k > 0)
                         {
-                            fParticleTreeList[parent_tree].edge_start.emplace_back(k-1);
-                            fParticleTreeList[parent_tree].edge_end.emplace_back(k);
+                            fParticleTreeList[parent_tree].edge_start.emplace_back(
+                                fParticleTreeList[parent_tree].track_id.size()-1
+                            );
+                            fParticleTreeList[parent_tree].edge_end.emplace_back(
+                                fParticleTreeList[parent_tree].track_id.size()
+                            );
                         }
                     }
                 }
