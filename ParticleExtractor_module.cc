@@ -203,7 +203,7 @@ namespace extractor
         EventList fTempEventList;
         ParticleParentList fTempParticleParentList;
         ParticleTree fTempParticleTree;
-        std::vector<ParticleTree> fParticleTree;
+        std::vector<ParticleTree> fParticleTreeList;
     };
 
     // constructor
@@ -371,21 +371,21 @@ namespace extractor
                 if (particle.Mother() == 0)
                 {
                     // if a primary, create a new tree
-                    fParticleTree.emplace_back(ParticleTree(fEvent));
+                    fParticleTreeList.emplace_back(ParticleTree(fEvent));
                     fNumberOfPrimaries++;
                     // fill primary tree with vertices
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
-                        fParticleTree[fNumberOfPrimaries].track_ids.emplace_back(particle.TrackId());
-                        fParticleTree[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
-                        fParticleTree[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
-                        fParticleTree[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
-                        fParticleTree[fNumberOfPrimaries].edep_energy.emplace_back(-1.);
-                        fParticleTree[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
+                        fParticleTreeList[fNumberOfPrimaries].track_ids.emplace_back(particle.TrackId());
+                        fParticleTreeList[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
+                        fParticleTreeList[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
+                        fParticleTreeList[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
+                        fParticleTreeList[fNumberOfPrimaries].edep_energy.emplace_back(-1.);
+                        fParticleTreeList[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
                         if (k > 0)
                         {
-                            fParticleTree[fNumberOfPrimaries].edge_start.emplace_back(k-1);
-                            fParticleTree[fNumberOfPrimaries].edge_end.emplace_back(k);
+                            fParticleTreeList[fNumberOfPrimaries].edge_start.emplace_back(k-1);
+                            fParticleTreeList[fNumberOfPrimaries].edge_end.emplace_back(k);
                         }
                     }
                 }
@@ -393,17 +393,17 @@ namespace extractor
                 {
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
-                        fParticleTree[fNumberOfPrimaries].track_ids.emplace_back(particle.TrackId());
-                        fParticleTree[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
-                        fParticleTree[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
-                        fParticleTree[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
-                        fParticleTree[fNumberOfPrimaries].edep_energy.emplace_back(-1.);
-                        fParticleTree[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
+                        fParticleTreeList[fNumberOfPrimaries].track_ids.emplace_back(particle.TrackId());
+                        fParticleTreeList[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
+                        fParticleTreeList[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
+                        fParticleTreeList[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
+                        fParticleTreeList[fNumberOfPrimaries].edep_energy.emplace_back(-1.);
+                        fParticleTreeList[fNumberOfPrimaries].edep_num_electrons.emplace_back(-1);
                         if (k == 0)
                         {
                             // find the parent and the starting location
                             starting_index = findParentLocation(
-                                fParticleTree[fNumberOfPrimaries],
+                                fParticleTreeList[fNumberOfPrimaries],
                                 particle.Mother(),
                                 particle.Vx(0),
                                 particle.Vy(0),
@@ -411,7 +411,7 @@ namespace extractor
                             );
                             if (starting_index != -1)
                             {
-                                fParticleTree[fNumberOfPrimaries].edge_start.(
+                                fParticleTreeList[fNumberOfPrimaries].edge_start.(
                                     starting_index
                                 );
                             }
@@ -419,17 +419,17 @@ namespace extractor
                             {
                                 std::cout << "Problem with something here..." << std::endl;
                             }
-                            fParticleTree[fNumberOfPrimaries].edge_end.(
-                                fParticleTree[fNumberOfPrimaries].track_ids.size()-1
+                            fParticleTreeList[fNumberOfPrimaries].edge_end.(
+                                fParticleTreeList[fNumberOfPrimaries].track_ids.size()-1
                             );
                         }
                         else
                         {
-                            fParticleTree[fNumberOfPrimaries].edge_start.(
-                                fParticleTree[fNumberOfPrimaries].track_ids.size()-1
+                            fParticleTreeList[fNumberOfPrimaries].edge_start.(
+                                fParticleTreeList[fNumberOfPrimaries].track_ids.size()-1
                             );
-                            fParticleTree[fNumberOfPrimaries].edge_end.(
-                                fParticleTree[fNumberOfPrimaries].track_ids.size()
+                            fParticleTreeList[fNumberOfPrimaries].edge_end.(
+                                fParticleTreeList[fNumberOfPrimaries].track_ids.size()
                             );
                         }
                     }
@@ -546,17 +546,17 @@ namespace extractor
         fTempEventList.particle_edep_num_electrons = eventList.particle_edep_num_electrons;
         fEventTree->Fill();
 
-        for (size_t k = 0; k < fParticleTree.size(); k++)
+        for (size_t k = 0; k < fParticleTreeList.size(); k++)
         {
-            fTempParticleTree.event_id = fParticleTree[k].event_id;
-            fTempParticleTree.track_id = fParticleTree[k].track_id;
-            fTempParticleTree.x = fParticleTree[k].x;
-            fTempParticleTree.y = fParticleTree[k].y;
-            fTempParticleTree.z = fParticleTree[k].z;
-            fTempParticleTree.edep_energy = fParticleTree[k].edep_energy;
-            fTempParticleTree.edep_num_electrons = fParticleTree[k].edep_num_electrons;
-            fTempParticleTree.edge_start = fParticleTree[k].edge_start;
-            fTempParticleTree.edge_end = fParticleTree[k].edge_end;
+            fTempParticleTree.event_id = fParticleTreeList[k].event_id;
+            fTempParticleTree.track_id = fParticleTreeList[k].track_id;
+            fTempParticleTree.x = fParticleTreeList[k].x;
+            fTempParticleTree.y = fParticleTreeList[k].y;
+            fTempParticleTree.z = fParticleTreeList[k].z;
+            fTempParticleTree.edep_energy = fParticleTreeList[k].edep_energy;
+            fTempParticleTree.edep_num_electrons = fParticleTreeList[k].edep_num_electrons;
+            fTempParticleTree.edge_start = fParticleTreeList[k].edge_start;
+            fTempParticleTree.edge_end = fParticleTreeList[k].edge_end;
             fParticleTree->Fill();
         }
 
