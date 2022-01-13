@@ -375,7 +375,7 @@ namespace extractor
         {
             if (time < particleTrajectory.t[k])
             {
-                return k-1;
+                return particleTrajectory.t.begin() + k-1;
             }
         }
         return particleTrajectory.t.end();
