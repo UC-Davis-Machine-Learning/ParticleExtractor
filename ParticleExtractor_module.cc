@@ -322,7 +322,7 @@ namespace extractor
     Int_t ParticleExtractor::findParentTree(std::vector<ParticleTree> particleTree,
         Int_t track_id)
     {
-        for (size_t k == 0; k < particleTree.size(); k++) {
+        for (size_t k = 0; k < particleTree.size(); k++) {
             for (size_t j = 0; j < particleTree[k].track_id.size(); j++) {
                 if (particleTree[k].track_id[j] == track_id) {
                     return k;
