@@ -422,7 +422,7 @@ namespace extractor
                 {
                     // find parent tree
                     Int_t parent_tree = findParentTree(fParticleTreeList, particle.Mother());
-                    std::cout << "particle: " << particle.TrackId() << ", pdg: " << particle.PdgCode() << ", mother: " << particle.Mother() << "\n";
+                    std::cout << "particle: " << particle.TrackId() << ", pdg: " << particle.PdgCode() << ", process: " << particle.Process() << ", mother: " << particle.Mother() << "\n";
                     Int_t traj_point = findParentLocation(
                         fParticleTreeList[parent_tree],
                         particle.Mother(),
@@ -431,7 +431,11 @@ namespace extractor
                         particle.Vy(0),
                         particle.Vz(0)
                     );
-                    std::cout << "tree: " << parent_tree << ", traj: " << traj_point << std::endl;
+                    std::cout << "tree: " << parent_tree << ", traj: " << traj_point;
+                    if (traj_point != -1) {
+                        std::cout << ", traj_process: " << fParticleTreeList[parent_tree].process[traj_point];
+                    } 
+                    std::cout << std::endl;
                     for (size_t k = 0; k < particle.NumberTrajectoryPoints(); k++)
                     {
                         fParticleTreeList[parent_tree].track_id.emplace_back(particle.TrackId());
@@ -441,7 +445,7 @@ namespace extractor
                         fParticleTreeList[parent_tree].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[parent_tree].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[parent_tree].z.emplace_back(particle.Vz(k));
-                        fParticleTreeList[parent_tree].process.emplace_back(particle.Process());
+                        fParticleTreeList[parent_tree].process.emplace_back(particle.Process(k));
                         fParticleTreeList[parent_tree].edep_energy.emplace_back(-1.);
                         fParticleTreeList[parent_tree].edep_num_electrons.emplace_back(-1);
                         if (k == 0)
