@@ -408,7 +408,7 @@ namespace extractor
                         fParticleTreeList[fNumberOfPrimaries].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[fNumberOfPrimaries].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[fNumberOfPrimaries].z.emplace_back(particle.Vz(k));
-                        if (k < particle.NumberTrajectoryPoints()-1; k++)
+                        if (k < particle.NumberTrajectoryPoints()-1)
                         {
                             fParticleTreeList[fNumberOfPrimaries].process.emplace_back(particle.Process());
                         }
@@ -452,7 +452,7 @@ namespace extractor
                         fParticleTreeList[parent_tree].x.emplace_back(particle.Vx(k));
                         fParticleTreeList[parent_tree].y.emplace_back(particle.Vy(k));
                         fParticleTreeList[parent_tree].z.emplace_back(particle.Vz(k));
-                        if (k < particle.NumberTrajectoryPoints()-1; k++)
+                        if (k < particle.NumberTrajectoryPoints()-1)
                         {
                             fParticleTreeList[parent_tree].process.emplace_back(particle.Process());
                         }
