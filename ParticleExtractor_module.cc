@@ -309,7 +309,7 @@ namespace extractor
     }
 
     Int_t ParticleExtractor::findParentLocation(ParticleTree particleTree, 
-        Int_t track_id, Double_t x, Double_t y, Double_t z)
+        Int_t track_id, Double_t t, Double_t x, Double_t y, Double_t z)
     {
         for (size_t k = 0; k < particleTree.track_id.size(); k++) {
             if (particleTree.track_id[k] == track_id) {
@@ -317,6 +317,10 @@ namespace extractor
                    (particleTree.y[k] == y) &&
                    (particleTree.z[k] == z)
                 )
+                {
+                    return k;
+                }
+                if (particleTree.t[k] == t)
                 {
                     return k;
                 }
@@ -419,6 +423,7 @@ namespace extractor
                     Int_t traj_point = findParentLocation(
                         fParticleTreeList[parent_tree],
                         particle.Mother(),
+                        particle.T(0),
                         particle.Vx(0),
                         particle.Vy(0),
                         particle.Vz(0)
