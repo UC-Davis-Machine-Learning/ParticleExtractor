@@ -323,16 +323,19 @@ namespace extractor
     {
         for (size_t k = 0; k < particleTree.particles.size(); k++) {
             if (particleTree.particles[k].track_id == track_id) {
-                if((particleTree.particles[k].x == x) &&
-                   (particleTree.particles[k].y == y) &&
-                   (particleTree.particles[k].z == z)
-                )
+                for (size_t j = 0; j < particleTree.particles[k].x.size(); j++)
                 {
-                    return k;
-                }
-                if (particleTree.particles[k].t == t)
-                {
-                    return k;
+                    if((particleTree.particles[k].x[j] == x) &&
+                        (particleTree.particles[k].y[j] == y) &&
+                        (particleTree.particles[k].z[j] == z)
+                    )
+                    {
+                        return k;
+                    }
+                    if (particleTree.particles[k].t[j] == t)
+                    {
+                        return k;
+                    }
                 }
             }
         }
