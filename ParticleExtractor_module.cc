@@ -77,6 +77,11 @@ namespace extractor
     private:
         /// Set of parameters
         Parameters fParameters;
+        bool    fFillMCNeutronCaptures;
+
+        // producer labels
+        art::InputTag fLArGeantProducerLabel;
+
         /// ROOT output through art::TFileService
         /** We will save different TTrees to different TFiles specified 
          *  by the directories for each type.
@@ -84,6 +89,11 @@ namespace extractor
         art::ServiceHandle<art::TFileService> fTFileService;
         // geometry information
         auto fGeometry = DetectorGeometry::getInstance("ParticleExtractor");
+
+        /// TTrees
+        TTree *fMetaTree;
+        TTree *fMCNeutronCapturesTree;
+
     };
 
     // constructor
@@ -91,19 +101,47 @@ namespace extractor
     : EDAnalyzer(config)
     , fParameters(config)
     {
+        /**
+         * Here we check the various parameter settings and ...
+         * 
+         */
+        fFillMCNeutronCaptures = fParameters.FillMCNeutronCaptures();
+
+        // Producer labels
+        fLArGeantProducerLabel = fParameters.LArGeantProducerLabel();
 
     }
 
     // begin job
     void ParticleExtractor::beginJob()
     {
-
+        
     }
 
     // analyze
     void ParticleExtractor::analyze(const art::Event& event)
     {
-
+        /**
+         * @details For each event, we will look through the various
+         * available data products and send event info to the 
+         * corresponding submodules that process them, starting with MCParticles
+         * 
+         */
+        art::Handle<std::vector<simb::MCParticle>> particleHandle;
+        if (!event.getByLabel(fLArGeantProducerLabel, particleHandle))
+        {
+            // if there are no particles for the event truth, then
+            // we are in big trouble haha.  throw an exception
+            throw cet::exception("ParticleExtractor")
+                << " No simb::MCParticle objects in this event - "
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        // get the list of MC particles from Geant4
+        auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
+        // now pass the list of particles to each of the appropriate submodules
+        if (fFillMCNeutronCaptures) {
+            fMCNeutronCaptures.process(mcParticles);
+        }
     }
 
     // end job

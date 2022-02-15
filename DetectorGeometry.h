@@ -147,10 +147,12 @@ namespace extractor
     private:
         static DetectorGeometry * sInstance;
         static std::mutex sMutex;
+
     protected:
         DetectorGeometry(const std::string name);
         ~DetectorGeometry() {}
         std::string sName;
+        
     public:
         // this singleton cannot be cloned
         DetectorGeometry(DetectorGeometry &other) = delete;

@@ -26,8 +26,35 @@
 
 namespace extractor
 {
+    /**
+     * @brief A collection of fhicl parameters for the ParticleExtractor
+     * module.  Each of these must be specified, which have default values
+     * in the accompanying fhicl file.
+     */
     struct Configuration
     {
+        /**
+         * @brief This option generates a TTree called "mc_neutron_captures",
+         * which stores various neutron capture statistics from each event.
+         * 
+         */
+        fhicl::Atom<bool> FillMCNeutronCaptures
+        {
+            fhicl::Name("FillMCNeutronCaptures"),
+            fhicl::Comment("Whether to save neutron capture locations.")
+        };
+
+        /**
+         * @brief LAr Geant4 configuration parameters.
+         * The user must specify the name of the larg4 module
+         * that was used to run the geant simulations.
+         * This is used to get simb::MCParticle products.
+         */
+        fhicl::Atom<art::InputTag> LArGeantProducerLabel
+        {
+            fhicl::Name("LArGeantProducerLabel"),
+            fhicl::Comment("Tag of the input data product for the largeant side of the simulation.")
+        };
 
     };
 
