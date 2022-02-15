@@ -9,6 +9,7 @@
  * @copyright Copyright (c) 2022
  * 
  */
+#pragma once
 
 // art framework includes
 #include "art/Framework/Core/EDAnalyzer.h"

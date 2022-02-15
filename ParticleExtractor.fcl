@@ -2,14 +2,8 @@ BEGIN_PROLOG
 
 ParticleExtractor:
 {
-    PDGCodes:                           [2112, 11, 22]
     module_type:                        "ParticleExtractor"
     LArGeantProducerLabel:              "largeant"
-    LArGeantEnergyDepositProducerLabel: "largeant:LArG4DetectorServicevolTPCActive"
-    IonAndScintProducerLabel:           "IonAndScint"
-    OutputFile:                         "output.root"
-    CollectDaughters:                   true
-    CollectAll:                         false
 }
 
 END_PROLOG
