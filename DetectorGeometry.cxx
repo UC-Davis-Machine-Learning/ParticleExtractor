@@ -15,38 +15,6 @@ namespace extractor
         return sInstance;
     }
 
-    std::string DetectorGeometry::GetWorldName()          
-    { 
-        return fWorldName; 
-    }
-    BoundingBox DetectorGeometry::GetWorldBox()           
-    { 
-        return fWorldBox; 
-    }
-    std::string DetectorGeometry::GetDetectorName()       
-    { 
-        return fDetectorName; 
-    }
-    BoundingBox DetectorGeometry::GetDetectorBox()        
-    { 
-        return fDetectorBox; 
-    }
-    std::string DetectorGeometry::GetCryostatName()       
-    { 
-        return fCryostatName;
-    }
-    BoundingBox DetectorGeometry::GetCryostatBox()        
-    { 
-        return fCryostatBox; 
-    }
-    int DetectorGeometry::GetNumberOfTPCs()               
-    { 
-        return fNumberOfTPCs; 
-    }
-    std::vector<std::string> DetectorGeometry::GetTPCNames()  
-    { 
-        return fTPCNames; 
-    }
     std::string DetectorGeometry::GetTPCName(const size_t i) 
     {
         if (i < fTPCNames.size()) { return fTPCNames[i]; }

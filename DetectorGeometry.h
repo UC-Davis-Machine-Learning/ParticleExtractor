@@ -56,12 +56,14 @@
 namespace extractor 
 {
     // list of materials in the detector
-    enum MaterialList {
+    enum MaterialList 
+    {
 
     };
     // list of effective atomic numbers for the materials
 
-    enum VolumeType {
+    enum VolumeType 
+    {
         World,
         Cryostat,
         TPC,
@@ -159,34 +161,36 @@ namespace extractor
         // instance
         static DetectorGeometry *getInstance(const std::string& name);
 
-        std::string Name() const {
-            return sName;
-        }
-
         // getters
-        std::string GetWorldName();
-        BoundingBox GetWorldBox();
-        std::string GetDetectorName();
-        BoundingBox GetDetectorBox();
-        std::string GetCryostatName();
-        BoundingBox GetCryostatBox();
-        int GetNumberOfTPCs();
-        std::vector<std::string> GetTPCNames();
+        std::string Name() const        { return sName; }
+        std::string GetWorldName()      { return fWorldName; }
+        BoundingBox GetWorldBox()       { return fWorldBox; }
+        std::string GetDetectorName()   { return fDetectorName; }
+        BoundingBox GetDetectorBox()    { return fDetectorBox; }
+        std::string GetCryostatName()   { return fCryostatName; }
+        BoundingBox GetCryostatBox()    { return fCryostatBox; }
+        int GetNumberOfTPCs()           { return fNumberOfTPCs; }
+        std::vector<std::string> GetTPCNames()  { return fTPCNames; }
+        std::vector<double> GetTPCMasses()      { return fTPCMasses; }
+        std::vector<double> GetTPCDriftDistances()  { return fTPCDriftDistances; }
+        BoundingBox GetTotalTPCBox()            { return fTotalTPCBox; }
+        BoundingBox GetTotalActiveTPCBox()      { return fTotalActiveTPCBox; }
+        double GetTotalTPCMass()                { return fTotalTPCMass; }
+
+        // get quantities by index
         std::string GetTPCName(const size_t i);
         BoundingBox GetTPCBox(const size_t i);
         BoundingBox GetActiveTPCBox(const size_t i);
-        std::vector<double> GetTPCMasses();
         double GetTPCMass(const size_t i);
-        std::vector<double> GetTPCDriftDistances();
         double GetTPCDriftDistance(const size_t i);
-        BoundingBox GetTotalTPCBox();
-        BoundingBox GetTotalActiveTPCBox();
-        double GetTotalTPCMass();
+
         // get volume information for a point
         DetectorVolume getVolume(std::vector<double> position);
         DetectorVolume getVolume(double x, double y, double z);
+
         // function for finding total tpc volumes
         void findTotalTPCBoxes();
+
         // fill the geometry ttree
         void FillTTree();
         
@@ -196,10 +200,12 @@ namespace extractor
         // meta variables
         art::ServiceHandle<geo::Geometry> fGeometryService;
         geo::GeometryCore const* fGeometryCore;
+
         // ROOT 
         art::ServiceHandle<art::TFileService> fTFileService;
         TTree *fGeometryTree;
         size_t fTriggerOffset;
+
         // map from volume names to volume type
         std::map<std::string,VolumeType> fVolumeTypeMap;
         // world volume
@@ -218,10 +224,12 @@ namespace extractor
         std::vector<BoundingBox> fActiveTPCBoxes;
         std::vector<double> fTPCMasses;
         std::vector<double> fTPCDriftDistances;
+
         // full tpc volume
         BoundingBox fTotalTPCBox;
         BoundingBox fTotalActiveTPCBox;
         double fTotalTPCMass;
+
         ////////////////////////////////////////////////
         // detector material variables
         ////////////////////////////////////////////////
