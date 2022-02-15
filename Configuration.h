@@ -57,6 +57,16 @@ namespace extractor
             fhicl::Comment("Tag of the input data product for the largeant side of the simulation.")
         };
 
+        /**
+         * @brief Set of pdg codes to extract from each event
+         * 
+         */
+        fhicl::Sequence<int> PDGCodes
+        {
+            Name("PDGCodes"),
+            Comment("PDG IDs of the particles to extracted.")
+        };
+
     };
 
     using Parameters = art::EDAnalyzer::Table<Configuration>;

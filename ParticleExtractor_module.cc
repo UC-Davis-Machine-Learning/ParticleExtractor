@@ -78,6 +78,7 @@ namespace extractor
         /// Set of parameters
         Parameters fParameters;
         bool    fFillMCNeutronCaptures;
+        std::vector<Int_t> fPDGCodes;
 
         // producer labels
         art::InputTag fLArGeantProducerLabel;
@@ -92,7 +93,7 @@ namespace extractor
 
         /// TTrees
         TTree *fMetaTree;
-        TTree *fMCNeutronCapturesTree;
+        
 
     };
 
@@ -109,6 +110,9 @@ namespace extractor
 
         // Producer labels
         fLArGeantProducerLabel = fParameters().LArGeantProducerLabel();
+
+        // PDG codes
+        fPDGCodes = fParameters().PDGCodes();
 
     }
 

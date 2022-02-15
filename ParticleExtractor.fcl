@@ -2,8 +2,9 @@ BEGIN_PROLOG
 
 ParticleExtractor:
 {
-    module_type:                        "ParticleExtractor"
-    LArGeantProducerLabel:              "largeant"
+    module_type:            "ParticleExtractor"
+    LArGeantProducerLabel:  "largeant"
+    PDGCodes:               [2112, 11, 22]
 }
 
 END_PROLOG
