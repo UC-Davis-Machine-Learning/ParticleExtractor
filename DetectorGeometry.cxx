@@ -30,18 +30,10 @@ namespace extractor
         if (i < fActiveTPCBoxes.size()) { return fActiveTPCBoxes[i]; }
         else { return fActiveTPCBoxes[0]; }
     }
-    std::vector<double> DetectorGeometry::GetTPCMasses() 
-    { 
-        return fTPCMasses; 
-    }
     double DetectorGeometry::GetTPCMass(const size_t i) 
     {
         if (i < fTPCMasses.size()) { return fTPCMasses[i]; }
         else { return fTPCMasses[0]; }
-    }
-    std::vector<double> DetectorGeometry::GetTPCDriftDistances() 
-    { 
-        return fTPCDriftDistances; 
     }
     double DetectorGeometry::GetTPCDriftDistance(const size_t i) 
     {

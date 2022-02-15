@@ -105,10 +105,10 @@ namespace extractor
          * Here we check the various parameter settings and ...
          * 
          */
-        fFillMCNeutronCaptures = fParameters.FillMCNeutronCaptures();
+        fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
 
         // Producer labels
-        fLArGeantProducerLabel = fParameters.LArGeantProducerLabel();
+        fLArGeantProducerLabel = fParameters().LArGeantProducerLabel();
 
     }
 
