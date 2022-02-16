@@ -86,13 +86,14 @@ namespace extractor
                     mother = parentDaughterMap[mother];
                 }
                 // see if the ancestors pdg code is in the list
-                auto pdg_index = std::find(
+                auto pdg_exists = std::find(
                     fPDGCodes.begin(), 
                     fPDGCodes.end(), 
                     particlePDGMap[track_id]
                 );
-                if (pdg_index != fPDGCodes.end())
+                if (pdg_exists != fPDGCodes.end())
                 {
+                    Int_t pdg_index = std::distance(fPDGCodes.begin(), pdg_exists);
                     if (
                         (fPDGLevels[pdg_index] == 0 and level == 0) or
                         (fPDGLevels[pdg_index] == 1 and level != 0) or
