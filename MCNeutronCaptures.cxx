@@ -25,7 +25,7 @@ namespace extractor
     MCNeutronCaptures::~MCNeutronCaptures()
     {}
 
-    void MCNeutronCaptures::processEvent(ValidHandle<std::vector<simb::MCParticle>> mcParticles)
+    void MCNeutronCaptures::processEvent(art::ValidHandle<std::vector<simb::MCParticle>> mcParticles)
     {
         if (mcParticles.isValid())
         {
