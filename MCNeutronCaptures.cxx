@@ -40,7 +40,7 @@ namespace extractor
                         neutronStatistics.neutron_ids.emplace_back(particle.TrackId());
                         neutronStatistics.total_number_steps.emplace_back(particle.NumberTrajectoryPoints());
 
-                        if (particle.EndProcess() == 'nCapture')
+                        if (particle.EndProcess() == "nCapture")
                         {
                             neutronStatistics.neutron_capture_x.emplace_back(particle.EndX());
                             neutronStatistics.neutron_capture_y.emplace_back(particle.EndY());
