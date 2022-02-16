@@ -144,6 +144,8 @@ namespace extractor
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
             }
         }
+        fMCEnergyDeposits.setPDGCodes(fMCEdepPDGCodes);
+        fMCEnergyDeposits.setPDGLevels(fMCEdepPDGLevels);
     }
 
     // begin job

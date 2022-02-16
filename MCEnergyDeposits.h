@@ -18,6 +18,8 @@
 #include "art/Framework/Principal/SubRun.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
+#include <vector>
+
 #include "DetectorGeometry.h"
 
 namespace extractor
@@ -28,7 +30,15 @@ namespace extractor
      */
     struct MCEdep
     {
-
+        std::vector<Int_t> pdg;
+        std::vector<Int_t> track_id;
+        std::vector<Int_t> ancestor_id;
+        std::vector<Int_t> level;
+        std::vector<Double_t> edep_x;
+        std::vector<Double_t> edep_y;
+        std::vector<Double_t> edep_z;
+        std::vector<Double_t> energy;
+        std::vector<Int_t> num_electrons;
     };
 
     /**
@@ -41,6 +51,10 @@ namespace extractor
         MCEnergyDeposits();
         ~MCEnergyDeposits();
 
+        void setPDGCodes(std::vector<Int_t> PDGCodes) { fPDGCodes = PDGCodes; }
+        void setPDGLevels(std::vector<Int_t> PDGLevels) { fPDGLevels = PDGLevels; }
+        void setPDGLevels(std::vector<std::string> PDGLevels);
+
         void processEvent(
             art::ValidHandle<std::vector<simb::MCParticle>> mcParticles,
             art::ValidHandle<std::vector<sim::SimEnergyDeposit>> mcEnergyDeposits
@@ -52,14 +66,14 @@ namespace extractor
          *  by the directories for each type.
          */ 
         art::ServiceHandle<art::TFileService> fTFileService;
-        TTree *fMCNeutronCapturesTree;
+        TTree *fMCEnergyDepositsTree;
         // geometry information
         DetectorGeometry* fGeometry = DetectorGeometry::getInstance("MCEnergyDeposits");
 
         // pdg codes to construct
         std::vector<Int_t> fPDGCodes;
-        std::vector<Int_t> fPDGLevel;
-        
+        std::vector<Int_t> fPDGLevels;
+
         // struct for holding event information
         MCEdep fMCEdep;
     };
