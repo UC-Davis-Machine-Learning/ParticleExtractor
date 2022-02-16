@@ -61,8 +61,8 @@ namespace extractor
                     /// get capture locations
                     if (particle.EndProcess() == "nCapture")
                     {
-                        neutronStatistics.capture.emplace_back(True);
-                        neutronStatistics.inellastic.emplace_back(False);
+                        neutronStatistics.capture.emplace_back(true);
+                        neutronStatistics.inellastic.emplace_back(false);
                         neutronStatistics.neutron_capture_x.emplace_back(particle.EndX());
                         neutronStatistics.neutron_capture_y.emplace_back(particle.EndY());
                         neutronStatistics.neutron_capture_z.emplace_back(particle.EndZ());
@@ -70,9 +70,9 @@ namespace extractor
                     else
                     {
                         std::cout << particle.EndProcess() << std::endl;
-                        neutronStatistics.capture.empalce_back(False);
+                        neutronStatistics.capture.empalce_back(false);
                         if (particle.EndProcess() == "nInellastic") {
-                            neutronStatistics.inellastic.emplace_back(True);
+                            neutronStatistics.inellastic.emplace_back(true);
                         }
                         neutronStatistics.neutron_capture_x.emplace_back(-1e9);
                         neutronStatistics.neutron_capture_y.emplace_back(-1e9);
@@ -100,7 +100,7 @@ namespace extractor
                         else if (current_volume.volume_type == 2) 
                         {
                             tpc_number_steps += 1;
-                            tpc_avg_material += volume.material;
+                            tpc_avg_material += current_volume.material;
                             if (current_volume.material_name == "LAr") 
                             {
                                 lar_number_steps += 1;
