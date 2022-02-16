@@ -35,17 +35,6 @@ namespace extractor
     struct Configuration
     {
         /**
-         * @brief This option generates a TTree called "mc_neutron_captures",
-         * which stores various neutron capture statistics from each event.
-         * 
-         */
-        fhicl::Atom<bool> FillMCNeutronCaptures
-        {
-            fhicl::Name("FillMCNeutronCaptures"),
-            fhicl::Comment("Whether to save neutron capture locations.")
-        };
-
-        /**
          * @brief LAr Geant4 configuration parameters.
          * The user must specify the name of the larg4 module
          * that was used to run the geant simulations.
@@ -55,6 +44,22 @@ namespace extractor
         {
             fhicl::Name("LArGeantProducerLabel"),
             fhicl::Comment("Tag of the input data product for the largeant side of the simulation.")
+        };
+        fhicl::Atom<art::InputTag> IonAndScintProducerLabel
+        {
+            fhicl::Name("IonAndScintProducerLabel"),
+            fhicl::Comment("Tag of the input data product for the IonAndScint side of the simulation.")
+        };
+
+        /**
+         * @brief This option generates a TTree called "mc_neutron_captures",
+         * which stores various neutron capture statistics from each event.
+         * 
+         */
+        fhicl::Atom<bool> FillMCNeutronCaptures
+        {
+            fhicl::Name("FillMCNeutronCaptures"),
+            fhicl::Comment("Whether to save neutron capture locations.")
         };
 
         fhicl::Atom<bool> FillMCEdeps

@@ -4,9 +4,11 @@ ParticleExtractor:
 {
     module_type:            "ParticleExtractor"
 
-    FillMCNeutronCaptures:  true
-    LArGeantProducerLabel:  "largeant"
+    LArGeantProducerLabel:      "largeant"
+    IonAndScintProducerLabel:   "IonAndScint"
 
+    FillMCNeutronCaptures:  true
+    
     FillMCEdeps:            true
     MCEdepPDGCodes:         [2112, 13]
     MCEdepTypes:            ['daughters', 'all']

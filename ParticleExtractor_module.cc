@@ -80,11 +80,13 @@ namespace extractor
         /// Set of parameters
         Parameters fParameters;
         bool    fFillMCNeutronCaptures;
+        bool    fFillMCEdeps;
         std::vector<Int_t> fMCEdepPDGCodes;
         std::vector<std::string> fMCEdepPDGTypes;
 
         // producer labels
         art::InputTag fLArGeantProducerLabel;
+        art::InputTag fIonAndScintProducerLabel;
 
         /// ROOT output through art::TFileService
         /** We will save different TTrees to different TFiles specified 
@@ -109,10 +111,12 @@ namespace extractor
          * Here we check the various parameter settings and ...
          * 
          */
-        fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
-
         // Producer labels
         fLArGeantProducerLabel = fParameters().LArGeantProducerLabel();
+        fIonAndScintProducerLabel = fParameters().IonAndScintProducerLabel();
+
+        fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
+        fFillMCEdeps = fParameters().FillMCEdeps();
 
         // MC edep information
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
