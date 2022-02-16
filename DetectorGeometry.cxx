@@ -40,18 +40,6 @@ namespace extractor
         if (i < fTPCDriftDistances.size()) { return fTPCDriftDistances[i]; }
         else { return fTPCDriftDistances[0]; }
     }
-    BoundingBox DetectorGeometry::GetTotalTPCBox()        
-    { 
-        return fTotalTPCBox; 
-    }
-    BoundingBox DetectorGeometry::GetTotalActiveTPCBox()  
-    { 
-        return fTotalActiveTPCBox; 
-    }
-    double DetectorGeometry::GetTotalTPCMass()            
-    { 
-        return fTotalTPCMass; 
-    }
     ///////////////////////////////////////////////////////////////////////////////////////
     DetectorGeometry::DetectorGeometry(const std::string name)
     : sName(name)
