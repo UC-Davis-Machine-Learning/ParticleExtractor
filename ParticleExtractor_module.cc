@@ -57,6 +57,7 @@
 // local includes
 #include "Configuration.h"
 #include "DetectorGeometry.h"
+#include "MCNeutronCaptures.h"
 
 namespace extractor
 {
@@ -88,13 +89,13 @@ namespace extractor
          *  by the directories for each type.
          */ 
         art::ServiceHandle<art::TFileService> fTFileService;
-        // geometry information
-        DetectorGeometry* fGeometry = DetectorGeometry::getInstance("ParticleExtractor");
-
         /// TTrees
         TTree *fMetaTree;
-        
 
+        // geometry information
+        DetectorGeometry* fGeometry = DetectorGeometry::getInstance("ParticleExtractor");
+        // MC neutron captures
+        MCNeutronCaptures fMCNeutronCaptures;
     };
 
     // constructor
