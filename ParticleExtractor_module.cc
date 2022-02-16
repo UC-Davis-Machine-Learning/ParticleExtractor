@@ -129,15 +129,15 @@ namespace extractor
                 << " have different numbers of entries, but must be the same!"
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
-        for (auto item : fMCEdepPDGCodes)
+        for (size_t i = 0; i < fMCEdepPDGTypes.size(); i++)
         {
             if (std::find(
                     allowed_mc_edep_types.begin(), 
                     allowed_mc_edep_types.end(), 
-                    item) == allowed_mc_edep_types.end())
+                    fMCEdepPDGTypes[i]) == allowed_mc_edep_types.end())
             {
                 throw cet::exception("ParticleExtractor")
-                << " Parameter '" << item << "' is not an allowed type for MCEdepPDGTypes!" 
+                << " Parameter i: '" << fMCEdepPDGTypes[i] << "' is not an allowed type for MCEdepPDGTypes!" 
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
             }
         }
