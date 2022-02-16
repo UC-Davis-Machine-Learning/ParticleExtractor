@@ -59,6 +59,7 @@
 #include "Configuration.h"
 #include "DetectorGeometry.h"
 #include "MCNeutronCaptures.h"
+#include "MCEnergyDeposits.h"
 
 namespace extractor
 {
@@ -80,7 +81,7 @@ namespace extractor
         /// Set of parameters
         Parameters fParameters;
         bool    fFillMCNeutronCaptures;
-        bool    fFillMCEdeps;
+        bool    fFillMCEnergyDeposits;
         std::vector<Int_t> fMCEdepPDGCodes;
         std::vector<std::string> fMCEdepPDGTypes;
 
@@ -100,6 +101,8 @@ namespace extractor
         DetectorGeometry* fGeometry = DetectorGeometry::getInstance("ParticleExtractor");
         // MC neutron captures
         MCNeutronCaptures fMCNeutronCaptures;
+        // MC EnergyDeposits
+        MCEnergyDeposits fMCEnergyDeposits;
     };
 
     // constructor
@@ -116,7 +119,7 @@ namespace extractor
         fIonAndScintProducerLabel = fParameters().IonAndScintProducerLabel();
 
         fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
-        fFillMCEdeps = fParameters().FillMCEdeps();
+        fFillMCEnergyDeposits = fParameters().FillMCEnergyDeposits();
 
         // MC edep information
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
@@ -174,6 +177,9 @@ namespace extractor
         // now pass the list of particles to each of the appropriate submodules
         if (fFillMCNeutronCaptures) {
             fMCNeutronCaptures.processEvent(mcParticles);
+        }
+        if (fFillMCEnergyDeposits) {
+            fMCEnergyDeposits.processEvent(mcParticles, mcEnergyDeposit);
         }
         
     }

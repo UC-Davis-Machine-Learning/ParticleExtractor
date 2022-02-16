@@ -61,6 +61,10 @@ namespace extractor
         std::vector<Double_t> neutron_capture_z;    ///< capture location in z
     };
 
+    /**
+     * @brief 
+     * 
+     */
     class MCNeutronCaptures
     {
     public:

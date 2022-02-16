@@ -9,7 +9,7 @@ ParticleExtractor:
 
     FillMCNeutronCaptures:  true
     
-    FillMCEdeps:            true
+    FillMCEnergyDeposits:   true
     MCEdepPDGCodes:         [2112, 13]
     MCEdepTypes:            ['daughters', 'all']
 }

@@ -62,9 +62,9 @@ namespace extractor
             fhicl::Comment("Whether to save neutron capture locations.")
         };
 
-        fhicl::Atom<bool> FillMCEdeps
+        fhicl::Atom<bool> FillMCEnergyDeposits
         {
-            fhicl::Name("FillMCEdeps"),
+            fhicl::Name("FillMCEnergyDeposits"),
             fhicl::Comment("Whether to save MC edep information.")
         };
         /**
