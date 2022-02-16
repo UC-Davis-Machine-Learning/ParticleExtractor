@@ -120,7 +120,7 @@ namespace extractor
 
         // MC edep information
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
-        fMCEdepPDGTypes = fParameters().MCEdepPDGType();
+        fMCEdepPDGTypes = fParameters().MCEdepPDGTypes();
         // check for errors
         if (fMCEdepPDGCodes.size() == fMCEdepPDGType.size())
         {
