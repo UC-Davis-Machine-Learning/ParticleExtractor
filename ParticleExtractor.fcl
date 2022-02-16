@@ -3,9 +3,13 @@ BEGIN_PROLOG
 ParticleExtractor:
 {
     module_type:            "ParticleExtractor"
+
     FillMCNeutronCaptures:  true
     LArGeantProducerLabel:  "largeant"
-    PDGCodes:               [2112, 11, 22]
+
+    FillMCEdeps:            true
+    MCEdepPDGCodes:         [2112, 13]
+    MCEdepTypes:            ['daughters', 'all']
 }
 
 END_PROLOG

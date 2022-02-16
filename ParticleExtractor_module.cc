@@ -53,6 +53,7 @@
 
 // C includes
 #include <cmath>
+#include <algorithm>
 
 // local includes
 #include "Configuration.h"
@@ -79,7 +80,8 @@ namespace extractor
         /// Set of parameters
         Parameters fParameters;
         bool    fFillMCNeutronCaptures;
-        std::vector<Int_t> fPDGCodes;
+        std::vector<Int_t> fMCEdepPDGCodes;
+        std::vector<std::string> fMCEdepPDGTypes;
 
         // producer labels
         art::InputTag fLArGeantProducerLabel;
@@ -112,9 +114,29 @@ namespace extractor
         // Producer labels
         fLArGeantProducerLabel = fParameters().LArGeantProducerLabel();
 
-        // PDG codes
-        fPDGCodes = fParameters().PDGCodes();
-
+        // MC edep information
+        fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
+        fMCEdepPDGTypes = fParameters().MCEdepPDGType();
+        // check for errors
+        if (fMCEdepPDGCodes.size() == fMCEdepPDGType.size())
+        {
+            throw cet::exception("ParticleExtractor")
+                << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGType'"
+                << " have different numbers of entries, but must be the same!"
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        for (auto item : *fMCEdepPDGCodes)
+        {
+            if (std::find(
+                    allowed_mc_edep_types.begin(), 
+                    allowed_mc_edep_types.end(), 
+                    item) == allowed_mc_edep_types.end())
+            {
+                throw cet::exception("ParticleExtractor")
+                << " Parameter '" << item << "' is not an allowed type for MCEdepPDGTypes!" 
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+            }
+        }
     }
 
     // begin job
@@ -143,10 +165,13 @@ namespace extractor
         }
         // get the list of MC particles from Geant4
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
+        auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
+
         // now pass the list of particles to each of the appropriate submodules
         if (fFillMCNeutronCaptures) {
             fMCNeutronCaptures.processEvent(mcParticles);
         }
+        
     }
 
     // end job

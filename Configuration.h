@@ -57,17 +57,35 @@ namespace extractor
             fhicl::Comment("Tag of the input data product for the largeant side of the simulation.")
         };
 
+        fhicl::Atom<bool> FillMCEdeps
+        {
+            fhicl::Name("FillMCEdeps"),
+            fhicl::Comment("Whether to save MC edep information.")
+        };
         /**
          * @brief Set of pdg codes to extract from each event
          * 
          */
-        fhicl::Sequence<int> PDGCodes
+        fhicl::Sequence<int> MCEdepPDGCodes
         {
-            fhicl::Name("PDGCodes"),
+            fhicl::Name("MCEdepPDGCodes"),
             fhicl::Comment("PDG IDs of the particles to extracted.")
+        };
+        fhicl::Sequence<int> MCEdepPDGTypes
+        {
+            fhicl::Name("MCEdepPDGTypes"),
+            fhicl::Comment("Heirarchy of particles to keep.")
         };
 
     };
 
     using Parameters = art::EDAnalyzer::Table<Configuration>;
+
+    // allowed values of MCEdepPDGType
+    std::vector<std::string> allowed_mc_edep_types = 
+    {
+        "parent",
+        "daughters",
+        "all"
+    };
 }

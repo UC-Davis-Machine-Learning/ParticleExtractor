@@ -267,6 +267,11 @@ namespace extractor
                     neutronStatistics.total_distance.emplace_back(total_distance);
                     neutronStatistics.cryo_distance.emplace_back(cryo_distance);
                     neutronStatistics.tpc_distance.emplace_back(tpc_distance);
+                    /**
+                     * TODO:
+                     * get lifetimes
+                     * accumulate trajectories
+                     */
                 }
             }
         }
