@@ -64,7 +64,7 @@ namespace extractor
             for (auto particle : *mcParticles)
             {
                 parentDaughterMap[particle.TrackId()] = particle.Mother();
-                particlePDGMap[particle.TrackId()] = particle.PDG();
+                particlePDGMap[particle.TrackId()] = particle.PdgCode();
             }
             /**
              * Now we work through the energy deposit list, looking first
@@ -87,16 +87,16 @@ namespace extractor
                 }
                 // see if the ancestors pdg code is in the list
                 Int_t pdg_index = std::find(
-                    fMCEdepPDGCodes.begin(), 
-                    fMCEdepPDGCodes.end(), 
+                    fPDGCodes.begin(), 
+                    fPDGCodes.end(), 
                     particlePDGMap[track_id]
                 )
-                if (pdg_index != fMCEdepPDGCodes.end())
+                if (pdg_index != fPDGCodes.end())
                 {
                     if (
-                        (fMCEdepPDGLevels[pdg_index] == 0 and level == 0) or
-                        (fMCEdepPDGLevels[pdg_index] == 1 and level != 0) or
-                        (fMCEdepPDGLevels[pdg_index] == 2)
+                        (fPDGLevels[pdg_index] == 0 and level == 0) or
+                        (fPDGLevels[pdg_index] == 1 and level != 0) or
+                        (fPDGLevels[pdg_index] == 2)
                     )
                     {
                         fMCEdep.pdg.emplace_back(particlePDGMap[track_id]);
