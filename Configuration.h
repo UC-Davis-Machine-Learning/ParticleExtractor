@@ -76,7 +76,7 @@ namespace extractor
             fhicl::Name("MCEdepPDGCodes"),
             fhicl::Comment("PDG IDs of the particles to extracted.")
         };
-        fhicl::Sequence<int> MCEdepPDGTypes
+        fhicl::Sequence<std::string> MCEdepPDGTypes
         {
             fhicl::Name("MCEdepPDGTypes"),
             fhicl::Comment("Heirarchy of particles to keep.")
