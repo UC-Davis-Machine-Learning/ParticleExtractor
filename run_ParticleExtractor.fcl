@@ -18,9 +18,10 @@ services:
     TimeTracker:    {}
     RandomNumberGenerator:  {}
     MemoryTracker:          {}
-    @table::dunefd_1x2x6_simulation_services_refactored
+    #@table::dunefd_1x2x6_simulation_services_refactored
+    @table::protodune_refactored_simulation_services
     FileCatalogMetadata:    @local::art_file_catalog_mc
-    Geometry:       @local::dune10kt_1x2x6_v4_refactored_geo
+    #Geometry:       @local::dune10kt_1x2x6_v4_refactored_geo
 }
 
 physics:
@@ -33,5 +34,5 @@ physics:
     end_paths: [ analysis ]
 }
 
-source.fileNames:                       ["outputs/g4_output.root"]
-source.maxEvents:                       1000
+source.fileNames:                       ["/dune/data2/users/ncarrara/NeutronCalibrationLArSoft/ProtoDUNE-I/UNet/outputs/g4_output.root"]
+source.maxEvents:                       1

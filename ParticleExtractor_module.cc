@@ -119,7 +119,7 @@ namespace extractor
     // begin job
     void ParticleExtractor::beginJob()
     {
-        
+        fGeometry->FillTTree();
     }
 
     // analyze

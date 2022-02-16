@@ -40,6 +40,18 @@ namespace extractor
         if (i < fTPCDriftDistances.size()) { return fTPCDriftDistances[i]; }
         else { return fTPCDriftDistances[0]; }
     }
+    BoundingBox DetectorGeometry::GetTotalTPCBox()        
+    { 
+        return fTotalTPCBox; 
+    }
+    BoundingBox DetectorGeometry::GetTotalActiveTPCBox()  
+    { 
+        return fTotalActiveTPCBox; 
+    }
+    double DetectorGeometry::GetTotalTPCMass()            
+    { 
+        return fTotalTPCMass; 
+    }
     ///////////////////////////////////////////////////////////////////////////////////////
     DetectorGeometry::DetectorGeometry(const std::string name)
     : sName(name)
@@ -93,19 +105,7 @@ namespace extractor
     // get volume information for a point
     DetectorVolume DetectorGeometry::getVolume(std::vector<double> position)
     {
-
-        fMaterialPOI.SetCoordinates(position[0],position[1],position[2]);
-        // get the volume information
-        //std::cout << "volname: " << fGeometryCore->VolumeName(fMaterialPOI) << std::endl;
-        std::string volumeName = fGeometryCore->VolumeName(fMaterialPOI);
-        VolumeType volumeType = fVolumeTypeMap[volumeName];
-        // get the current material information
-        fMaterial = fGeometryService->Material(fMaterialPOI);
-        double material = fMaterial->GetZ();
-        std::string materialName = fMaterial->GetName();
-        //std::cout << "mat name: " << fMaterial->GetName() << std::endl;
-        // return the constructed volume 
-        return DetectorVolume(volumeType, volumeName, materialName, material);
+        return getVolume(position[0],position[1],position[2]);
     }
     // get volume information for a point
     DetectorVolume DetectorGeometry::getVolume(double x, double y, double z)
@@ -155,6 +155,7 @@ namespace extractor
     void DetectorGeometry::FillTTree()
     {
         // add geometry info
+        fGeometryTree->Branch("instance_name", &sName);
         fGeometryTree->Branch("world_name", &fWorldName);
         fGeometryTree->Branch("world_box_ranges", &(fWorldBox), "x_min/D:x_max/D:y_min/D:y_max/D:z_min/D:z_max/D");
         fGeometryTree->Branch("detector_name", &fDetectorName);
