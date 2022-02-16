@@ -13,7 +13,7 @@ ParticleExtractor:
     # MC Edep parameters
     FillMCEnergyDeposits:   true
     MCEdepPDGCodes:         [2112, 13]
-    MCEdepPDGLevels:        ['daughters', 'all']
+    MCEdepPDGLevels:        ["daughters", "all"]
 }
 
 END_PROLOG
