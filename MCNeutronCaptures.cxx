@@ -172,7 +172,7 @@ namespace extractor
                         }
                         else if (current_volume.volume_type == 2) 
                         {
-                            if (entered_tpc == false) 
+                            if (entered_tpc == false and exited_tpc == false) 
                             {
                                 entered_tpc = true;
                                 entered_tpc_step = i;
