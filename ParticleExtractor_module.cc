@@ -144,7 +144,7 @@ namespace extractor
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
         // now pass the list of particles to each of the appropriate submodules
         if (fFillMCNeutronCaptures) {
-            //fMCNeutronCaptures.process(mcParticles);
+            fMCNeutronCaptures.process(mcParticles);
         }
     }
 
