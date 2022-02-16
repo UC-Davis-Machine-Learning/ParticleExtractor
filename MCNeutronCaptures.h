@@ -28,13 +28,21 @@ namespace extractor
      */
     struct MCNeutronStatistics
     {
+        std::vector<Int_t> neutron_ids;             ///< track id of each neutron
+        std::vector<bool> primary;                  ///< wether neutron is a primary
+
+        std::vector<Int_t> total_number_steps;      ///< total number of steps in the trajectory
+        std::vector<Int_t> cryo_number_steps;       ///< number of steps inside the Cryostat but not TPC
+        std::vector<Int_t> tpc_number_steps;        ///< number of steps inside TPC
+        std::vector<Int_t> lar_number_steps;        ///< number of steps in LAr
+
+        std::vector<Double_t> total_distance;       ///< total distance traveled
+        std::vector<Double_t> cryo_distance;        ///< total distance traveled inside Cryostat but not TPC
+        std::vector<Double_t> tpc_distance;         ///< total distance traveled inside TPC
+
         std::vector<Double_t> neutron_capture_x;    ///< capture location in x
         std::vector<Double_t> neutron_capture_y;    ///< capture location in y
         std::vector<Double_t> neutron_capture_z;    ///< capture location in z
-        std::vector<Int_t> neutron_ids;             ///< track id of each neutron
-        std::vector<Int_t> total_number_steps;      ///< total number of steps in the trajectory
-        std::vector<Int_t> tpc_number_steps;        ///< number of steps inside TPC
-        std::vector<Int_t> lar_number_steps;        ///< number of steps in LAr
     };
 
     class MCNeutronCaptures
