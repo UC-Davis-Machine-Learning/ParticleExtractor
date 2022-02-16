@@ -30,12 +30,16 @@ namespace extractor
     {
         std::vector<Int_t> neutron_ids;             ///< track id of each neutron
         std::vector<bool> primary;                  ///< wether neutron is a primary
+        std::vector<bool> capture;                  ///< wether neutron is captured
+        std::vector<bool> inellastic;               ///< wether neutron is inellastically scattered
 
         std::vector<Int_t> total_number_steps;      ///< total number of steps in the trajectory
         std::vector<Int_t> cryo_number_steps;       ///< number of steps inside the Cryostat but not TPC
         std::vector<Int_t> tpc_number_steps;        ///< number of steps inside TPC
         std::vector<Int_t> lar_number_steps;        ///< number of steps in LAr
 
+        std::vector<Double_t> tpc_avg_material;     ///< the average material Z number for tpc steps
+        
         std::vector<Double_t> total_distance;       ///< total distance traveled
         std::vector<Double_t> cryo_distance;        ///< total distance traveled inside Cryostat but not TPC
         std::vector<Double_t> tpc_distance;         ///< total distance traveled inside TPC

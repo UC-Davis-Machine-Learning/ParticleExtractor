@@ -17,12 +17,18 @@ namespace extractor
         fMCNeutronCapturesTree = fTFileService->make<TTree>("mc_neutron_captures", "mc_neutron_captures");
         fMCNeutronCapturesTree->Branch("neutron_ids", &fMCNeutronStatistics.neutron_ids);
         fMCNeutronCapturesTree->Branch("primary", &fMCNeutronStatistics.primary);
+        fMCNeutronCapturesTree->Branch("capture", &fMCNeutronStatistics.capture);
+        fMCNeutronCapturesTree->Branch("inellastic", &fMCNeutronStatistics.inellastic);
 
         fMCNeutronCapturesTree->Branch("total_number_steps", &fMCNeutronStatistics.total_number_steps);
+        fMCNeutronCapturesTree->Branch("cryo_number_steps", &fMCNeutronStatistics.cryo_number_steps);
         fMCNeutronCapturesTree->Branch("tpc_number_steps", &fMCNeutronStatistics.tpc_number_steps);
         fMCNeutronCapturesTree->Branch("lar_number_steps", &fMCNeutronStatistics.lar_number_steps);
 
+        fMCNeutronCapturesTree->Branch("tpc_avg_material", &fMCNeutronStatistics.tpc_avg_material);
+
         fMCNeutronCapturesTree->Branch("total_distance", &fMCNeutronStatistics.total_distance);
+        fMCNeutronCapturesTree->Branch("cryo_distance", &fMCNeutronStatistics.cryo_distance);
         fMCNeutronCapturesTree->Branch("tpc_distance", &fMCNeutronStatistics.tpc_distance);
 
         fMCNeutronCapturesTree->Branch("neutron_capture_x", &fMCNeutronStatistics.neutron_capture_x);
@@ -55,12 +61,19 @@ namespace extractor
                     /// get capture locations
                     if (particle.EndProcess() == "nCapture")
                     {
+                        neutronStatistics.capture.emplace_back(True);
+                        neutronStatistics.inellastic.emplace_back(False);
                         neutronStatistics.neutron_capture_x.emplace_back(particle.EndX());
                         neutronStatistics.neutron_capture_y.emplace_back(particle.EndY());
                         neutronStatistics.neutron_capture_z.emplace_back(particle.EndZ());
                     }
                     else
                     {
+                        std::cout << particle.EndProcess() << std::endl;
+                        neutronStatistics.capture.empalce_back(False);
+                        if (particle.EndProcess() == "nInellastic") {
+                            neutronStatistics.inellastic.emplace_back(True);
+                        }
                         neutronStatistics.neutron_capture_x.emplace_back(-1e9);
                         neutronStatistics.neutron_capture_y.emplace_back(-1e9);
                         neutronStatistics.neutron_capture_z.emplace_back(-1e9);
@@ -69,9 +82,12 @@ namespace extractor
                     Int_t cryo_number_steps = 0;
                     Int_t tpc_number_steps = 0;
                     Int_t lar_number_steps = 0;
+
                     Double_t total_distance = 0.0;
                     Double_t cryo_distance = 0.0;
                     Double_t tpc_distance = 0.0;
+
+                    Double_t tpc_avg_material = 0.0;
                     for (size_t i = 0; i < particle.NumberTrajectoryPoints(); i++)
                     {
                         /// check what volume the step is in
@@ -84,6 +100,7 @@ namespace extractor
                         else if (current_volume.volume_type == 2) 
                         {
                             tpc_number_steps += 1;
+                            tpc_avg_material += volume.material;
                             if (current_volume.material_name == "LAr") 
                             {
                                 lar_number_steps += 1;
@@ -137,9 +154,14 @@ namespace extractor
                         }
                     }
                     // accumulate step results
+                    tpc_avg_material /= tpc_number_steps;
+
                     neutronStatistics.cryo_number_steps.emplace_back(cryo_number_steps);
                     neutronStatistics.tpc_number_steps.emplace_back(tpc_number_steps);
                     neutronStatistics.lar_number_steps.emplace_back(lar_number_steps);
+
+                    neutronStatistics.tpc_avg_material.emplace_back(tpc_avg_material);
+
                     neutronStatistics.total_distance.emplace_back(total_distance);
                     neutronStatistics.cryo_distance.emplace_back(cryo_distance);
                     neutronStatistics.tpc_distance.emplace_back(tpc_distance);
