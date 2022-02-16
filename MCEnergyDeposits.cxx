@@ -86,7 +86,7 @@ namespace extractor
                     mother = parentDaughterMap[mother];
                 }
                 // see if the ancestors pdg code is in the list
-                Int_t pdg_index = std::find(
+                auto pdg_index = std::find(
                     fPDGCodes.begin(), 
                     fPDGCodes.end(), 
                     particlePDGMap[track_id]

@@ -19,6 +19,7 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
 #include <vector>
+#include <algorithm>
 
 #include "DetectorGeometry.h"
 
