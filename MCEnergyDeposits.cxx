@@ -14,6 +14,7 @@ namespace extractor
 {
     MCEnergyDeposits::MCEnergyDeposits()
     {
+        fMCEnergyDepositsTree = fTFileService->make<TTree>("mc_energy_deposits", "mc_energy_deposits");
         fMCEnergyDepositsTree->Branch("pdg", &fMCEdep.pdg);
         fMCEnergyDepositsTree->Branch("track_id", &fMCEdep.track_id);
         fMCEnergyDepositsTree->Branch("ancestor_id", &fMCEdep.ancestor_id);
