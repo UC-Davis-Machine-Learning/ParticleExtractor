@@ -76,9 +76,9 @@ namespace extractor
             fhicl::Name("MCEdepPDGCodes"),
             fhicl::Comment("PDG IDs of the particles to extracted.")
         };
-        fhicl::Sequence<std::string> MCEdepPDGTypes
+        fhicl::Sequence<std::string> MCEdepPDGLevels
         {
-            fhicl::Name("MCEdepPDGTypes"),
+            fhicl::Name("MCEdepPDGLevels"),
             fhicl::Comment("Heirarchy of particles to keep.")
         };
 
@@ -87,7 +87,7 @@ namespace extractor
     using Parameters = art::EDAnalyzer::Table<Configuration>;
 
     // allowed values of MCEdepPDGType
-    std::vector<std::string> allowed_mc_edep_types = 
+    std::vector<std::string> allowed_mc_edep_levels = 
     {
         "parent",
         "daughters",

@@ -55,6 +55,10 @@ namespace extractor
         TTree *fMCNeutronCapturesTree;
         // geometry information
         DetectorGeometry* fGeometry = DetectorGeometry::getInstance("MCEnergyDeposits");
+
+        // pdg codes to construct
+        std::vector<Int_t> fPDGCodes;
+        std::vector<Int_t> fPDGLevel;
         
         // struct for holding event information
         MCEdep fMCEdep;

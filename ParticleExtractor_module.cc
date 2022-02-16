@@ -83,7 +83,7 @@ namespace extractor
         bool    fFillMCNeutronCaptures;
         bool    fFillMCEnergyDeposits;
         std::vector<Int_t> fMCEdepPDGCodes;
-        std::vector<std::string> fMCEdepPDGTypes;
+        std::vector<std::string> fMCEdepPDGLevels;
 
         // producer labels
         art::InputTag fLArGeantProducerLabel;
@@ -123,24 +123,24 @@ namespace extractor
 
         // MC edep information
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
-        fMCEdepPDGTypes = fParameters().MCEdepPDGTypes();
+        fMCEdepPDGLevels = fParameters().MCEdepPDGLevels();
         // check for errors
-        if (fMCEdepPDGCodes.size() == fMCEdepPDGTypes.size())
+        if (fMCEdepPDGCodes.size() == fMCEdepPDGLevels.size())
         {
             throw cet::exception("ParticleExtractor")
-                << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGTypes'"
+                << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGLevels'"
                 << " have different numbers of entries, but must be the same!"
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
-        for (size_t i = 0; i < fMCEdepPDGTypes.size(); i++)
+        for (size_t i = 0; i < fMCEdepPDGLevels.size(); i++)
         {
             if (std::find(
-                    allowed_mc_edep_types.begin(), 
-                    allowed_mc_edep_types.end(), 
-                    fMCEdepPDGTypes[i]) == allowed_mc_edep_types.end())
+                    allowed_mc_edep_levels.begin(), 
+                    allowed_mc_edep_levels.end(), 
+                    fMCEdepPDGLevels[i]) == allowed_mc_edep_levels.end())
             {
                 throw cet::exception("ParticleExtractor")
-                << " Parameter i: '" << fMCEdepPDGTypes[i] << "' is not an allowed type for MCEdepPDGTypes!" 
+                << " Parameter i: '" << fMCEdepPDGLevels[i] << "' is not an allowed type for MCEdepPDGLevels!" 
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
             }
         }

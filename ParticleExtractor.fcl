@@ -3,15 +3,17 @@ BEGIN_PROLOG
 ParticleExtractor:
 {
     module_type:            "ParticleExtractor"
-
+    # module labels
     LArGeantProducerLabel:      "largeant"
     IonAndScintProducerLabel:   "IonAndScint"
 
+    # MC Neutron capture parameters
     FillMCNeutronCaptures:  true
     
+    # MC Edep parameters
     FillMCEnergyDeposits:   true
     MCEdepPDGCodes:         [2112, 13]
-    MCEdepTypes:            ['daughters', 'all']
+    MCEdepLevels:           ['daughters', 'all']
 }
 
 END_PROLOG
