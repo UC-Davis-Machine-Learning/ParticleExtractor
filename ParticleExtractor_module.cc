@@ -125,7 +125,7 @@ namespace extractor
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
         fMCEdepPDGLevels = fParameters().MCEdepPDGLevels();
         // check for errors
-        if (fMCEdepPDGCodes.size() == fMCEdepPDGLevels.size())
+        if (fMCEdepPDGCodes.size() != fMCEdepPDGLevels.size())
         {
             throw cet::exception("ParticleExtractor")
                 << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGLevels'"
