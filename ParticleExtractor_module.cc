@@ -129,7 +129,8 @@ namespace extractor
         {
             throw cet::exception("ParticleExtractor")
                 << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGLevels'"
-                << " have different numbers of entries, but must be the same!"
+                << " have different numbers of entries, (" << fMCEdepPDGCodes.size() << " and "
+                << fMCEdepPDGLevels.size() << ") but must be the same!\n"
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
         for (size_t i = 0; i < fMCEdepPDGLevels.size(); i++)
