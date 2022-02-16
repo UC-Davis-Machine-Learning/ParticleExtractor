@@ -70,7 +70,7 @@ namespace extractor
                     else
                     {
                         std::cout << particle.EndProcess() << std::endl;
-                        neutronStatistics.capture.empalce_back(false);
+                        neutronStatistics.capture.emplace_back(false);
                         if (particle.EndProcess() == "nInellastic") {
                             neutronStatistics.inellastic.emplace_back(true);
                         }
