@@ -29,7 +29,7 @@ namespace extractor
     {
         if (mcParticles.isValid())
         {
-            NeutronStatistics neutronStatistics;
+            MCNeutronStatistics neutronStatistics;
             for (auto particle : *mcParticles)
             {
                 // check if the particle is a neutron
