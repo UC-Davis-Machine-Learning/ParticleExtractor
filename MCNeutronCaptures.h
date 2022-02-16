@@ -40,6 +40,16 @@ namespace extractor
         std::vector<Int_t> tpc_number_steps;        ///< number of steps inside TPC
         std::vector<Int_t> lar_number_steps;        ///< number of steps in LAr
 
+        std::vector<bool> entered_tpc;              ///< wether the neutron has entered the tpc
+        std::vector<Int_t> entered_tpc_step;        ///< time step when neutron has entered the tpc
+        std::vector<Double_t> entered_tpc_time;     ///< time when neutron has entered tpc
+        std::vector<Double_t> entered_tpc_energy;   ///< energy when neutron has entered tpc
+
+        std::vector<bool> exited_tpc;               ///< wether the neutron has exited the tpc
+        std::vector<Int_t> exited_tpc_step;         ///< time step when neutron has exited the tpc
+        std::vector<Double_t> exited_tpc_time;      ///< time when neutron has exited tpc
+        std::vector<Double_t> exited_tpc_energy;    ///< energy when neutron has entered tpc
+
         std::vector<Double_t> tpc_avg_material;     ///< the average material Z number for tpc steps
 
         std::vector<Double_t> total_distance;       ///< total distance traveled
