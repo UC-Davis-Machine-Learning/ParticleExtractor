@@ -27,9 +27,9 @@ namespace extractor
 
     void MCNeutronCaptures::processEvent(art::ValidHandle<std::vector<simb::MCParticle>> mcParticles)
     {
+        MCNeutronStatistics neutronStatistics;
         if (mcParticles.isValid())
         {
-            MCNeutronStatistics neutronStatistics;
             for (auto particle : *mcParticles)
             {
                 // check if the particle is a neutron
