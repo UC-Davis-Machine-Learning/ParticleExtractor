@@ -122,10 +122,10 @@ namespace extractor
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
         fMCEdepPDGTypes = fParameters().MCEdepPDGTypes();
         // check for errors
-        if (fMCEdepPDGCodes.size() == fMCEdepPDGType.size())
+        if (fMCEdepPDGCodes.size() == fMCEdepPDGTypes.size())
         {
             throw cet::exception("ParticleExtractor")
-                << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGType'"
+                << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGTypes'"
                 << " have different numbers of entries, but must be the same!"
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
