@@ -129,7 +129,7 @@ namespace extractor
                 << " have different numbers of entries, but must be the same!"
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
-        for (auto item : *fMCEdepPDGCodes)
+        for (auto item : fMCEdepPDGCodes)
         {
             if (std::find(
                     allowed_mc_edep_types.begin(), 
