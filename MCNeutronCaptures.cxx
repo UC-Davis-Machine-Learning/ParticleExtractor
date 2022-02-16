@@ -66,12 +66,12 @@ namespace extractor
                         neutronStatistics.neutron_capture_z.emplace_back(-1e9);
                     }
                     /// iterate over trajectory
-                    Int_t cryo_number_steps = 0;
-                    Int_t tpc_number_steps = 0;
-                    Int_t lar_number_steps = 0;
-                    Double_t total_distance = 0.0;
-                    Double_t cryo_distance = 0.0;
-                    Double_t tpc_distance = 0.0;
+                    // Int_t cryo_number_steps = 0;
+                    // Int_t tpc_number_steps = 0;
+                    // Int_t lar_number_steps = 0;
+                    // Double_t total_distance = 0.0;
+                    // Double_t cryo_distance = 0.0;
+                    // Double_t tpc_distance = 0.0;
                     for (size_t i = 0; i < particle.NumberTrajectoryPoints(); i++)
                     {
                         /// check what volume the step is in
