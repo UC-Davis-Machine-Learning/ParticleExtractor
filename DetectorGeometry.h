@@ -49,12 +49,24 @@
 #include "TGeoElement.h"
 
 // std includes
+#include <math.h>
 #include <string>
 #include <vector>
 #include <memory>
 
 namespace extractor 
 {
+    inline Double_t euclidean_distance(
+        Double_t x1, Double_t y1, Double_t z1,
+        Double_t x2, Double_t y2, Double_t z2
+    )
+    {
+        return sqrt(
+            (x1 - x2)*(x1 - x2) + 
+            (y1 - y2)*(y1 - y2) + 
+            (z1 - z2)*(z1 - z2)
+        );
+    }
     // list of materials in the detector
     enum MaterialList 
     {

@@ -66,20 +66,83 @@ namespace extractor
                         neutronStatistics.neutron_capture_z.emplace_back(-1e9);
                     }
                     /// iterate over trajectory
-                    // Int_t cryo_number_steps = 0;
-                    // Int_t tpc_number_steps = 0;
-                    // Int_t lar_number_steps = 0;
-                    // Double_t total_distance = 0.0;
-                    // Double_t cryo_distance = 0.0;
-                    // Double_t tpc_distance = 0.0;
+                    Int_t cryo_number_steps = 0;
+                    Int_t tpc_number_steps = 0;
+                    Int_t lar_number_steps = 0;
+                    Double_t total_distance = 0.0;
+                    Double_t cryo_distance = 0.0;
+                    Double_t tpc_distance = 0.0;
                     for (size_t i = 0; i < particle.NumberTrajectoryPoints(); i++)
                     {
                         /// check what volume the step is in
-                        DetectorVolume volume = fGeometry->getVolume(
+                        DetectorVolume current_volume = fGeometry->getVolume(
                             particle.Vx(i), particle.Vy(i), particle.Vz(i)
                         );
-                        std::cout << volume.volume_type << "," << volume.volume_name << "," << volume.material_name << "," << volume.material << std::endl;
+                        if (current_volume.volume_type == 1) {
+                            cryo_number_steps += 1;
+                        }
+                        else if (current_volume.volume_type == 2) 
+                        {
+                            tpc_number_steps += 1;
+                            if (current_volume.material_name == "LAr") 
+                            {
+                                lar_number_steps += 1;
+                            }
+                        }
+                        /// compute distances and average material interactions
+                        if (i > 0)
+                        {
+                            DetectorVolume previous_volume = fGeometry->getVolume(
+                                particle.Vx(i-1), particle.Vy(i-1), particle.Vz(i-1)
+                            );
+                            Double_t step_distance = euclidean_distance(
+                                particle.Vx(i), particle.Vy(i), particle.Vz(i),
+                                particle.Vx(i-1), particle.Vy(i-1), particle.Vz(i-1)
+                            );
+                            total_distance += step_distance;
+                            /**
+                             * Check wether the last and current step are in the same
+                             * volume type and if so, add that distance to that type,
+                             * otherwise, divide the distance in half for the previous
+                             * and current steps (basically assume an average distance).
+                             */
+                            // Cryostat (volume_type == 1)
+                            if (current_volume.volume_type == 1)
+                            {
+                                if (previous_volume.volume_type == 1) {
+                                    cryo_distance += step_distance;
+                                }
+                                else 
+                                {
+                                    cryo_distance += step_distance / 2.0;
+                                    if (previous_volume.volume_type == 2) {
+                                        tpc_distance += step_distance / 2.0;
+                                    }
+                                }
+                            }
+                            // TPC (volume_type == 2)
+                            else if (current_volume.volume_type == 2)
+                            {
+                                if (previous_volume.volume_type == 2) {
+                                    tpc_distance += step_distance;
+                                }
+                                else
+                                {
+                                    tpc_distance += step_distance / 2.0;
+                                    if (previous_volume.volume_type == 1) {
+                                        cryo_distance += step_distance / 2.0;
+                                    }
+                                }
+                            }
+                        }
                     }
+                    // accumulate step results
+                    neutronStatistics.cryo_number_steps.emplace_back(cryo_number_steps);
+                    neutronStatistics.tpc_number_steps.emplace_back(tpc_number_steps);
+                    neutronStatistics.lar_number_steps.emplace_back(lar_number_steps);
+                    neutronStatistics.total_distance.emplace_back(total_distance);
+                    neutronStatistics.cryo_distance.emplace_back(cryo_distance);
+                    neutronStatistics.tpc_distance.emplace_back(tpc_distance);
                 }
             }
         }
