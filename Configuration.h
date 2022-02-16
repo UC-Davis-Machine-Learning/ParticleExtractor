@@ -63,8 +63,8 @@ namespace extractor
          */
         fhicl::Sequence<int> PDGCodes
         {
-            Name("PDGCodes"),
-            Comment("PDG IDs of the particles to extracted.")
+            fhicl::Name("PDGCodes"),
+            fhicl::Comment("PDG IDs of the particles to extracted.")
         };
 
     };
