@@ -18,7 +18,9 @@ namespace extractor
         fMCNeutronCapturesTree->Branch("neutron_ids", &fMCNeutronStatistics.neutron_ids);
         fMCNeutronCapturesTree->Branch("primary", &fMCNeutronStatistics.primary);
         fMCNeutronCapturesTree->Branch("capture", &fMCNeutronStatistics.capture);
-        fMCNeutronCapturesTree->Branch("inellastic", &fMCNeutronStatistics.inellastic);
+        fMCNeutronCapturesTree->Branch("capture_tpc", &fMCNeutronStatistics.capture_tpc);
+        fMCNeutronCapturesTree->Branch("capture_tpc_lar", &fMCNeutronStatistics.capture_tpc_lar);
+        fMCNeutronCapturesTree->Branch("inelastic", &fMCNeutronStatistics.inelastic);
 
         fMCNeutronCapturesTree->Branch("total_number_steps", &fMCNeutronStatistics.total_number_steps);
         fMCNeutronCapturesTree->Branch("cryo_number_steps", &fMCNeutronStatistics.cryo_number_steps);
@@ -62,17 +64,34 @@ namespace extractor
                     if (particle.EndProcess() == "nCapture")
                     {
                         neutronStatistics.capture.emplace_back(true);
-                        neutronStatistics.inellastic.emplace_back(false);
+                        // get the ending volume
+                        DetectorVolume ending_volume = fGeometry->getVolume(
+                            particle.EndX(), particle.EndY(), particle.EndZ()
+                        );
+                        if (ending_volume.volume_type == 2) {
+                            neutronStatistics.capture_tpc.emplace_back(true);
+                        }
+                        else {
+                            neutronStatistics.capture_tpc.emplace_back(false);
+                        }
+                        if (ending_volume.material_name == "LAr") {
+                            neutronStatistics.capture_tpc_lar.emplace_back(true);
+                        }
+                        else {
+                            neutronStatistics.capture_tpc_lar.emplace_back(false);
+                        }
+                        neutronStatistics.inelastic.emplace_back(false);
                         neutronStatistics.neutron_capture_x.emplace_back(particle.EndX());
                         neutronStatistics.neutron_capture_y.emplace_back(particle.EndY());
                         neutronStatistics.neutron_capture_z.emplace_back(particle.EndZ());
                     }
                     else
                     {
-                        std::cout << particle.EndProcess() << std::endl;
                         neutronStatistics.capture.emplace_back(false);
-                        if (particle.EndProcess() == "nInellastic") {
-                            neutronStatistics.inellastic.emplace_back(true);
+                        neutronStatistics.capture_tpc.emplace_back(false);
+                        neutronStatistics.capture_tpc_lar.emplace_back(false);
+                        if (particle.EndProcess() == "neutronInelastic") {
+                            neutronStatistics.inelastic.emplace_back(true);
                         }
                         neutronStatistics.neutron_capture_x.emplace_back(-1e9);
                         neutronStatistics.neutron_capture_y.emplace_back(-1e9);
