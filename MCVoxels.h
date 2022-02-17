@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <numeric>
 
 #include "DetectorGeometry.h"
 #include "MCEnergyDeposits.h"

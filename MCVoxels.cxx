@@ -145,7 +145,7 @@ namespace extractor
                 {
                     Int_t arg_max_energy = std::distance(
                         unique_energy.begin(), 
-                        std::max_element(unique_energy.begin(), unique_energy.end()
+                        std::max_element(unique_energy.begin(), unique_energy.end())
                     );
                     voxels.labels.emplace_back(arg_max_energy);
                 }
