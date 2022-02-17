@@ -155,6 +155,6 @@ namespace extractor
             }
         }
         fVoxels = voxels;
-        fMCVoxelTree->Fill();
+        fMCVoxelsTree->Fill();
     }
 }
