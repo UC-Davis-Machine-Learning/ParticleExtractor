@@ -260,7 +260,7 @@ namespace extractor
         {
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(
-                    art::InputTag(fSimChannelProducerLabel, fSimChannelInstanceProducerLabel)
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
                 );
             auto recoHits =  event.getValidHandle<std::vector<recob::Hit>>(fHitProducerLabel);
             auto recoSpacePoints =  event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
@@ -277,7 +277,7 @@ namespace extractor
             fMCVoxels.processEvent(fMCEnergyDeposits);
         }
         if (fFillRecoEnergyDeposits) {
-            fMCRecoEnergyDeposits.processEvent(
+            fRecoEnergyDeposits.processEvent(
                 mcParticles, 
                 mcSimChannels,
                 recoHits,

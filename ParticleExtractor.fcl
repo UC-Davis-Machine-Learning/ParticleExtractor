@@ -27,6 +27,9 @@ ParticleExtractor:
     MCVoxelSize:            4.7
     MCVoxelBoundingBox:     "TPC"
     MCVoxelLabeling:        "largest"   
+
+    # Reco energy deposit parameters
+    FillRecoEnergyDeposits: false
 }
 
 END_PROLOG
