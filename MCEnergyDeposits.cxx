@@ -47,9 +47,22 @@ namespace extractor
         fPDGLevels = levels;
     }
 
+    void MCEnergyDeposits::setBoundingBoxType(std::string volumeType)
+    {
+        if (volumeType == "TPC" or volumeType == "tpc") { 
+            fBoundingBoxType = 2;
+        }
+        else if (volumeType == "Cryo" or volumeType == "cryo") {
+            fBoundingBoxType = 1;
+        }
+        else {
+            fBoundingBoxType = 0;
+        }
+    }
+
     void MCEnergyDeposits::processEvent(
-        art::ValidHandle<std::vector<simb::MCParticle>> mcParticles,
-        art::ValidHandle<std::vector<sim::SimEnergyDeposit>> mcEnergyDeposits
+        const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
+        const art::ValidHandle<std::vector<sim::SimEnergyDeposit>>& mcEnergyDeposits
     )
     {
         MCEdep mcEdep;
@@ -76,6 +89,13 @@ namespace extractor
             
             for (auto energyDeposit : *mcEnergyDeposits)
             {
+                // Determine if edep is within the desired volume
+                DetectorVolume edep_volume = fGeometry->getVolume(
+                    energyDeposit.StartX(), energyDeposit.StartY(), energyDeposit.StartZ()
+                );
+                if (edep_volume.volume_type != fBoundingBoxType) {
+                    continue;
+                }
                 // find the track id of the primary ancestor
                 Int_t level = 0;
                 Int_t track_id = energyDeposit.TrackID();
@@ -100,7 +120,7 @@ namespace extractor
                         (fPDGLevels[pdg_index] == 1 and level != 0) or
                         (fPDGLevels[pdg_index] == 2)
                     )
-                    {
+                    {                      
                         mcEdep.pdg.emplace_back(particlePDGMap[track_id]);
                         mcEdep.track_id.emplace_back(energyDeposit.TrackID());
                         mcEdep.ancestor_id.emplace_back(track_id);

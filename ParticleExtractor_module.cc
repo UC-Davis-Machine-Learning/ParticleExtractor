@@ -54,6 +54,8 @@
 // C includes
 #include <cmath>
 #include <algorithm>
+#include <chrono>
+#include <ctime> 
 
 // local includes
 #include "Configuration.h"
@@ -151,6 +153,7 @@ namespace extractor
         fFillRecoEnergyDeposits = fParameters().FillRecoEnergyDeposits();
 
         // MC edep information
+        fMCEdepBoundingBox = fParameters().MCEdepBoundingBox();
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
         fMCEdepPDGLevels = fParameters().MCEdepPDGLevels();
         fMCEdepPDGLabels = fParameters().MCEdepPDGLabels();
@@ -203,9 +206,9 @@ namespace extractor
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
         if (std::find(
-                allowed_mc_voxel_bounding_boxes.begin(), 
-                allowed_mc_voxel_bounding_boxes.end(), 
-                fMCVoxelBoundingBox) == allowed_mc_voxel_bounding_boxes.end())
+                allowed_bounding_boxes.begin(), 
+                allowed_bounding_boxes.end(), 
+                fMCVoxelBoundingBox) == allowed_bounding_boxes.end())
         {
             throw cet::exception("ParticleExtractor")
                 << " Parameter 'MCVoxelBoundingBox': '" << fMCVoxelBoundingBox << "' is not an allowed type for MCVoxelBoundingBox!" 
@@ -220,6 +223,7 @@ namespace extractor
                 << " Parameter 'MCVoxelLabeling': '" << fMCVoxelLabeling << "' is not an allowed type for MCVoxelLabeling!" 
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
+        fMCEnergyDeposits.setBoundingBoxType(fMCEdepBoundingBox);
         fMCEnergyDeposits.setPDGCodes(fMCEdepPDGCodes);
         fMCEnergyDeposits.setPDGLevels(fMCEdepPDGLevels);
         fMCVoxels.setPDGCodes(fMCEdepPDGCodes);
@@ -227,6 +231,8 @@ namespace extractor
         fMCVoxels.setVoxelSize(fMCVoxelSize);
         fMCVoxels.setBoundingBox(fMCVoxelBoundingBox);
         fMCVoxels.setVoxelLabeling(fMCVoxelLabeling);
+
+        fMetaTree = fTFileService->make<TTree>("meta", "meta");
     }
 
     // begin job
@@ -275,11 +281,13 @@ namespace extractor
                 );
             auto recoHits =  event.getValidHandle<std::vector<recob::Hit>>(fHitProducerLabel);
             auto recoSpacePoints =  event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
+            art::FindManyP<recob::Hit> hitsFromSpacePointsAssn(recoSpacePoints, event, fSpacePointProducerLabel);
             fRecoEnergyDeposits.processEvent(
                 mcParticles, 
                 mcSimChannels,
                 recoHits,
-                recoSpacePoints
+                recoSpacePoints,
+                hitsFromSpacePointsAssn
             );
         }
     }
@@ -287,7 +295,40 @@ namespace extractor
     // end job
     void ParticleExtractor::endJob()
     {
+        // grab and save system info
+        std::string user = str(std::getenv("USER"));
+        std::string host = str(std::getenv("HOSTNAME"));
+        std::string dir  = str(std::getenv("PWD"));
+        // get current time
+        auto end = std::chrono::system_clock::now();
+        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+        auto end_datetime = str(std::ctime(&end_time));
 
+        fMetaTree->Branch("user", &user);
+        fMetaTree->Branch("host", &host);
+        fMetaTree->Branch("current_dir", &dir);
+        fMetaTree->Branch("date", &end_datetime);
+
+        // save configuration parameters
+        fMetaTree->Branch("LArGeantProducerLabel", &fLArGeantProducerLabel);
+        fMetaTree->Branch("IonAndScintProducerLabel", &fIonAndScintProducerLabel);
+        fMetaTree->Branch("SimChannelProducerLabel", &fSimChannelProducerLabel);
+        fMetaTree->Branch("SimChannelInstanceProducerLabel", &fSimChannelInstanceProducerLabel);
+        fMetaTree->Branch("HitProducerLabel", &fHitProducerLabel);
+        fMetaTree->Branch("SpacePointProducerLabel", &fSpacePointProducerLabel);
+        fMetaTree->Branch("FillMCNeutronCaptures", &fFillMCNeutronCaptures);
+        fMetaTree->Branch("FillMCEnergyDeposits", &fFillMCEnergyDeposits);
+        fMetaTree->Branch("FillMCVoxels", &fFillMCVoxels);
+        fMetaTree->Branch("FillRecoEnergyDeposits", &fFillRecoEnergyDeposits);
+        fMetaTree->Branch("MCEdepBoundingBox", &fMCEdepBoundingBox);
+        fMetaTree->Branch("MCEdepPDGCodes", &fMCEdepPDGCodes);
+        fMetaTree->Branch("MCEdepPDGLevels", &fMCEdepPDGLevels);
+        fMetaTree->Branch("MCEdepPDGLabels", &fMCEdepPDGLabels);
+        fMetaTree->Branch("MCVoxelSize", &fMCVoxelSize);
+        fMetaTree->Branch("MCVoxelBoundingBox", &fMCVoxelBoundingBox);
+        fMetaTree->Branch("MCVoxelLabeling", &fMCVoxelLabeling);
+ 
+        fMetaTree->Fill();
     }
 
 }

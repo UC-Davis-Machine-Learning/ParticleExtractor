@@ -21,12 +21,14 @@ namespace extractor
     {}
 
     void RecoEnergyDeposits::processEvent(
-        art::ValidHandle<std::vector<simb::MCParticle>> mcParticles,
-        art::ValidHandle<std::vector<sim::SimChannel>> mcChannels,
-        art::ValidHandle<std::vector<recob::Hit>> recoHits,
-        art::ValidHandle<std::vector<recob::SpacePoint>> recoSpacePoints
+        const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
+        const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
+        const art::ValidHandle<std::vector<recob::Hit>>& recoHits,
+        const art::ValidHandle<std::vector<recob::SpacePoint>>& recoSpacePoints,
+        const art::FindManyP<recob::Hit>& hitSpacePointAssn
     )
     {
+        RecoEdep recoEdep;
         if (mcParticles.isValid() and mcChannels.isValid() and recoHits.isValid() and recoSpacePoints.isValid())
         {
             /**
@@ -40,6 +42,58 @@ namespace extractor
             {
                 parentDaughterMap[particle.TrackId()] = particle.Mother();
                 particlePDGMap[particle.TrackId()] = particle.PdgCode();
+            }
+            // get a list of hits associated to each space point
+            
+
+            /**
+             * We iterate over the list of hits ...
+             * 
+             */
+            for (auto hit : *recoHits)
+            {
+                // If the hit is not in the collection plane,
+                // then just continue.
+                if (hit.WireID().Plane != 2) {
+                    continue;
+                }
+                // now find the corresponding sim channels
+                for (auto channel : *mcChannels)
+                {
+                    // the hit and sim channels must match
+                    if (channel.Channel() != hit.Channel()) {
+                        continue;
+                    }
+                    auto trackIDs = channel.TrackIDEs(hit.PeakTime(), hit.PeakTime());
+                    if (trackIDs.size() != 0)
+                    {
+
+                    }
+
+                }
+
+                for (size_t i = 0; i < recoSpacePoints.size(); i++)
+                {
+                    for (size_t j = 0; j < hitSpacePointAssn[i].size(); j++)
+                    {
+                        if (hitSpacePointAssn[i][j]->WireID().Plane != 2) {
+                            continue;
+                        }
+                        for (size_t k = 0; k < recoHits.size(); k++)
+                        {
+                            if (
+                                (hitSpacePointAssn[i][j]->Channel() != recoHits[k].Channel()) or
+                                (hitSpacePointAssn[i][j]->PeakTime() != recoHits[k].PeakTime())
+                            ) {
+                                continue;
+                            }
+                            auto xyz = spacePoint.XYZ();
+                            recoEdep.sp_x.emplace_back(xyz[0]);
+                            recoEdep.sp_y.emplace_back(xyz[1]);
+                            recoEdep.sp_z.emplace_back(xyz[2]);
+                        }
+                    }
+                }
             }
         }
     }

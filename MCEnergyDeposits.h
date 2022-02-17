@@ -52,13 +52,15 @@ namespace extractor
         MCEnergyDeposits();
         ~MCEnergyDeposits();
 
+        void setBoundingBoxType(VolumeType volumeType) { fVolumeType = volumeType; }
+        void setBoundingBoxType(std::string volumeType);
         void setPDGCodes(std::vector<Int_t> PDGCodes) { fPDGCodes = PDGCodes; }
         void setPDGLevels(std::vector<Int_t> PDGLevels) { fPDGLevels = PDGLevels; }
         void setPDGLevels(std::vector<std::string> PDGLevels);
 
         void processEvent(
-            art::ValidHandle<std::vector<simb::MCParticle>> mcParticles,
-            art::ValidHandle<std::vector<sim::SimEnergyDeposit>> mcEnergyDeposits
+            const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
+            const art::ValidHandle<std::vector<sim::SimEnergyDeposit>>& mcEnergyDeposits
         );
 
         MCEdep getMCEdep() const { return fMCEdep; }
@@ -74,6 +76,7 @@ namespace extractor
         DetectorGeometry* fGeometry = DetectorGeometry::getInstance("MCEnergyDeposits");
 
         // pdg codes to construct
+        VolumeType fBoundingBoxType;
         std::vector<Int_t> fPDGCodes;
         std::vector<Int_t> fPDGLevels;
 

@@ -98,6 +98,11 @@ namespace extractor
          * information from MC truth.
          * Set of pdg codes to extract from each event
          */
+        fhicl::Atom<std::string> MCEdepBoundingBox
+        {
+            fhicl::Name("MCEdepBoundingBox"),
+            fhicl::Comment("Which bounding box to use for the MC edeps.")
+        };
         fhicl::Sequence<int> MCEdepPDGCodes
         {
             fhicl::Name("MCEdepPDGCodes"),
@@ -158,7 +163,7 @@ namespace extractor
         "mixed"  
     };
 
-    std::vector<std::string> allowed_mc_voxel_bounding_boxes = 
+    std::vector<std::string> allowed_bounding_boxes = 
     {
         "TPC",
         "tpc",

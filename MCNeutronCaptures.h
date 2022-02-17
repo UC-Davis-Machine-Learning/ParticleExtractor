@@ -71,7 +71,7 @@ namespace extractor
         MCNeutronCaptures();
         ~MCNeutronCaptures();
 
-        void processEvent(art::ValidHandle<std::vector<simb::MCParticle>> mcParticles);
+        void processEvent(const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles);
 
     private:
         /// ROOT output through art::TFileService
