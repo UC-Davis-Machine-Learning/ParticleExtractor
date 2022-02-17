@@ -102,12 +102,14 @@ namespace extractor
         fMaterialPOI.SetCoordinates(x,y,z);
         // get the volume information
         std::string volumeName = fGeometryCore->VolumeName(fMaterialPOI);
+        if (volumeName == "unknownVolume") {
+            return DetectorVolume(VolumeType::Unknown, volumeName, "none", 0);
+        }
         VolumeType volumeType = fVolumeTypeMap[volumeName];
         // get the current material information
         fMaterial = fGeometryService->Material(fMaterialPOI);
         std::string materialName = fMaterial->GetName();
         double material = fMaterial->GetZ();
-        
         // return the constructed volume 
         return DetectorVolume(volumeType, volumeName, materialName, material);
     }

@@ -61,6 +61,7 @@
 #include "MCNeutronCaptures.h"
 #include "MCEnergyDeposits.h"
 #include "MCVoxels.h"
+#include "RecoEnergyDeposits.h"
 
 namespace extractor
 {
@@ -85,11 +86,14 @@ namespace extractor
     private:
         /// Set of parameters
         Parameters fParameters;
-        bool    fFillMCNeutronCaptures;
-        bool    fFillMCEnergyDeposits;
-        bool    fFillMCVoxels;
+        bool fFillMCNeutronCaptures;
+        bool fFillMCEnergyDeposits;
+        bool fFillMCVoxels;
+        bool fFillRecoEnergyDeposits;
+        // MC edep variables
         std::vector<Int_t> fMCEdepPDGCodes;
         std::vector<std::string> fMCEdepPDGLevels;
+        // MC voxel variables
         std::vector<Int_t> fMCEdepPDGLabels;
         Double_t fMCVoxelSize;
         std::string fMCVoxelBoundingBox;
@@ -98,6 +102,10 @@ namespace extractor
         // producer labels
         art::InputTag fLArGeantProducerLabel;
         art::InputTag fIonAndScintProducerLabel;
+        art::InputTag fSimChannelProducerLabel;
+        art::InputTag fSimChannelInstanceProducerLabel;
+        art::InputTag fHitProducerLabel;
+        art::InputTag fSpacePointProducerLabel;
 
         /// ROOT output through art::TFileService
         /** We will save different TTrees to different TFiles specified 
@@ -115,6 +123,8 @@ namespace extractor
         MCEnergyDeposits fMCEnergyDeposits;
         // MC Voxels
         MCVoxels fMCVoxels;
+        // Reco EnergyDeposits
+        RecoEnergyDeposits fRecoEnergyDeposits;
     };
 
     // constructor
@@ -129,11 +139,16 @@ namespace extractor
         // Producer labels
         fLArGeantProducerLabel = fParameters().LArGeantProducerLabel();
         fIonAndScintProducerLabel = fParameters().IonAndScintProducerLabel();
+        fSimChannelProducerLabel = fParameters().SimChannelProducerLabel();
+        fSimChannelInstanceProducerLabel = fParameters().SimChannelInstanceProducerLabel();
+        fHitProducerLabel = fParameters().HitProducerLabel();
+        fSpacePointProducerLabel = fParameters().SpacePointProducerLabel();
 
         // Which submodules to run
         fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
         fFillMCEnergyDeposits = fParameters().FillMCEnergyDeposits();
         fFillMCVoxels = fParameters().FillMCVoxels();
+        fFillRecoEnergyDeposits = fParameters().FillRecoEnergyDeposits();
 
         // MC edep information
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
@@ -241,6 +256,15 @@ namespace extractor
         // get the list of MC particles from Geant4
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
         auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
+        if (fFillRecoEnergyDeposits)
+        {
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel, fSimChannelInstanceProducerLabel)
+                );
+            auto recoHits =  event.getValidHandle<std::vector<recob::Hit>>(fHitProducerLabel);
+            auto recoSpacePoints =  event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
+        }
 
         // now pass the list of particles to each of the appropriate submodules
         if (fFillMCNeutronCaptures) {
@@ -252,7 +276,14 @@ namespace extractor
         if (fFillMCVoxels) {
             fMCVoxels.processEvent(fMCEnergyDeposits);
         }
-        
+        if (fFillRecoEnergyDeposits) {
+            fMCRecoEnergyDeposits.processEvent(
+                mcParticles, 
+                mcSimChannels,
+                recoHits,
+                recoSpacePoints
+            );
+        }
     }
 
     // end job

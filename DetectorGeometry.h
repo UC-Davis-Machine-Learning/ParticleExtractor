@@ -79,6 +79,7 @@ namespace extractor
         World,
         Cryostat,
         TPC,
+        Unknown,
     };
     ///////////////////////////////////////////////////////////////////////////////////////
     // struct for detector volume information

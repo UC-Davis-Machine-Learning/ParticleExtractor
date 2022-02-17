@@ -35,7 +35,7 @@ namespace extractor
     struct Configuration
     {
         /**
-         * @brief LAr Geant4 configuration parameters.
+         * LAr Geant4 and reco configuration parameters.
          * The user must specify the name of the larg4 module
          * that was used to run the geant simulations.
          * This is used to get simb::MCParticle products.
@@ -50,26 +50,53 @@ namespace extractor
             fhicl::Name("IonAndScintProducerLabel"),
             fhicl::Comment("Tag of the input data product for the IonAndScint side of the simulation.")
         };
+        fhicl::Atom<art::InputTag> SimChannelProducerLabel
+        {
+            fhicl::Name("SimChannelProducerLabel"),
+            fhicl::Comment("Tag of the input data product for the SimChannel side of the simulation.")
+        };
+        fhicl::Atom<art::InputTag> SimChannelInstanceProducerLabel
+        {
+            fhicl::Name("SimChannelInstanceProducerLabel"),
+            fhicl::Comment("Tag of the input data product for the SimChannel instance side of the simulation.")
+        };
+        fhicl::Atom<art::InputTag> HitProducerLabel
+        {
+            fhicl::Name("HitProducerLabel"),
+            fhicl::Comment("Tag of the input data product for the Hit side of the simulation.")
+        };
+        fhicl::Atom<art::InputTag> SpacePointProducerLabel
+        {
+            fhicl::Name("SpacePointProducerLabel"),
+            fhicl::Comment("Tag of the input data product for the SpacePoint side of the simulation.")
+        };
 
         /**
-         * @brief This option generates a TTree called "mc_neutron_captures",
-         * which stores various neutron capture statistics from each event.
-         * 
+         * These options generate TTrees called "mc_neutron_captures",
+         * "mc_energy_deposits", "reco_energy_deposits",
+         * which stores various neutron capture statistics,
+         * and energy deposition information from each event.
          */
         fhicl::Atom<bool> FillMCNeutronCaptures
         {
             fhicl::Name("FillMCNeutronCaptures"),
             fhicl::Comment("Whether to save neutron capture locations.")
         };
-
         fhicl::Atom<bool> FillMCEnergyDeposits
         {
             fhicl::Name("FillMCEnergyDeposits"),
             fhicl::Comment("Whether to save MC edep information.")
         };
+        fhicl::Atom<bool> FillRecoEnergyDeposits
+        {
+            fhicl::Name("FillRecoEnergyDeposits"),
+            fhicl::Comment("Whether to save Reco edep information.")
+        };
+
         /**
-         * @brief Set of pdg codes to extract from each event
-         * 
+         * Below are a set of parameters for extracting energy deposition
+         * information from MC truth.
+         * Set of pdg codes to extract from each event
          */
         fhicl::Sequence<int> MCEdepPDGCodes
         {
@@ -82,6 +109,12 @@ namespace extractor
             fhicl::Comment("Heirarchy of particles to keep.")
         };
 
+        /**
+         * Below are a set of voxelization parameters for MC energy depositions.
+         * One must specify a voxel size, as well as a bounding box to use
+         * for each event (typically just the active tpc volume).
+         * 
+         */
         fhicl::Atom<bool> FillMCVoxels
         {
             fhicl::Name("FillMCVoxels"),
@@ -107,7 +140,6 @@ namespace extractor
             fhicl::Name("MCVoxelLabeling"),
             fhicl::Comment("Labeling scheme for the voxels.")
         };
-
     };
 
     using Parameters = art::EDAnalyzer::Table<Configuration>;
