@@ -147,7 +147,7 @@ namespace extractor
                         unique_energy.begin(), 
                         std::max_element(unique_energy.begin(), unique_energy.end())
                     );
-                    voxels.labels.emplace_back(arg_max_energy);
+                    voxels.labels.emplace_back(unique_labels[arg_max_energy]);
                 }
             }
             else {
