@@ -95,22 +95,21 @@ namespace extractor
                 if (pdg_exists != fPDGCodes.end())
                 {
                     Int_t pdg_index = std::distance(fPDGCodes.begin(), pdg_exists);
-                    std::cout << pdg_index << "," << fPDGLevels[pdg_index] << std::endl;
                     if (
                         (fPDGLevels[pdg_index] == 0 and level == 0) or
                         (fPDGLevels[pdg_index] == 1 and level != 0) or
                         (fPDGLevels[pdg_index] == 2)
                     )
                     {
-                        fMCEdep.pdg.emplace_back(particlePDGMap[track_id]);
-                        fMCEdep.track_id.emplace_back(energyDeposit.TrackID());
-                        fMCEdep.ancestor_id.emplace_back(track_id);
-                        fMCEdep.level.emplace_back(level);
-                        fMCEdep.edep_x.emplace_back(energyDeposit.StartX());
-                        fMCEdep.edep_y.emplace_back(energyDeposit.StartY());
-                        fMCEdep.edep_z.emplace_back(energyDeposit.StartZ());
-                        fMCEdep.energy.emplace_back(energyDeposit.Energy());
-                        fMCEdep.num_electrons.emplace_back(energyDeposit.NumElectrons());
+                        mcEdep.pdg.emplace_back(particlePDGMap[track_id]);
+                        mcEdep.track_id.emplace_back(energyDeposit.TrackID());
+                        mcEdep.ancestor_id.emplace_back(track_id);
+                        mcEdep.level.emplace_back(level);
+                        mcEdep.edep_x.emplace_back(energyDeposit.StartX());
+                        mcEdep.edep_y.emplace_back(energyDeposit.StartY());
+                        mcEdep.edep_z.emplace_back(energyDeposit.StartZ());
+                        mcEdep.energy.emplace_back(energyDeposit.Energy());
+                        mcEdep.num_electrons.emplace_back(energyDeposit.NumElectrons());
                     }
                 }
             }
