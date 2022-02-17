@@ -256,15 +256,6 @@ namespace extractor
         // get the list of MC particles from Geant4
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
         auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
-        if (fFillRecoEnergyDeposits)
-        {
-            auto mcSimChannels = 
-                event.getValidHandle<std::vector<sim::SimChannel>>(
-                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
-                );
-            auto recoHits =  event.getValidHandle<std::vector<recob::Hit>>(fHitProducerLabel);
-            auto recoSpacePoints =  event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
-        }
 
         // now pass the list of particles to each of the appropriate submodules
         if (fFillMCNeutronCaptures) {
@@ -276,7 +267,14 @@ namespace extractor
         if (fFillMCVoxels) {
             fMCVoxels.processEvent(fMCEnergyDeposits);
         }
-        if (fFillRecoEnergyDeposits) {
+        if (fFillRecoEnergyDeposits) 
+        {
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto recoHits =  event.getValidHandle<std::vector<recob::Hit>>(fHitProducerLabel);
+            auto recoSpacePoints =  event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
             fRecoEnergyDeposits.processEvent(
                 mcParticles, 
                 mcSimChannels,
