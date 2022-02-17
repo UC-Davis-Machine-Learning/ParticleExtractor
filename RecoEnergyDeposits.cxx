@@ -27,7 +27,7 @@ namespace extractor
         art::ValidHandle<std::vector<recob::SpacePoint>> recoSpacePoints
     )
     {
-        if (mcParticles.isValid() and mcChannels.isValid() and recoHits.isValis() and recoSpacePoints.isValid())
+        if (mcParticles.isValid() and mcChannels.isValid() and recoHits.isValid() and recoSpacePoints.isValid())
         {
             /**
              * We first iterate through all particles and create a map of 
