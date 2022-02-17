@@ -134,5 +134,5 @@ namespace extractor
         "Cryo",
         "World",
         "world"
-    }
+    };
 }

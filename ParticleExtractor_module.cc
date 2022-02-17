@@ -166,7 +166,7 @@ namespace extractor
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
             }
         }
-        if (fMCFillMCVoxels and (fMCEdepPDGCodes.size() != fMCEdepPDGLabels.size()))
+        if (fFillMCVoxels and (fMCEdepPDGCodes.size() != fMCEdepPDGLabels.size()))
         {
             throw cet::exception("ParticleExtractor")
                 << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGLabels'"
