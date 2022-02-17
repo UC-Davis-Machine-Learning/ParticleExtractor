@@ -76,7 +76,6 @@ namespace extractor
             xyz[2] = int((mcEdep.edep_z[i] - fBoundingBox.z_min) / fVoxelSize);
             label = mcEdep.pdg[i];
             energy = mcEdep.energy[i];
-            std::cout << energy << std::endl;
             edep_idx = static_cast<int>(i);
 
             // see if xyz is in temp_voxels
@@ -110,7 +109,7 @@ namespace extractor
         for (size_t i = 0; i < temp_voxels.size(); i++)
         {
             std::vector<Int_t> unique_labels;
-            std::vector<Int_t> unique_energy;
+            std::vector<Double_t> unique_energy;
             // collect unique labels and the total energy
             for (size_t j = 0; j < temp_labels[i].size(); j++)
             {
