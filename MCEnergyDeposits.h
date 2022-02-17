@@ -61,6 +61,8 @@ namespace extractor
             art::ValidHandle<std::vector<sim::SimEnergyDeposit>> mcEnergyDeposits
         );
 
+        MCEdep getMCEdep() const { return fMCEdep; }
+
     private:
         /// ROOT output through art::TFileService
         /** We will save different TTrees to different TFiles specified 

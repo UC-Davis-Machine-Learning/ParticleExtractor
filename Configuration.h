@@ -82,6 +82,32 @@ namespace extractor
             fhicl::Comment("Heirarchy of particles to keep.")
         };
 
+        fhicl::Atom<bool> FillMCVoxels
+        {
+            fhicl::Name("FillMCVoxels"),
+            fhicl::Comment("Whether to save MC voxel information.")
+        };
+        fhicl::Sequence<int> MCEdepPDGLabels
+        {
+            fhicl::Name("MCEdepPDGLabels"),
+            fhicl::Comment("Labeling scheme for the PDGCodes.")
+        };
+        fhicl::Atom<double> MCVoxelSize
+        {
+            fhicl::Name("MCVoxelSize"),
+            fhicl::Comment("Size of the voxels in mm.")
+        };
+        fhicl::Atom<std::string> MCVoxelBoundingBox
+        {
+            fhicl::Name("MCVoxelBoundingBox"),
+            fhicl::Comment("Which bounding box to use for the voxelization.")
+        };
+        fhicl::Atom<std::string> MCVoxelLabeling
+        {
+            fhicl::Name("MCVoxelLabeling"),
+            fhicl::Comment("Labeling scheme for the voxels.")
+        };
+
     };
 
     using Parameters = art::EDAnalyzer::Table<Configuration>;
@@ -93,4 +119,20 @@ namespace extractor
         "daughters",
         "all"
     };
+
+    std::vector<std::string> allowed_mc_voxel_labeling = 
+    {
+        "largest",
+        "mixed"  
+    };
+
+    std::vector<std::string> allowed_mc_voxel_bounding_boxes = 
+    {
+        "TPC",
+        "tpc",
+        "cryo",
+        "Cryo",
+        "World",
+        "world"
+    }
 }

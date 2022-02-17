@@ -14,6 +14,15 @@ ParticleExtractor:
     FillMCEnergyDeposits:   true
     MCEdepPDGCodes:         [2112, 13]
     MCEdepPDGLevels:        ["daughters", "all"]
+
+    # MC Voxelizer parameters
+    # For the voxel labeling, we can choose from either
+    # "largest", or "mixed".
+    FillMCVoxels:           true
+    MCEdepPDGLabels:        [0, 1]
+    MCVoxelSize:            4.7
+    MCVoxelBoundingBox:     "TPC"
+    MCVoxelLabeling:        "largest"   
 }
 
 END_PROLOG

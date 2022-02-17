@@ -60,9 +60,14 @@
 #include "DetectorGeometry.h"
 #include "MCNeutronCaptures.h"
 #include "MCEnergyDeposits.h"
+#include "MCVoxels.h"
 
 namespace extractor
 {
+    /**
+     * @brief 
+     * 
+     */
     class ParticleExtractor : public art::EDAnalyzer
     {
     public:
@@ -82,8 +87,13 @@ namespace extractor
         Parameters fParameters;
         bool    fFillMCNeutronCaptures;
         bool    fFillMCEnergyDeposits;
+        bool    fFillMCVoxels;
         std::vector<Int_t> fMCEdepPDGCodes;
         std::vector<std::string> fMCEdepPDGLevels;
+        std::vector<Int_t> fMCEdepPDGLabels;
+        Double_t fMCVoxelSize;
+        std::string fMCVoxelBoundingBox;
+        std::string fMCVoxelLabeling;
 
         // producer labels
         art::InputTag fLArGeantProducerLabel;
@@ -103,6 +113,8 @@ namespace extractor
         MCNeutronCaptures fMCNeutronCaptures;
         // MC EnergyDeposits
         MCEnergyDeposits fMCEnergyDeposits;
+        // MC Voxels
+        MCVoxels fMCVoxels;
     };
 
     // constructor
@@ -118,12 +130,21 @@ namespace extractor
         fLArGeantProducerLabel = fParameters().LArGeantProducerLabel();
         fIonAndScintProducerLabel = fParameters().IonAndScintProducerLabel();
 
+        // Which submodules to run
         fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
         fFillMCEnergyDeposits = fParameters().FillMCEnergyDeposits();
+        fFillMCVoxels = fParameters().FillMCVoxels();
 
         // MC edep information
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
         fMCEdepPDGLevels = fParameters().MCEdepPDGLevels();
+        fMCEdepPDGLabels = fParameters().MCEdepPDGLabels();
+
+        // MC Voxel information
+        fMCVoxelSize = fParameters().MCVoxelSize();
+        fMCVoxelBoundingBox = fParameters().MCVoxelBoundingBox();
+        fMCVoxelLabeling = fParameters().MCVoxelLabeling();
+
         // check for errors
         if (fMCEdepPDGCodes.size() != fMCEdepPDGLevels.size())
         {
@@ -145,8 +166,52 @@ namespace extractor
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
             }
         }
+        if (fMCFillMCVoxels and (fMCEdepPDGCodes.size() != fMCEdepPDGLabels.size()))
+        {
+            throw cet::exception("ParticleExtractor")
+                << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGLabels'"
+                << " have different numbers of entries, (" << fMCEdepPDGCodes.size() << " and "
+                << fMCEdepPDGLabels.size() << ") but must be the same!\n"
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        if (fFillMCEnergyDeposits != fFillMCVoxels)
+        {
+            throw cet::exception("ParticleExtractor")
+                << " Both 'FillMCEnergyDeposits' and 'FillMCVoxels' must either both be true or false!"
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        if (fMCVoxelSize <= 0.0)
+        {
+            throw cet::exception("ParticleExtractor")
+                << " MC Voxel configuration parameter 'MCVoxelSize' cannot be <= 0, "
+                << "but was set to: " << fMCVoxelSize << "!\n"
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        if (std::find(
+                allowed_mc_voxel_bounding_boxes.begin(), 
+                allowed_mc_voxel_bounding_boxes.end(), 
+                fMCVoxelBoundingBox) == allowed_mc_voxel_bounding_boxes.end())
+        {
+            throw cet::exception("ParticleExtractor")
+                << " Parameter 'MCVoxelBoundingBox': '" << fMCVoxelBoundingBox << "' is not an allowed type for MCVoxelBoundingBox!" 
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        if (std::find(
+                allowed_mc_voxel_labeling.begin(), 
+                allowed_mc_voxel_labeling.end(), 
+                fMCVoxelLabeling) == allowed_mc_voxel_labeling.end())
+        {
+            throw cet::exception("ParticleExtractor")
+                << " Parameter 'MCVoxelLabeling': '" << fMCVoxelLabeling << "' is not an allowed type for MCVoxelLabeling!" 
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
         fMCEnergyDeposits.setPDGCodes(fMCEdepPDGCodes);
         fMCEnergyDeposits.setPDGLevels(fMCEdepPDGLevels);
+        fMCVoxels.setPDGCodes(fMCEdepPDGCodes);
+        fMCVoxels.setVoxelLabels(fMCEdepPDGLabels);
+        fMCVoxels.setVoxelSize(fMCVoxelSize);
+        fMCVoxels.setBoundingBox(fMCVoxelBoundingBox);
+        fMCVoxels.setVoxelLabeling(fMCVoxelLabeling);
     }
 
     // begin job
@@ -183,6 +248,9 @@ namespace extractor
         }
         if (fFillMCEnergyDeposits) {
             fMCEnergyDeposits.processEvent(mcParticles, mcEnergyDeposit);
+        }
+        if (fFillMCVoxels) {
+            fMCVoxels.processEvent(fMCEnergyDeposits);
         }
         
     }
