@@ -131,7 +131,7 @@ namespace extractor
             }
             voxels.voxels.emplace_back(temp_voxels[i]);
             voxels.energy.emplace_back(
-                std::accumulate(unique_energy.begin(), unique_energy.end(), 0)
+                std::accumulate(unique_energy.begin(), unique_energy.end(), 0.)
             );
             voxels.edep_idxs.emplace_back(temp_edep_idxs[i]);
 
