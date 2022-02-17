@@ -44,11 +44,11 @@ namespace extractor
         }
         else {
             fVoxelLabeling = 1;
-            fMixedLabel = std::max_element(fVoxelLabels.begin(), fVoxelLabels.end()) + 1;
+            fMixedLabel = *std::max_element(fVoxelLabels.begin(), fVoxelLabels.end()) + 1;
         }
     }
 
-    void processEvent(const MCEnergyDeposits& energyDeposits)
+    void MCVoxels::processEvent(const MCEnergyDeposits& energyDeposits)
     {
         Voxels voxels;
         std::vector<std::vector<Int_t>> temp_voxels;
