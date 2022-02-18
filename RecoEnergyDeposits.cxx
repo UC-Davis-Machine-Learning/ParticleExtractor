@@ -75,7 +75,7 @@ namespace extractor
                 {
                     // If the hit is not in the collection plane,
                     // then just continue.
-                    if (hit.WireID().Plane != 2) {
+                    if (hit->WireID().Plane != 2) {
                         continue;
                     }
                     // now find the corresponding sim channels
@@ -83,12 +83,12 @@ namespace extractor
                     for (auto channel : *mcChannels)
                     {
                         // the hit and sim channels must match
-                        if (channel.Channel() != hit.Channel()) {
+                        if (channel.Channel() != hit->Channel()) {
                             continue;
                         }
                         // find the track IDs that correspond to the peaktime
                         // on this channel.
-                        auto trackIDs = channel.TrackIDEs(hit.PeakTime(), hit.PeakTime());
+                        auto trackIDs = channel.TrackIDEs(hit->PeakTime(), hit->PeakTime());
                         if (trackIDs.size() != 0)
                         {
                             temp_channel_id.emplace_back(channel.Channel());
@@ -105,7 +105,7 @@ namespace extractor
                     }
                     temp_ancestor_id.emplace_back(track_id);
                     temp_pdg.emplace_back(particlePDGMap[track_id]);
-                    temp_summed_adc.emplace_back(hit.SummedADC());
+                    temp_summed_adc.emplace_back(hit->SummedADC());
                 }
                 // collect results
                 recoEdep.pdg.emplace_back(temp_pdg);
