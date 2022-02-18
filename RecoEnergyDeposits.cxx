@@ -70,7 +70,8 @@ namespace extractor
                 std::vector<Int_t> temp_ancestor_id;
                 std::vector<Int_t> temp_channel_id;
                 std::vector<Double_t> temp_summed_adc;
-                for (auto hit : *hitSpacePointAssn.at(i))
+                auto& spsHit = hitSpacePointAssn[i];
+                for (auto hit : *spsHit)
                 {
                     // If the hit is not in the collection plane,
                     // then just continue.
@@ -113,7 +114,7 @@ namespace extractor
                 recoEdep.channel_id.emplace_back(temp_channel_id);
                 recoEdep.summed_adc.emplace_back(temp_summed_adc);
 
-                auto xyz = pointsList[i].XYZ();
+                auto xyz = pointsList[i]->XYZ();
                 recoEdep.sp_x.emplace_back(xyz[0]);
                 recoEdep.sp_y.emplace_back(xyz[1]);
                 recoEdep.sp_z.emplace_back(xyz[2]);
