@@ -18,6 +18,9 @@
 #include "art/Framework/Principal/SubRun.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
+#include "lardataobj/Simulation/SimChannel.h"
+
+
 #include <vector>
 #include <algorithm>
 
