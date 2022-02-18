@@ -19,7 +19,7 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
 #include "lardataobj/Simulation/SimChannel.h"
-
+#include "lardataobj/Simulation/AuxDetSimChannel.h"
 
 #include <vector>
 #include <algorithm>
