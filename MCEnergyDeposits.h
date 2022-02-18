@@ -52,7 +52,7 @@ namespace extractor
         MCEnergyDeposits();
         ~MCEnergyDeposits();
 
-        void setBoundingBoxType(VolumeType volumeType) { fVolumeType = volumeType; }
+        void setBoundingBoxType(VolumeType volumeType) { fBoundingBoxType = volumeType; }
         void setBoundingBoxType(std::string volumeType);
         void setPDGCodes(std::vector<Int_t> PDGCodes) { fPDGCodes = PDGCodes; }
         void setPDGLevels(std::vector<Int_t> PDGLevels) { fPDGLevels = PDGLevels; }
