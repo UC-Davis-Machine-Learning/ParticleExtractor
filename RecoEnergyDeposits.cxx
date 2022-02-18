@@ -36,7 +36,7 @@ namespace extractor
     )
     {
         RecoEdep recoEdep;
-        if (mcParticles.isValid() and mcChannels.isValid() and recoHits.isValid() and recoSpacePoints.isValid())
+        if (mcParticles.isValid() and mcChannels.isValid() and recoSpacePoints.isValid())
         {
             /**
              * We first iterate through all particles and create a map of 
@@ -61,7 +61,9 @@ namespace extractor
              *      MCParticle.TrackId() -> SimChannel.TrackIDEs(peaktime, peaktime) -> Hit.Channel()  
              * 
              */
-            for (size_t i = 0; i < recoSpacePoints.size(); i++)
+            std::vector<art::Ptr<recob::SpacePoint>> pointsList;
+            art::fill_ptr_vector(pointsList, recoSpacePoints);            
+            for (size_t i = 0; i < pointsList.size(); i++)
             {
                 std::vector<Int_t> temp_pdg;
                 std::vector<Int_t> temp_track_id;
@@ -111,7 +113,7 @@ namespace extractor
                 recoEdep.channel_id.emplace_back(temp_channel_id);
                 recoEdep.summed_adc.emplace_back(temp_summed_adc);
 
-                auto xyz = spacePoint.XYZ();
+                auto xyz = pointsList[i].XYZ();
                 recoEdep.sp_x.emplace_back(xyz[0]);
                 recoEdep.sp_y.emplace_back(xyz[1]);
                 recoEdep.sp_z.emplace_back(xyz[2]);
