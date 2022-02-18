@@ -300,14 +300,14 @@ namespace extractor
         std::string host = std::to_string(std::getenv("HOSTNAME"));
         std::string dir  = std::to_string(std::getenv("PWD"));
         // get current time
-        auto end = std::chrono::system_clock::now();
-        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-        auto end_datetime = std::to_string(std::ctime(&end_time));
+        // auto end = std::chrono::system_clock::now();
+        // std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+        // auto end_datetime = std::to_string(std::ctime(&end_time));
 
         fMetaTree->Branch("user", &user);
         fMetaTree->Branch("host", &host);
         fMetaTree->Branch("current_dir", &dir);
-        fMetaTree->Branch("date", &end_datetime);
+        //fMetaTree->Branch("date", &end_datetime);
 
         // save configuration parameters
         fMetaTree->Branch("LArGeantProducerLabel", &fLArGeantProducerLabel);
