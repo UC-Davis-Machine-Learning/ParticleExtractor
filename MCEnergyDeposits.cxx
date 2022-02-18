@@ -50,13 +50,13 @@ namespace extractor
     void MCEnergyDeposits::setBoundingBoxType(std::string volumeType)
     {
         if (volumeType == "TPC" or volumeType == "tpc") { 
-            fBoundingBoxType = 2;
+            fBoundingBoxType = VolumeType::TPC;
         }
         else if (volumeType == "Cryo" or volumeType == "cryo") {
-            fBoundingBoxType = 1;
+            fBoundingBoxType = VolumeType::Cryostat;
         }
         else {
-            fBoundingBoxType = 0;
+            fBoundingBoxType = VolumeType::World;
         }
     }
 
