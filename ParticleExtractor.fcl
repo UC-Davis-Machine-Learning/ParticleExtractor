@@ -6,10 +6,10 @@ ParticleExtractor:
     # module labels
     LArGeantProducerLabel:      "largeant"
     IonAndScintProducerLabel:   "IonAndScint"
-    SimChannelProducerLabel:    ""
-    SimChannelInstanceProducerLabel:    ""
-    HitProducerLabel:           ""
-    SpacePointProducerLabel:    ""
+    SimChannelProducerLabel:    "tpcrawdecoder"
+    SimChannelInstanceProducerLabel:    "simpleSC"
+    HitProducerLabel:           "hitpdune"
+    SpacePointProducerLabel:    "reco3d"
 
     # MC Neutron capture parameters
     FillMCNeutronCaptures:  true
