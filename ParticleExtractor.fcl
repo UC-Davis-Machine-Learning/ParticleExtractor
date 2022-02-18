@@ -30,7 +30,7 @@ ParticleExtractor:
     MCVoxelLabeling:        "largest"   
 
     # Reco energy deposit parameters
-    FillRecoEnergyDeposits: false
+    FillRecoEnergyDeposits: true
 }
 
 END_PROLOG

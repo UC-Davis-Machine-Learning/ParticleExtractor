@@ -285,7 +285,6 @@ namespace extractor
             fRecoEnergyDeposits.processEvent(
                 mcParticles, 
                 mcSimChannels,
-                recoHits,
                 recoSpacePoints,
                 hitsFromSpacePointsAssn
             );

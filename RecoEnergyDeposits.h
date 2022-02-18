@@ -31,12 +31,14 @@ namespace extractor
      */
     struct RecoEdep
     {
-        std::vector<Int_t> pdg;
-        std::vector<Int_t> track_id;
-        std::vector<Int_t> channel_id;
+        std::vector<std::vector<Int_t>> pdg;
+        std::vector<std::vector<Int_t>> track_id;
+        std::vector<std::vector<Int_t>> ancestor_id;
+        std::vector<std::vector<Int_t>> channel_id;
         std::vector<Double_t> sp_x;
         std::vector<Double_t> sp_y;
         std::vector<Double_t> sp_z;
+        std::vector<std::vector<Double_t>> summed_adc;
         std::vector<Double_t> energy;
         std::vector<Int_t> num_electrons;
     };
@@ -58,7 +60,6 @@ namespace extractor
         void processEvent(
             const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
             const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
-            const art::ValidHandle<std::vector<recob::Hit>>& recoHits,
             const art::ValidHandle<std::vector<recob::SpacePoint>>& recoSpacePoints,
             const art::FindManyP<recob::Hit>& hitSpacePointAssn
         );

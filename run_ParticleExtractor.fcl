@@ -35,5 +35,5 @@ physics:
     end_paths: [ analysis ]
 }
 
-source.fileNames:                       ["/dune/data2/users/ncarrara/NeutronCalibrationLArSoft/ProtoDUNE-I/UNet/outputs/g4_output.root"]
-source.maxEvents:                       50
+source.fileNames:                       ["/dune/data2/users/ncarrara/NeutronCalibrationLArSoft/ProtoDUNE-I/UNet/outputs/reco_output_0.root"]
+source.maxEvents:                       5
