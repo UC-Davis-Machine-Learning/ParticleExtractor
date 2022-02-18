@@ -70,7 +70,7 @@ namespace extractor
                 std::vector<Int_t> temp_ancestor_id;
                 std::vector<Int_t> temp_channel_id;
                 std::vector<Double_t> temp_summed_adc;
-                auto& spsHit = hitSpacePointAssn[i];
+                auto& spsHit = hitSpacePointAssn.at(i);
                 for (auto hit : *spsHit)
                 {
                     // If the hit is not in the collection plane,
