@@ -88,7 +88,7 @@ namespace extractor
                         }
                         // find the track IDs that correspond to the peaktime
                         // on this channel.
-                        auto trackIDs = channel.TrackIDEs(hit->PeakTime(), hit->PeakTime());
+                        auto const& trackIDs = channel.TrackIDEs((int)hit->PeakTime(), (int)hit->PeakTime());
                         if (trackIDs.size() != 0)
                         {
                             temp_channel_id.emplace_back(channel.Channel());
