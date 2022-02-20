@@ -2,6 +2,7 @@ art_make(LIB_LIBRARIES
             lardataobj_RecoBase
             larsim_MCSTReco
             lardataobj_MCBase
+            lardataobj_Simulation
             larcorealg_Geometry
             larcore_Geometry_Geometry_service
             lardata_Utilities
@@ -33,6 +34,7 @@ art_make(LIB_LIBRARIES
             lardata_RecoObjects
             lardataobj_RecoBase
             lardataobj_MCBase
+            lardataobj_Simulation
             larreco_RecoAlg
             larcorealg_Geometry
             larcore_Geometry_Geometry_service
