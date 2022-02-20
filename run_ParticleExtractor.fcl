@@ -36,4 +36,4 @@ physics:
 }
 
 source.fileNames:                       ["/dune/data2/users/ncarrara/NeutronCalibrationLArSoft/ProtoDUNE-I/UNet/outputs/reco_output_0.root"]
-source.maxEvents:                       5
+source.maxEvents:                       50
