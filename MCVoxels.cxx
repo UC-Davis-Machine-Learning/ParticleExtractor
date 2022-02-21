@@ -37,6 +37,15 @@ namespace extractor
         }
     }
 
+    void MCVoxels::setVoxelLabels(std::vector<Int_t> voxelLabels)
+    {
+        fVoxelLabels = voxelLabels;
+        for (size_t i = 0; i < fVoxelLabels.size(); i++)
+        {
+            fPDGLabelMap[fPDGCodes[i]] = fVoxelLabels[i];
+        }
+    }
+
     void MCVoxels::setVoxelLabeling(std::string voxelLabeling)
     {
         if (voxelLabeling == "largest"){
@@ -74,7 +83,7 @@ namespace extractor
             xyz[0] = int((mcEdep.edep_x[i] - fBoundingBox.x_min) / fVoxelSize);
             xyz[1] = int((mcEdep.edep_y[i] - fBoundingBox.y_min) / fVoxelSize);
             xyz[2] = int((mcEdep.edep_z[i] - fBoundingBox.z_min) / fVoxelSize);
-            label = mcEdep.pdg[i];
+            label = fPDGLabelMap[mcEdep.pdg[i]];
             energy = mcEdep.energy[i];
             edep_idx = static_cast<int>(i);
 

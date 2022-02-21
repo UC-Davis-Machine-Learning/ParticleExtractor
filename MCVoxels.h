@@ -21,6 +21,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <map>
 
 #include "DetectorGeometry.h"
 #include "MCEnergyDeposits.h"
@@ -42,7 +43,7 @@ namespace extractor
         ~MCVoxels();
 
         void setPDGCodes(std::vector<Int_t> pdgCodes) { fPDGCodes = pdgCodes; }
-        void setVoxelLabels(std::vector<Int_t> voxelLabels) { fVoxelLabels = voxelLabels; }
+        void setVoxelLabels(std::vector<Int_t> voxelLabels);
         void setVoxelSize(Double_t voxelSize) { fVoxelSize = voxelSize; }
         void setBoundingBox(BoundingBox boundingBox) { fBoundingBox = boundingBox; }
         void setBoundingBox(std::string boundingBox);
@@ -67,6 +68,7 @@ namespace extractor
         Double_t fVoxelSize;
         Int_t fVoxelLabeling;
         Int_t fMixedLabel;
+        std::map<Int_t, Int_t> fPDGLabelMap;
 
         // temp struct
         Voxels fVoxels;
