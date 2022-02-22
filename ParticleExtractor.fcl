@@ -3,6 +3,7 @@ BEGIN_PROLOG
 ParticleExtractor:
 {
     module_type:            "ParticleExtractor"
+
     # module labels
     LArGeantProducerLabel:      "largeant"
     IonAndScintProducerLabel:   "IonAndScint"
@@ -19,6 +20,7 @@ ParticleExtractor:
     MCEdepBoundingBox:      "TPC"
     MCEdepPDGCodes:         [2112, 13]
     MCEdepPDGLevels:        ["electrons", "parent_electrons"]
+    MCEdepEnergyCutoff:     0.0
 
     # MC Voxelizer parameters
     # For the voxel labeling, we can choose from either

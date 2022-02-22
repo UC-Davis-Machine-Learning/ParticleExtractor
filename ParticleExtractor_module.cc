@@ -96,6 +96,7 @@ namespace extractor
         std::string fMCEdepBoundingBox;
         std::vector<Int_t> fMCEdepPDGCodes;
         std::vector<std::string> fMCEdepPDGLevels;
+        Double_t fMCEdepEnergyCutoff;
         // MC voxel variables
         std::vector<Int_t> fMCEdepPDGLabels;
         Double_t fMCVoxelSize;
@@ -158,6 +159,7 @@ namespace extractor
         fMCEdepPDGCodes = fParameters().MCEdepPDGCodes();
         fMCEdepPDGLevels = fParameters().MCEdepPDGLevels();
         fMCEdepPDGLabels = fParameters().MCEdepPDGLabels();
+        fMCEdepEnergyCutoff = fParameters().MCEdepEnergyCutoff();
 
         // MC Voxel information
         fMCVoxelSize = fParameters().MCVoxelSize();
@@ -235,6 +237,7 @@ namespace extractor
         fMCEnergyDeposits.setBoundingBoxType(fMCEdepBoundingBox);
         fMCEnergyDeposits.setPDGCodes(fMCEdepPDGCodes);
         fMCEnergyDeposits.setPDGLevels(fMCEdepPDGLevels);
+        fMCEnergyDeposits.setEnergyCutoff(fMCEdepEnergyCutoff);
         fMCVoxels.setPDGCodes(fMCEdepPDGCodes);
         fMCVoxels.setVoxelLabels(fMCEdepPDGLabels);
         fMCVoxels.setVoxelSize(fMCVoxelSize);
@@ -274,7 +277,7 @@ namespace extractor
 
         // now pass the list of particles to each of the appropriate submodules
         if (fFillMCNeutronCaptures) {
-            fMCNeutronCaptures.processEvent(mcParticles);
+            fMCNeutronCaptures.processEvent(mcParticles, mcEnergyDeposit);
         }
         if (fFillMCEnergyDeposits) {
             fMCEnergyDeposits.processEvent(mcParticles, mcEnergyDeposit);

@@ -95,6 +95,9 @@ namespace extractor
             
             for (auto energyDeposit : *mcEnergyDeposits)
             {
+                if (energyDeposit.Energy() < fMCEnergyCutoff) {
+                    continue;
+                }
                 // Determine if edep is within the desired volume
                 DetectorVolume edep_volume = fGeometry->getVolume(
                     energyDeposit.StartX(), energyDeposit.StartY(), energyDeposit.StartZ()

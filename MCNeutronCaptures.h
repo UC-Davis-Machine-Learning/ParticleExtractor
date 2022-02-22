@@ -29,6 +29,19 @@ namespace extractor
     struct MCNeutronStatistics
     {
         std::vector<Int_t> neutron_ids;             ///< track id of each neutron
+        std::vector<Int_t> gamma_ids;               ///< track ids of captured gammas
+        std::vector<Int_t> gamma_neutron_ids;       ///< associated ids of captured gammas
+        std::vector<Double_t> gamma_energy;         ///< energy of each gamma
+        std::vector<Double_t> gamma_electron_energy;///< energy deposited into electrons
+        std::vector<Double_t> gamma_edep_energy;    ///< energy deposited into LAr
+
+        std::vector<Int_t> electron_ids;            ///< track ids of each capture electron
+        std::vector<Int_t> electron_parent;         ///< parent id of each electron
+        std::vector<Int_t> electron_gamma_ids;      ///< track id of the gamma which created the electron
+        std::vector<Int_t> electron_neutron_ids;    ///< track id of the neutron which led to the electron
+        std::vector<Double_t> electron_energy;      ///< energy of the electron
+        std::vector<Int_t> edep_parent;             ///< parent id of the edep
+
         std::vector<bool> primary;                  ///< wether neutron is a primary
         std::vector<bool> capture;                  ///< wether neutron is captured
         std::vector<bool> capture_tpc;              ///< wether the neutron is captured within the tpc volume
@@ -71,7 +84,10 @@ namespace extractor
         MCNeutronCaptures();
         ~MCNeutronCaptures();
 
-        void processEvent(const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles);
+        void processEvent(
+            const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
+            const art::ValidHandle<std::vector<sim::SimEnergyDeposit>>& mcEnergyDeposits
+        );
 
     private:
         /// ROOT output through art::TFileService

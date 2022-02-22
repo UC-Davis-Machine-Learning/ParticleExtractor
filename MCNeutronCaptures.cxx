@@ -16,6 +16,18 @@ namespace extractor
     {
         fMCNeutronCapturesTree = fTFileService->make<TTree>("mc_neutron_captures", "mc_neutron_captures");
         fMCNeutronCapturesTree->Branch("neutron_ids", &fMCNeutronStatistics.neutron_ids);
+        fMCNeutronCapturesTree->Branch("gamma_ids", &fMCNeutronStatistics.gamma_ids);              
+        fMCNeutronCapturesTree->Branch("gamma_neutron_ids", &fMCNeutronStatistics.gamma_neutron_ids);       
+        fMCNeutronCapturesTree->Branch("gamma_energy", &fMCNeutronStatistics.gamma_energy);         
+        fMCNeutronCapturesTree->Branch("gamma_electron_energy", &fMCNeutronStatistics.gamma_electron_energy);
+        fMCNeutronCapturesTree->Branch("gamma_edep_energy", &fMCNeutronStatistics.gamma_edep_energy);    
+
+        fMCNeutronCapturesTree->Branch("electron_ids", &fMCNeutronStatistics.electron_ids);            
+        fMCNeutronCapturesTree->Branch("electron_parent", &fMCNeutronStatistics.electron_parent);         
+        fMCNeutronCapturesTree->Branch("electron_gamma_ids", &fMCNeutronStatistics.electron_gamma_ids);      
+        fMCNeutronCapturesTree->Branch("electron_neutron_ids", &fMCNeutronStatistics.electron_neutron_ids);    
+        fMCNeutronCapturesTree->Branch("electron_energy", &fMCNeutronStatistics.electron_energy);
+
         fMCNeutronCapturesTree->Branch("primary", &fMCNeutronStatistics.primary);
         fMCNeutronCapturesTree->Branch("capture", &fMCNeutronStatistics.capture);
         fMCNeutronCapturesTree->Branch("capture_tpc", &fMCNeutronStatistics.capture_tpc);
@@ -51,7 +63,10 @@ namespace extractor
     MCNeutronCaptures::~MCNeutronCaptures()
     {}
 
-    void MCNeutronCaptures::processEvent(const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles)
+    void MCNeutronCaptures::processEvent(
+        const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
+        const art::ValidHandle<std::vector<sim::SimEnergyDeposit>>& mcEnergyDeposits
+    )
     {
         MCNeutronStatistics neutronStatistics;
         if (mcParticles.isValid())
@@ -243,6 +258,7 @@ namespace extractor
                             }
                         }
                     }
+                    
                     // accumulate step results
                     neutronStatistics.entered_tpc.emplace_back(entered_tpc);
                     neutronStatistics.entered_tpc_step.emplace_back(entered_tpc_step);
@@ -272,6 +288,82 @@ namespace extractor
                      * get lifetimes
                      * accumulate trajectories
                      */
+                }
+                // check if the particle is a gamma
+                if (particle.PdgCode() == 22)
+                {
+                    for(size_t i = 0; i < neutronStatistics.neutron_ids.size(); i++)
+                    {
+                        if (neutronStatistics.neutron_ids[i] == particle.Mother())
+                        {
+                            neutronStatistics.gamma_ids.emplace_back(particle.TrackId());
+                            neutronStatistics.gamma_neutron_ids.emplace_back(particle.Mother());
+                            neutronStatistics.gamma_energy.emplace_back(particle.E());
+                            neutronStatistics.gamma_electron_energy.emplace_back(0);
+                            neutronStatistics.gamma_edep_energy.emplace_back(0);
+                        }
+                    }
+                }
+                // check if the particle is an electron
+                if (particle.PdgCode() == 11)
+                {
+                    // check for gammas first
+                    for (size_t i = 0; i < neutronStatistics.gamma_ids.size(); i++)
+                    {
+                        if (neutronStatistics.gamma_ids[i] == particle.Mother())
+                        {
+                            neutronStatistics.electron_ids.emplace_back(particle.TrackId());
+                            neutronStatistics.electron_parent.emplace_back(particle.Mother());
+                            neutronStatistics.electron_gamma_ids.emplace_back(particle.Mother());
+                            neutronStatistics.gamma_electron_energy[i] += particle.E();
+                            // find the corresponding neutron id
+                            for(size_t j = 0; j < neutronStatistics.neutron_ids.size(); j++)
+                            {
+                                if (neutronStatistics.neutron_ids[j] == neutronStatistics.gamma_neutron_ids[i])
+                                {
+                                    neutronStatistics.electron_neutron_ids.emplace_back(neutronStatistics.neutron_ids[j]);
+                                }
+                            }
+                            neutronStatistics.electron_energy.emplace_back(particle.E());
+                        }
+                    }
+                    // then check electrons
+                    for (size_t i = 0; i < neutronStatistics.electron_ids.size(); i++)
+                    {
+                        if (neutronStatistics.electron_ids[i] == particle.Mother())
+                        {
+                            neutronStatistics.electron_ids.emplace_back(particle.TrackId());
+                            neutronStatistics.electron_parent.emplace_back(particle.Mother());
+                            // find the corresponding gamma
+                            neutronStatistics.electron_gamma_ids.emplace_back(neutronStatistics.electron_gamma_ids[i]);
+                            neutronStatistics.electron_neutron_ids.emplace_back(neutronStatistics.electron_neutron_ids[i]);
+                            neutronStatistics.electron_energy.emplace_back(particle.E());
+                        }
+                    }
+                }
+            }
+        }
+        if (mcEnergyDeposit.isValid())
+        {
+            for (auto energyDeposit : *mcEnergyDeposit)
+            {
+                // check the list of electrons
+                for (size_t i = 0; i < neutronStatistics.electron_ids.size(); i++)
+                {
+                    if (neutronStatistics.electron_ids[i] == energyDeposit.TrackID())
+                    {
+                        neutronStatistics.edep_parent.emplace_back(energyDeposit.TrackID());
+                        neutronStatistics.edep_neutron_ids.emplace_back(neutronStatistics.electron_neutron_ids[i]);
+                        neutronStatistics.edep_gamma_ids.emplace_back(neutronStatistics.electron_gamma_ids[i]);
+                        for (size_t j = 0; j < neutronStatistics.gamma_ids.size(); j++)
+                        {
+                            if (neutronStatistics.gamma_ids[j] == neutronStatistics.electron_gamma_ids[i])
+                            {
+                                neutronStatistics.gamma_edep_energy[j] += energyDeposit.Energy();
+                            }
+                        }
+                        break;
+                    }
                 }
             }
         }

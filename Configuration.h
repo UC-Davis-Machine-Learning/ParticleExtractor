@@ -113,7 +113,11 @@ namespace extractor
             fhicl::Name("MCEdepPDGLevels"),
             fhicl::Comment("Heirarchy of particles to keep.")
         };
-
+        fhicl::Atom<double> MCEdepEnergyCutoff
+        {
+            fhicl::Name("MCEdepEnergyCutoff"),
+            fhicl::Comment("Cutoff for storing Edeps.")
+        };
         /**
          * Below are a set of voxelization parameters for MC energy depositions.
          * One must specify a voxel size, as well as a bounding box to use

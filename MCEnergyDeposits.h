@@ -57,6 +57,7 @@ namespace extractor
         void setPDGCodes(std::vector<Int_t> PDGCodes) { fPDGCodes = PDGCodes; }
         void setPDGLevels(std::vector<Int_t> PDGLevels) { fPDGLevels = PDGLevels; }
         void setPDGLevels(std::vector<std::string> PDGLevels);
+        void setEnergyCutoff(Double_t energyCutoff) { fEnergyCutoff = energyCutoff; }
 
         void processEvent(
             const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
@@ -79,6 +80,7 @@ namespace extractor
         VolumeType fBoundingBoxType;
         std::vector<Int_t> fPDGCodes;
         std::vector<Int_t> fPDGLevels;
+        Double_t fEnergyCutoff;
 
         // struct for holding event information
         MCEdep fMCEdep;
