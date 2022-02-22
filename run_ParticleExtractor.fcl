@@ -22,7 +22,7 @@ services:
     #@table::dunefd_1x2x6_simulation_services_refactored
     @table::protodune_refactored_simulation_services
     FileCatalogMetadata:    @local::art_file_catalog_mc
-    #Geometry:       @local::dune10kt_1x2x6_v4_refactored_geo
+    Geometry:                 @local::protodunev7_ddg_geo
 }
 
 physics:
