@@ -345,7 +345,7 @@ namespace extractor
         }
         if (mcEnergyDeposits.isValid())
         {
-            for (auto energyDeposit : *mcEnergyDeposit)
+            for (auto energyDeposit : *mcEnergyDeposits)
             {
                 // check the list of electrons
                 for (size_t i = 0; i < neutronStatistics.electron_ids.size(); i++)
