@@ -154,6 +154,8 @@ namespace extractor
     {
         "parent",
         "daughters",
+        "electrons",
+        "parent_electrons",
         "all"
     };
 

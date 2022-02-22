@@ -40,8 +40,14 @@ namespace extractor
             else if (PDGLevels[i] == "daughters") { 
                 levels.emplace_back(1);
             }
-            else {
+            else if (PDGLevels[i] == "electrons") {
                 levels.emplace_back(2);
+            }
+            else if (PDGLevels[i] == "parent_electrons") {
+                levels.emplace_back(3);
+            }
+            else {
+                levels.emplace_back(4);
             }
         }
         fPDGLevels = levels;
@@ -118,7 +124,10 @@ namespace extractor
                     if (
                         (fPDGLevels[pdg_index] == 0 and level == 0) or
                         (fPDGLevels[pdg_index] == 1 and level != 0) or
-                        (fPDGLevels[pdg_index] == 2)
+                        (fPDGLevels[pdg_index] == 2 and particlePDGMap[energyDeposit.TrackID()] == 11) or
+                        (fPDGLevels[pdg_index] == 3 and particlePDGMap[energyDeposit.TrackID()] == 11) or
+                        (fPDGLevels[pdg_index] == 3 and level == 0) or
+                        (fPDGLevels[pdg_index] == 4)
                     )
                     {                      
                         mcEdep.pdg.emplace_back(particlePDGMap[track_id]);

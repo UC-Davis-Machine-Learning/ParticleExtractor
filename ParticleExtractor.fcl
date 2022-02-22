@@ -18,7 +18,7 @@ ParticleExtractor:
     FillMCEnergyDeposits:   true
     MCEdepBoundingBox:      "TPC"
     MCEdepPDGCodes:         [2112, 13]
-    MCEdepPDGLevels:        ["daughters", "all"]
+    MCEdepPDGLevels:        ["electrons", "parent_electrons"]
 
     # MC Voxelizer parameters
     # For the voxel labeling, we can choose from either
