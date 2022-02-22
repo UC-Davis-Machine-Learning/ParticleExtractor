@@ -29,6 +29,7 @@ namespace extractor
     struct MCNeutronStatistics
     {
         std::vector<Int_t> neutron_ids;             ///< track id of each neutron
+
         std::vector<Int_t> gamma_ids;               ///< track ids of captured gammas
         std::vector<Int_t> gamma_neutron_ids;       ///< associated ids of captured gammas
         std::vector<Double_t> gamma_energy;         ///< energy of each gamma
@@ -40,7 +41,16 @@ namespace extractor
         std::vector<Int_t> electron_gamma_ids;      ///< track id of the gamma which created the electron
         std::vector<Int_t> electron_neutron_ids;    ///< track id of the neutron which led to the electron
         std::vector<Double_t> electron_energy;      ///< energy of the electron
-        std::vector<Int_t> edep_parent;             ///< parent id of the edep
+
+        std::vector<Int_t> neutron_edep_ids;        ///< neutron ids associated to each edep
+        std::vector<Int_t> neutron_edep_parent;     ///< parent id of the edep
+        std::vector<Int_t> neutron_edep_gamma_ids;  ///< gamma ids associated to each edep
+
+        std::vector<Double_t> neutron_edep_x;       ///< x position of neutron edep
+        std::vector<Double_t> neutron_edep_y;       ///< y position of neutron edep
+        std::vector<Double_t> neutron_edep_z;       ///< z position of neutron edep
+        std::vector<Double_t> neutron_edep_energy;  ///< energy of edep
+        std::vector<Int_t> neutron_edep_num_electrons;  ///< number of electrons from edep
 
         std::vector<bool> primary;                  ///< wether neutron is a primary
         std::vector<bool> capture;                  ///< wether neutron is captured

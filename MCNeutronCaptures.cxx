@@ -343,7 +343,7 @@ namespace extractor
                 }
             }
         }
-        if (mcEnergyDeposit.isValid())
+        if (mcEnergyDeposits.isValid())
         {
             for (auto energyDeposit : *mcEnergyDeposit)
             {
@@ -352,9 +352,9 @@ namespace extractor
                 {
                     if (neutronStatistics.electron_ids[i] == energyDeposit.TrackID())
                     {
-                        neutronStatistics.edep_parent.emplace_back(energyDeposit.TrackID());
-                        neutronStatistics.edep_neutron_ids.emplace_back(neutronStatistics.electron_neutron_ids[i]);
-                        neutronStatistics.edep_gamma_ids.emplace_back(neutronStatistics.electron_gamma_ids[i]);
+                        neutronStatistics.neutron_edep_ids.emplace_back(neutronStatistics.electron_neutron_ids[i]);
+                        neutronStatistics.neutron_edep_parent.emplace_back(energyDeposit.TrackID());
+                        neutronStatistics.neutron_edep_gamma_ids.emplace_back(neutronStatistics.electron_gamma_ids[i]);
                         for (size_t j = 0; j < neutronStatistics.gamma_ids.size(); j++)
                         {
                             if (neutronStatistics.gamma_ids[j] == neutronStatistics.electron_gamma_ids[i])
@@ -362,6 +362,11 @@ namespace extractor
                                 neutronStatistics.gamma_edep_energy[j] += energyDeposit.Energy();
                             }
                         }
+                        neutronStatistics.neutron_edep_energy.emplace_back(energyDeposit.Energy());
+                        neutronStatistics.neutron_edep_num_electrons.emplace_back(energyDeposit.NumElectrons());
+                        neutronStatistics.neutron_edep_x.emplace_back(energyDeposit.StartX());
+                        neutronStatistics.neutron_edep_y.emplace_back(energyDeposit.StartY());
+                        neutronStatistics.neutron_edep_z.emplace_back(energyDeposit.StartZ());
                         break;
                     }
                 }

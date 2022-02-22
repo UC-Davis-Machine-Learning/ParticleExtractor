@@ -95,7 +95,7 @@ namespace extractor
             
             for (auto energyDeposit : *mcEnergyDeposits)
             {
-                if (energyDeposit.Energy() < fMCEnergyCutoff) {
+                if (energyDeposit.Energy() < fEnergyCutoff) {
                     continue;
                 }
                 // Determine if edep is within the desired volume
