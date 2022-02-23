@@ -185,7 +185,7 @@ namespace extractor
 
         // Reco Voxel information
         fRecoVoxelSize = fParameters().RecoVoxelSize();
-        fRecoVoxelBoundingBox = fParameters().RecoVoxelBoundingBox();
+        fRecoEdepPDGLabels = fParameters().RecoEdepPDGLabels();
         fRecoVoxelLabeling = fParameters().RecoVoxelLabeling();
 
         // check for errors

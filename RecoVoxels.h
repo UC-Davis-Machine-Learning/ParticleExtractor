@@ -25,17 +25,10 @@
 
 #include "DetectorGeometry.h"
 #include "RecoEnergyDeposits.h"
+#include "MCVoxels.h"
 
 namespace extractor
 {
-    struct Voxels
-    {
-        std::vector<std::vector<Int_t>> voxels;
-        std::vector<Int_t> labels;
-        std::vector<Double_t> energy;
-        std::vector<std::vector<Int_t>> edep_idxs;
-    };
-
     class RecoVoxels
     {
     public:
