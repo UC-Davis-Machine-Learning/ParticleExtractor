@@ -84,14 +84,17 @@ namespace extractor
             xyz[1] = int((recoEdep.sp_y[i] - fBoundingBox.y_min) / fVoxelSize);
             xyz[2] = int((recoEdep.sp_z[i] - fBoundingBox.z_min) / fVoxelSize);
             // find if pdg is in the map, otherwise use -1
-            auto it = fPDGLabelMap.find(recoEdep.pdg[i]);
-            if (it != fPDGLabelMap.end()) {
-                label = fPDGLabelMap[recoEdep.pdg[i]];
-            }
-            else {
-                label = -1;
-            }
-            energy = recoEdep.summed_adc[i];
+            // TODO: FIX THIS!
+            // auto it = fPDGLabelMap.find(recoEdep.pdg[i]);
+            // if (it != fPDGLabelMap.end()) {
+            //     label = fPDGLabelMap[recoEdep.pdg[i]];
+            // }
+            // else {
+            //     label = -1;
+            // }
+            // energy = recoEdep.summed_adc[i];
+            label = -1;
+            energy = -1;
             edep_idx = static_cast<int>(i);
 
             // see if xyz is in temp_voxels
