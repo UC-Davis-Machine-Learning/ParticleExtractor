@@ -248,6 +248,37 @@ namespace extractor
                 << " Parameter 'MCVoxelLabeling': '" << fMCVoxelLabeling << "' is not an allowed type for MCVoxelLabeling!" 
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
+        if (fFillRecoVoxels and (fMCEdepPDGCodes.size() != fRecoEdepPDGLabels.size()))
+        {
+            throw cet::exception("ParticleExtractor")
+                << " Configuration parameters 'MCEdepPDGCodes' and 'RecoEdepPDGLabels'"
+                << " have different numbers of entries, (" << fMCEdepPDGCodes.size() << " and "
+                << fRecoEdepPDGLabels.size() << ") but must be the same!\n"
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        if (fFillRecoVoxels and !fFillRecoEnergyDeposits)
+        {
+            throw cet::exception("ParticleExtractor")
+                << " If 'FillRecoVoxels' set to true, then 'FillRecoEnergyDeposits' must also be true!"
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        if (fRecoVoxelSize <= 0.0)
+        {
+            throw cet::exception("ParticleExtractor")
+                << " Reco Voxel configuration parameter 'RecoVoxelSize' cannot be <= 0, "
+                << "but was set to: " << fRecoVoxelSize << "!\n"
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+        if (std::find(
+                allowed_mc_voxel_labeling.begin(), 
+                allowed_mc_voxel_labeling.end(), 
+                fRecoVoxelLabeling) == allowed_mc_voxel_labeling.end())
+        {
+            throw cet::exception("ParticleExtractor")
+                << " Parameter 'RecoVoxelLabeling': '" << fRecoVoxelLabeling << "' is not an allowed type for MCVoxelLabeling!" 
+                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
+        }
+
         fMCEnergyDeposits.setBoundingBoxType(fMCEdepBoundingBox);
         fMCEnergyDeposits.setPDGCodes(fMCEdepPDGCodes);
         fMCEnergyDeposits.setPDGLevels(fMCEdepPDGLevels);
@@ -259,7 +290,7 @@ namespace extractor
         fMCVoxels.setBoundingBox(fMCVoxelBoundingBox);
         fMCVoxels.setVoxelLabeling(fMCVoxelLabeling);
 
-        fRecoVoxels.setPDGCodes(fRecoEdepPDGCodes);
+        fRecoVoxels.setPDGCodes(fMCEdepPDGCodes);
         fRecoVoxels.setVoxelLabels(fRecoEdepPDGLabels);
         fRecoVoxels.setVoxelSize(fRecoVoxelSize);
         fRecoVoxels.setVoxelLabeling(fRecoVoxelLabeling);
@@ -350,17 +381,25 @@ namespace extractor
         fMetaTree->Branch("SimChannelInstanceProducerLabel", &fSimChannelInstanceProducerLabel);
         fMetaTree->Branch("HitProducerLabel", &fHitProducerLabel);
         fMetaTree->Branch("SpacePointProducerLabel", &fSpacePointProducerLabel);
+
         fMetaTree->Branch("FillMCNeutronCaptures", &fFillMCNeutronCaptures);
         fMetaTree->Branch("FillMCEnergyDeposits", &fFillMCEnergyDeposits);
         fMetaTree->Branch("FillMCVoxels", &fFillMCVoxels);
         fMetaTree->Branch("FillRecoEnergyDeposits", &fFillRecoEnergyDeposits);
+        fMetaTree->Branch("FillRecoVoxels", &fFillRecoVoxels);
+
         fMetaTree->Branch("MCEdepBoundingBox", &fMCEdepBoundingBox);
         fMetaTree->Branch("MCEdepPDGCodes", &fMCEdepPDGCodes);
         fMetaTree->Branch("MCEdepPDGLevels", &fMCEdepPDGLevels);
         fMetaTree->Branch("MCEdepPDGLabels", &fMCEdepPDGLabels);
+
         fMetaTree->Branch("MCVoxelSize", &fMCVoxelSize);
         fMetaTree->Branch("MCVoxelBoundingBox", &fMCVoxelBoundingBox);
         fMetaTree->Branch("MCVoxelLabeling", &fMCVoxelLabeling);
+
+        fMetaTree->Branch("RecoEdepPDGLabels", &fRecoEdepPDGLabels);
+        fMetaTree->Branch("RecoVoxelSize", &fRecoVoxelSize);
+        fMetaTree->Branch("RecoVoxelLabeling", &fRecoVoxelLabeling);
  
         fMetaTree->Fill();
     }
