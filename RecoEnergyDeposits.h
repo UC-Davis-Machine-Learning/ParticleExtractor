@@ -1,6 +1,7 @@
 /**
  * @file RecoEnergyDeposits.h
  * @author Nicholas Carrara [nmcarrara@ucdavis.edu]
+ * @author Junying Huang [jyghuang@ucdavis.edu]
  * @brief 
  * @version 0.1
  * @date 2022-02-17
