@@ -187,14 +187,6 @@ namespace extractor
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
             }
         }
-        if (fMCEdepPDGCodes.size() != fMCEdepPDGLabels.size())
-        {
-            throw cet::exception("ParticleExtractor")
-                << " Configuration parameters 'MCEdepPDGCodes' and 'MCEdepPDGLabels'"
-                << " have different numbers of entries, (" << fMCEdepPDGCodes.size() << " and "
-                << fMCEdepPDGLabels.size() << ") but must be the same!\n"
-                << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
-        }
         if (fFillMCVoxels and (fMCEdepPDGCodes.size() != fMCEdepPDGLabels.size()))
         {
             throw cet::exception("ParticleExtractor")
