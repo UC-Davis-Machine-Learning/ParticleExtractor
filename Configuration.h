@@ -149,6 +149,30 @@ namespace extractor
             fhicl::Name("MCVoxelLabeling"),
             fhicl::Comment("Labeling scheme for the voxels.")
         };
+
+        /**
+         * Below are a set of voxelization parameters for Reco energy depositions.
+         */
+        fhicl::Atom<bool> FillRecoVoxels
+        {
+            fhicl::Name("FillRecoVoxels"),
+            fhicl::Comment("Whether to save Reco voxel information.")
+        };
+        fhicl::Sequence<int> RecoEdepPDGLabels
+        {
+            fhicl::Name("RecoEdepPDGLabels"),
+            fhicl::Comment("Labeling scheme for the PDGCodes.")
+        };
+        fhicl::Atom<double> RecoVoxelSize
+        {
+            fhicl::Name("RecoVoxelSize"),
+            fhicl::Comment("Size of the voxels in mm.")
+        };
+        fhicl::Atom<std::string> RecoVoxelLabeling
+        {
+            fhicl::Name("RecoVoxelLabeling"),
+            fhicl::Comment("Labeling scheme for the voxels.")
+        };
     };
 
     using Parameters = art::EDAnalyzer::Table<Configuration>;
