@@ -195,10 +195,10 @@ namespace extractor
                 << fMCEdepPDGLabels.size() << ") but must be the same!\n"
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
-        if (fFillMCEnergyDeposits != fFillMCVoxels)
+        if (fFillMCVoxels and !fFillMCEnergyDeposits)
         {
             throw cet::exception("ParticleExtractor")
-                << " Both 'FillMCEnergyDeposits' and 'FillMCVoxels' must either both be true or false!"
+                << " If 'FillMCVoxels' set to true, then 'FillMCEnergyDeposits' must also be true!"
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
         if (fMCVoxelSize <= 0.0)
