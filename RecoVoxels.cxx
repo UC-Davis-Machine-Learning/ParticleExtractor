@@ -79,43 +79,43 @@ namespace extractor
          */
         for (size_t i = 0; i < recoEdep.pdg.size(); i++)
         {
-            // gather variables
-            xyz[0] = int((recoEdep.sp_x[i] - fBoundingBox.x_min) / fVoxelSize);
-            xyz[1] = int((recoEdep.sp_y[i] - fBoundingBox.y_min) / fVoxelSize);
-            xyz[2] = int((recoEdep.sp_z[i] - fBoundingBox.z_min) / fVoxelSize);
-            // find if pdg is in the map, otherwise use -1
-            // TODO: FIX THIS!
-            // auto it = fPDGLabelMap.find(recoEdep.pdg[i]);
-            // if (it != fPDGLabelMap.end()) {
-            //     label = fPDGLabelMap[recoEdep.pdg[i]];
-            // }
-            // else {
-            //     label = -1;
-            // }
-            // energy = recoEdep.summed_adc[i];
-            label = -1;
-            energy = -1;
-            edep_idx = static_cast<int>(i);
+            for (size_t j = 0; j < recoEdep.pdg[i].size(); j++)
+            {
+                // gather variables
+                xyz[0] = int((recoEdep.sp_x[i] - fBoundingBox.x_min) / fVoxelSize);
+                xyz[1] = int((recoEdep.sp_y[i] - fBoundingBox.y_min) / fVoxelSize);
+                xyz[2] = int((recoEdep.sp_z[i] - fBoundingBox.z_min) / fVoxelSize);
+                // find if pdg is in the map, otherwise use -1
+                auto it = fPDGLabelMap.find(recoEdep.pdg[i][j]);
+                if (it != fPDGLabelMap.end()) {
+                    label = fPDGLabelMap[recoEdep.pdg[i][j]];
+                }
+                else {
+                    label = -1;
+                }
+                energy = recoEdep.summed_adc[i][j];
+                edep_idx = static_cast<int>(i);
 
-            // see if xyz is in temp_voxels
-            auto voxel_exists = std::find(
-                temp_voxels.begin(), 
-                temp_voxels.end(), 
-                xyz
-            );
-            if (voxel_exists == temp_voxels.end())
-            {
-                temp_voxels.emplace_back(xyz);
-                temp_labels.emplace_back(std::vector<Int_t>({label}));
-                temp_energy.emplace_back(std::vector<Double_t>({energy}));
-                temp_edep_idxs.emplace_back(std::vector<Int_t>({edep_idx}));
-            }
-            else
-            {
-                Int_t voxel_index = std::distance(temp_voxels.begin(), voxel_exists);
-                temp_labels[voxel_index].emplace_back(label);
-                temp_energy[voxel_index].emplace_back(energy);
-                temp_edep_idxs[voxel_index].emplace_back(edep_idx);
+                // see if xyz is in temp_voxels
+                auto voxel_exists = std::find(
+                    temp_voxels.begin(), 
+                    temp_voxels.end(), 
+                    xyz
+                );
+                if (voxel_exists == temp_voxels.end())
+                {
+                    temp_voxels.emplace_back(xyz);
+                    temp_labels.emplace_back(std::vector<Int_t>({label}));
+                    temp_energy.emplace_back(std::vector<Double_t>({energy}));
+                    temp_edep_idxs.emplace_back(std::vector<Int_t>({edep_idx}));
+                }
+                else
+                {
+                    Int_t voxel_index = std::distance(temp_voxels.begin(), voxel_exists);
+                    temp_labels[voxel_index].emplace_back(label);
+                    temp_energy[voxel_index].emplace_back(energy);
+                    temp_edep_idxs[voxel_index].emplace_back(edep_idx);
+                }
             }
         }
         /**
