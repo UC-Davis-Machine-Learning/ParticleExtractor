@@ -64,6 +64,7 @@
 #include "MCEnergyDeposits.h"
 #include "MCVoxels.h"
 #include "RecoEnergyDeposits.h"
+#include "RecoVoxels.h"
 
 namespace extractor
 {
@@ -92,16 +93,29 @@ namespace extractor
         bool fFillMCEnergyDeposits;
         bool fFillMCVoxels;
         bool fFillRecoEnergyDeposits;
+        bool fFillRecoVoxels;
+
         // MC edep variables
         std::string fMCEdepBoundingBox;
         std::vector<Int_t> fMCEdepPDGCodes;
         std::vector<std::string> fMCEdepPDGLevels;
         Double_t fMCEdepEnergyCutoff;
+
         // MC voxel variables
         std::vector<Int_t> fMCEdepPDGLabels;
         Double_t fMCVoxelSize;
         std::string fMCVoxelBoundingBox;
         std::string fMCVoxelLabeling;
+
+        // Reco edep variables
+        std::vector<Int_t> fRecoEdepPDGCodes;
+        Double_t fRecoEdepEnergyCutoff;
+
+        // Reco voxel variables
+        std::vector<Int_t> fRecoEdepPDGLabels;
+        Double_t fRecoVoxelSize;
+        std::string fRecoVoxelBoundingBox;
+        std::string fRecoVoxelLabeling;
 
         // producer labels
         art::InputTag fLArGeantProducerLabel;
@@ -129,6 +143,8 @@ namespace extractor
         MCVoxels fMCVoxels;
         // Reco EnergyDeposits
         RecoEnergyDeposits fRecoEnergyDeposits;
+        // Reco Voxels
+        RecoVoxels fRecoVoxels;
     };
 
     // constructor
@@ -153,6 +169,7 @@ namespace extractor
         fFillMCEnergyDeposits = fParameters().FillMCEnergyDeposits();
         fFillMCVoxels = fParameters().FillMCVoxels();
         fFillRecoEnergyDeposits = fParameters().FillRecoEnergyDeposits();
+        fFillRecoVoxels = fParameters().FillRecoVoxels();
 
         // MC edep information
         fMCEdepBoundingBox = fParameters().MCEdepBoundingBox();
@@ -165,6 +182,11 @@ namespace extractor
         fMCVoxelSize = fParameters().MCVoxelSize();
         fMCVoxelBoundingBox = fParameters().MCVoxelBoundingBox();
         fMCVoxelLabeling = fParameters().MCVoxelLabeling();
+
+        // Reco Voxel information
+        fRecoVoxelSize = fParameters().RecoVoxelSize();
+        fRecoVoxelBoundingBox = fParameters().RecoVoxelBoundingBox();
+        fRecoVoxelLabeling = fParameters().RecoVoxelLabeling();
 
         // check for errors
         if (fMCEdepPDGCodes.size() != fMCEdepPDGLevels.size())
@@ -230,11 +252,17 @@ namespace extractor
         fMCEnergyDeposits.setPDGCodes(fMCEdepPDGCodes);
         fMCEnergyDeposits.setPDGLevels(fMCEdepPDGLevels);
         fMCEnergyDeposits.setEnergyCutoff(fMCEdepEnergyCutoff);
+
         fMCVoxels.setPDGCodes(fMCEdepPDGCodes);
         fMCVoxels.setVoxelLabels(fMCEdepPDGLabels);
         fMCVoxels.setVoxelSize(fMCVoxelSize);
         fMCVoxels.setBoundingBox(fMCVoxelBoundingBox);
         fMCVoxels.setVoxelLabeling(fMCVoxelLabeling);
+
+        fRecoVoxels.setPDGCodes(fRecoEdepPDGCodes);
+        fRecoVoxels.setVoxelLabels(fRecoEdepPDGLabels);
+        fRecoVoxels.setVoxelSize(fRecoVoxelSize);
+        fRecoVoxels.setVoxelLabeling(fRecoVoxelLabeling);
 
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
     }
@@ -292,6 +320,9 @@ namespace extractor
                 recoSpacePoints,
                 hitsFromSpacePointsAssn
             );
+        }
+        if (fFillRecoVoxels) {
+            fRecoVoxels.processEvent(fRecoEnergyDeposits);
         }
     }
 
