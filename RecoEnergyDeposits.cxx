@@ -74,6 +74,7 @@ namespace extractor
                 std::vector<Double_t> temp_summed_adc;
                 Int_t hit_count = 0;
                 auto& spsHit = hitSpacePointAssn.at(i);
+                Int_t num_channels = mcChannels->size();
                 for (auto hit : spsHit)
                 {   
                     std::cout << "  hit: " << hit_count << std::endl;
@@ -87,28 +88,19 @@ namespace extractor
                     // now find the corresponding sim channels
                     Int_t track_id;
                     Int_t channel_count = 0;
-                    for (auto channel : *mcChannels)
+                    // check if hit channel is reached
+                    if hit->Channel() >= num_channels {
+                        break;
+                    }
+                    auto channel = mcChannels->at(hit->Channel());
+                    auto const& trackIDs = channel.TrackIDEs((int)hit->PeakTime(), (int)hit->PeakTime());
+                    if (trackIDs.size() != 0)
                     {
-                        std::cout << "channel: " << channel_count << std::endl;
-                        channel_count += 1;
-                        // the hit and sim channels must match
-                        if (channel.Channel() != hit->Channel()) {
-                            std::cout << "channel: " << channel.Channel() << ", hit: " << hit->Channel() << std::endl;
-                            std::cout << "      channel not hit channel" << std::endl;
-                            continue;
-                        }
-                        // find the track IDs that correspond to the peaktime
-                        // on this channel.
-
-                        auto const& trackIDs = channel.TrackIDEs((int)hit->PeakTime(), (int)hit->PeakTime());
-                        if (trackIDs.size() != 0)
-                        {
-                            std::cout << "          track size > 0" << std::endl;
-                            temp_channel_id.emplace_back(channel.Channel());
-                            temp_track_id.emplace_back(trackIDs[0].trackID);
-                            track_id = trackIDs[0].trackID;
-                            break;
-                        }
+                        std::cout << "          track size > 0" << std::endl;
+                        temp_channel_id.emplace_back(channel.Channel());
+                        temp_track_id.emplace_back(trackIDs[0].trackID);
+                        track_id = trackIDs[0].trackID;
+                        break;
                     }
                     Int_t mother = parentDaughterMap[track_id];
                     std::cout << "      mother: " << mother << std::endl;
