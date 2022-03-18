@@ -93,6 +93,7 @@ namespace extractor
                         channel_count += 1;
                         // the hit and sim channels must match
                         if (channel.Channel() != hit->Channel()) {
+                            std::cout << "channel: " << channel.Channel() << ", hit: " << hit->Channel() << std::endl;
                             std::cout << "      channel not hit channel" << std::endl;
                             continue;
                         }
