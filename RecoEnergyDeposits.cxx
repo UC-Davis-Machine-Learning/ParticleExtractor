@@ -95,8 +95,11 @@ namespace extractor
                     auto const& trackIDs = channel.TrackIDEs((int)hit->PeakTime(), (int)hit->PeakTime());
                     if (trackIDs.size() == 0)
                     {
-                        std::cout << "          track size > 0" << std::endl;
+                        std::cout << "          track size == 0" << std::endl;
                         continue;
+                    }
+                    for (int i = 0; i < trackIDs.size(); i++) {
+                        std::cout << " trackid: " << i << ": " << trackID[i].trackID << std::endl;
                     }
                     temp_channel_id.emplace_back(channel.Channel());
                     temp_track_id.emplace_back(trackIDs[0].trackID);
