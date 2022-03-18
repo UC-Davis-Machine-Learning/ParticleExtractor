@@ -71,7 +71,6 @@ namespace extractor
                 std::vector<Int_t> temp_ancestor_id;
                 std::vector<Int_t> temp_channel_id;
                 std::vector<Double_t> temp_summed_adc;
-                Int_t hit_count = 0;
                 auto& spsHit = hitSpacePointAssn.at(i);
                 auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
