@@ -66,7 +66,6 @@ namespace extractor
             art::fill_ptr_vector(pointsList, recoSpacePoints);            
             for (size_t i = 0; i < pointsList.size(); i++)
             {
-                //std::cout << "point: " << i << std::endl;
                 std::vector<Int_t> temp_pdg;
                 std::vector<Int_t> temp_track_id;
                 std::vector<Int_t> temp_ancestor_id;
@@ -76,16 +75,8 @@ namespace extractor
                 auto& spsHit = hitSpacePointAssn.at(i);
                 auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
-                {   
-                    //std::cout << "  hit: " << hit_count << std::endl;
-                    hit_count += 1;
-                    // If the hit is not in the collection plane,
-                    // then just continue.
-                    // if (hit->WireID().Plane != 2) {
-                    //     //std::cout << "wireplane != 2" << std::endl;
-                    //     continue;
-                    // }
-                    // now find the corresponding sim channels
+                {  
+                    // find the corresponding sim channels
                     Int_t track_id;
                     // check if hit channel is reached
                     if (hit->Channel() >= num_channels) {
@@ -93,9 +84,7 @@ namespace extractor
                     }
                     auto channel = mcChannels->at(hit->Channel());
                     auto const& trackIDs = channel.TrackIDEs((int)hit->PeakTime(), (int)hit->PeakTime());
-                    if (trackIDs.size() == 0)
-                    {
-                        //std::cout << "          track size == 0" << std::endl;
+                    if (trackIDs.size() == 0) {
                         continue;
                     }
                     temp_channel_id.emplace_back(channel.Channel());
@@ -103,21 +92,15 @@ namespace extractor
                     track_id = trackIDs[0].trackID;
                     
                     Int_t mother = parentDaughterMap[track_id];
-                    //std::cout << "      mother: " << mother << std::endl;
                     while (mother != 0)
                     {
                         track_id = mother;
                         mother = parentDaughterMap[track_id];
                     }
-                    //std::cout << "      mother: " << mother << std::endl;
-                    //std::cout << "      pdg: " << particlePDGMap[track_id] << std::endl;
                     
                     temp_ancestor_id.emplace_back(track_id);
                     temp_pdg.emplace_back(particlePDGMap[track_id]);
                     temp_summed_adc.emplace_back(hit->SummedADC());
-                }
-                if (temp_pdg.size() == 0) {
-                    std::cout << "point: " << i << std::endl;
                 }
                 // collect results
                 recoEdep.pdg.emplace_back(temp_pdg);

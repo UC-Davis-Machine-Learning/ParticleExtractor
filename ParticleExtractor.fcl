@@ -13,32 +13,32 @@ ParticleExtractor:
     SpacePointProducerLabel:    "reco3d"
 
     # MC Neutron capture parameters
-    FillMCNeutronCaptures:  true
+    FillMCNeutronCaptures:  false
     
     # MC Edep parameters
     FillMCEnergyDeposits:   true
     MCEdepBoundingBox:      "TPC"
-    MCEdepPDGCodes:         [2112, 13]
-    MCEdepPDGLevels:        ["electrons", "parent_electrons"]
+    MCEdepPDGCodes:         [2212, 2112, 13, -13, 11, -11]
+    MCEdepPDGLevels:        ["electrons", "parent_electrons", "parent_electrons", "parent_electrons", "parent_electrons"]
     MCEdepEnergyCutoff:     0.0
 
     # MC Voxelizer parameters
     # For the voxel labeling, we can choose from either
     # "largest", or "mixed".
     FillMCVoxels:           true
-    MCEdepPDGLabels:        [0, 1]
+    MCEdepPDGLabels:        [0, 1, 2, 3, 4, 5]
     MCVoxelSize:            4.7
     MCVoxelBoundingBox:     "TPC"
     MCVoxelLabeling:        "largest"   
 
     # Reco energy deposit parameters
-    FillRecoEnergyDeposits: false
+    FillRecoEnergyDeposits: true
 
     # MC Voxelizer parameters
     # For the voxel labeling, we can choose from either
     # "largest", or "mixed".
-    FillRecoVoxels:           false
-    RecoEdepPDGLabels:        [0, 1]
+    FillRecoVoxels:           true
+    RecoEdepPDGLabels:        [0, 1, 2, 3, 4, 5]
     RecoVoxelSize:            4.7
     RecoVoxelLabeling:        "largest"
 }
