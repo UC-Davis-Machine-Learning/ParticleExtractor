@@ -113,6 +113,7 @@ namespace extractor
                         mother = parentDaughterMap[track_id];
                     }
                     std::cout << "      mother: " << mother << std::endl;
+                    std::cout << "      pdg: " << particlePDGMap[track_id] << std::endl;
                     temp_ancestor_id.emplace_back(track_id);
                     temp_pdg.emplace_back(particlePDGMap[track_id]);
                     temp_summed_adc.emplace_back(hit->SummedADC());
