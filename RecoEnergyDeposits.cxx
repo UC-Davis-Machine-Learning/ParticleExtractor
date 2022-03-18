@@ -98,7 +98,7 @@ namespace extractor
                         //std::cout << "          track size == 0" << std::endl;
                         continue;
                     }
-                    for (int j = 0; j < trackIDs.size(); j++)
+                    for (unsigned int j = 0; j < trackIDs.size(); j++)
                     {
                         temp_channel_id.emplace_back(channel.Channel());
                         temp_track_id.emplace_back(trackIDs[j].trackID);
