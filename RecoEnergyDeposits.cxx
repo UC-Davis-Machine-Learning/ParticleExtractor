@@ -74,7 +74,7 @@ namespace extractor
                 std::vector<Double_t> temp_summed_adc;
                 Int_t hit_count = 0;
                 auto& spsHit = hitSpacePointAssn.at(i);
-                Int_t num_channels = mcChannels->size();
+                auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
                 {   
                     std::cout << "  hit: " << hit_count << std::endl;
@@ -87,7 +87,6 @@ namespace extractor
                     }
                     // now find the corresponding sim channels
                     Int_t track_id;
-                    Int_t channel_count = 0;
                     // check if hit channel is reached
                     if (hit->Channel() >= num_channels) {
                         break;
