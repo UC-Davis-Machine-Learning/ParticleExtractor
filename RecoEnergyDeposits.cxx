@@ -89,7 +89,7 @@ namespace extractor
                     Int_t track_id;
                     Int_t channel_count = 0;
                     // check if hit channel is reached
-                    if hit->Channel() >= num_channels {
+                    if (hit->Channel() >= num_channels) {
                         break;
                     }
                     auto channel = mcChannels->at(hit->Channel());
