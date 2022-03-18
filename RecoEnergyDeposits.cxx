@@ -93,14 +93,15 @@ namespace extractor
                     }
                     auto channel = mcChannels->at(hit->Channel());
                     auto const& trackIDs = channel.TrackIDEs((int)hit->PeakTime(), (int)hit->PeakTime());
-                    if (trackIDs.size() != 0)
+                    if (trackIDs.size() == 0)
                     {
                         std::cout << "          track size > 0" << std::endl;
-                        temp_channel_id.emplace_back(channel.Channel());
-                        temp_track_id.emplace_back(trackIDs[0].trackID);
-                        track_id = trackIDs[0].trackID;
-                        break;
+                        continue;
                     }
+                    temp_channel_id.emplace_back(channel.Channel());
+                    temp_track_id.emplace_back(trackIDs[0].trackID);
+                    track_id = trackIDs[0].trackID;
+                    
                     Int_t mother = parentDaughterMap[track_id];
                     std::cout << "      mother: " << mother << std::endl;
                     while (mother != 0)
