@@ -81,10 +81,10 @@ namespace extractor
                     hit_count += 1;
                     // If the hit is not in the collection plane,
                     // then just continue.
-                    if (hit->WireID().Plane != 2) {
-                        //std::cout << "wireplane != 2" << std::endl;
-                        continue;
-                    }
+                    // if (hit->WireID().Plane != 2) {
+                    //     //std::cout << "wireplane != 2" << std::endl;
+                    //     continue;
+                    // }
                     // now find the corresponding sim channels
                     Int_t track_id;
                     // check if hit channel is reached
