@@ -98,26 +98,26 @@ namespace extractor
                         //std::cout << "          track size == 0" << std::endl;
                         continue;
                     }
-                    for (unsigned int i = 0; i < trackIDs.size(); i++) {
-                        //std::cout << " trackid: " << i << ": " << trackIDs[i].trackID << std::endl;
-                    }
-                    temp_channel_id.emplace_back(channel.Channel());
-                    temp_track_id.emplace_back(trackIDs[0].trackID);
-                    track_id = trackIDs[0].trackID;
-                    
-                    Int_t mother = parentDaughterMap[track_id];
-                    //std::cout << "      mother: " << mother << std::endl;
-                    while (mother != 0)
+                    for (auto j : trackIDs.size())
                     {
-                        track_id = mother;
-                        mother = parentDaughterMap[track_id];
+                        temp_channel_id.emplace_back(channel.Channel());
+                        temp_track_id.emplace_back(trackIDs[j].trackID);
+                        track_id = trackIDs[j].trackID;
+                        
+                        Int_t mother = parentDaughterMap[track_id];
+                        //std::cout << "      mother: " << mother << std::endl;
+                        while (mother != 0)
+                        {
+                            track_id = mother;
+                            mother = parentDaughterMap[track_id];
+                        }
+                        //std::cout << "      mother: " << mother << std::endl;
+                        //std::cout << "      pdg: " << particlePDGMap[track_id] << std::endl;
+                        
+                        temp_ancestor_id.emplace_back(track_id);
+                        temp_pdg.emplace_back(particlePDGMap[track_id]);
+                        temp_summed_adc.emplace_back(hit->SummedADC());
                     }
-                    //std::cout << "      mother: " << mother << std::endl;
-                    //std::cout << "      pdg: " << particlePDGMap[track_id] << std::endl;
-                    
-                    temp_ancestor_id.emplace_back(track_id);
-                    temp_pdg.emplace_back(particlePDGMap[track_id]);
-                    temp_summed_adc.emplace_back(hit->SummedADC());
                 }
                 if (temp_pdg.size() == 0) {
                     std::cout << "point: " << i << std::endl;
