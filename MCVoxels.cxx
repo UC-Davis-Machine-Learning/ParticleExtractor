@@ -65,6 +65,7 @@ namespace extractor
         std::vector<std::vector<Int_t>> temp_labels;
         std::vector<std::vector<Double_t>> temp_energy;
         std::vector<std::vector<Int_t>> temp_edep_idxs;
+        std::vector<std::vector<Int_t>> temp_levels;
 
         std::vector<Int_t> xyz(3);
         Int_t label;
@@ -88,7 +89,7 @@ namespace extractor
             label = fPDGLabelMap[mcEdep.pdg[i]];
             energy = mcEdep.energy[i];
             edep_idx = static_cast<int>(i);
-            level = mcEdep.level[i][j];
+            level = mcEdep.level[i];
 
             // see if xyz is in temp_voxels
             auto voxel_exists = std::find(
