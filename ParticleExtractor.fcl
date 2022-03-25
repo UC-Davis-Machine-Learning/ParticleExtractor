@@ -41,6 +41,7 @@ ParticleExtractor:
     FillRecoVoxels:         true
     RecoEdepPDGLabels:      [0, 1, 2, 3, 4, 5]
     RecoVoxelSize:          4.7
+    RecoVoxelBoundingBox:   "TPC"
     RecoVoxelLabeling:      "largest"
 }
 

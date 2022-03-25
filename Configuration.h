@@ -173,6 +173,11 @@ namespace extractor
             fhicl::Name("RecoVoxelSize"),
             fhicl::Comment("Size of the voxels in mm.")
         };
+        fhicl::Atom<std::string> RecoVoxelBoundingBox
+        {
+            fhicl::Name("RecoVoxelBoundingBox"),
+            fhicl::Comment("Which bounding box to use for the voxelization.")
+        };
         fhicl::Atom<std::string> RecoVoxelLabeling
         {
             fhicl::Name("RecoVoxelLabeling"),

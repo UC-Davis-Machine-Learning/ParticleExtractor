@@ -189,6 +189,7 @@ namespace extractor
 
         // Reco Voxel information
         fRecoVoxelSize = fParameters().RecoVoxelSize();
+        fRecoVoxelBoundingBox = fParameters().RecoVoxelBoundingBox();
         fRecoEdepPDGLabels = fParameters().RecoEdepPDGLabels();
         fRecoVoxelLabeling = fParameters().RecoVoxelLabeling();
 
@@ -299,6 +300,7 @@ namespace extractor
         fRecoVoxels.setPDGCodes(fMCEdepPDGCodes);
         fRecoVoxels.setVoxelLabels(fRecoEdepPDGLabels);
         fRecoVoxels.setVoxelSize(fRecoVoxelSize);
+        fRecoVoxels.setBoundingBox(fRecoVoxelBoundingBox);
         fRecoVoxels.setVoxelLabeling(fRecoVoxelLabeling);
 
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
