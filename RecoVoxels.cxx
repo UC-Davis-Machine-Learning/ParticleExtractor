@@ -180,6 +180,7 @@ namespace extractor
             }
             else {
                 voxels.labels.emplace_back(unique_labels[0]);
+                voxels.levels.emplace_back(unique_levels[0]);
             }
         }
         fVoxels = voxels;
