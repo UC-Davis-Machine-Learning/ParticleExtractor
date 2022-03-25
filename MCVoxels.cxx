@@ -19,6 +19,7 @@ namespace extractor
         fMCVoxelsTree->Branch("labels", &fVoxels.labels);
         fMCVoxelsTree->Branch("energy", &fVoxels.energy);
         fMCVoxelsTree->Branch("edep_idxs", &fVoxels.edep_idxs);
+        fMCVoxelsTree->Branch("levels", &fVoxels.levels);
     }
 
     MCVoxels::~MCVoxels()
@@ -69,6 +70,7 @@ namespace extractor
         Int_t label;
         Double_t energy;
         Int_t edep_idx;
+        Int_t level;
 
         MCEdep mcEdep = energyDeposits.getMCEdep();
         /**
@@ -86,6 +88,7 @@ namespace extractor
             label = fPDGLabelMap[mcEdep.pdg[i]];
             energy = mcEdep.energy[i];
             edep_idx = static_cast<int>(i);
+            level = mcEdep.level[i][j];
 
             // see if xyz is in temp_voxels
             auto voxel_exists = std::find(
@@ -99,6 +102,7 @@ namespace extractor
                 temp_labels.emplace_back(std::vector<Int_t>({label}));
                 temp_energy.emplace_back(std::vector<Double_t>({energy}));
                 temp_edep_idxs.emplace_back(std::vector<Int_t>({edep_idx}));
+                temp_levels.emplace_back(std::vector<Int_t>({level}));
             }
             else
             {
@@ -106,6 +110,7 @@ namespace extractor
                 temp_labels[voxel_index].emplace_back(label);
                 temp_energy[voxel_index].emplace_back(energy);
                 temp_edep_idxs[voxel_index].emplace_back(edep_idx);
+                temp_levels[voxel_index].emplace_back(level);
             }
         }
         /**
@@ -119,6 +124,7 @@ namespace extractor
         {
             std::vector<Int_t> unique_labels;
             std::vector<Double_t> unique_energy;
+            std::vector<Int_t> unique_levels;
             // collect unique labels and the total energy
             for (size_t j = 0; j < temp_labels[i].size(); j++)
             {
@@ -131,6 +137,7 @@ namespace extractor
                 {
                     unique_labels.emplace_back(temp_labels[i][j]);
                     unique_energy.emplace_back(temp_energy[i][j]);
+                    unique_levels.emplace_back(temp_levels[i][j]);
                 }
                 else
                 {
@@ -157,6 +164,7 @@ namespace extractor
                         std::max_element(unique_energy.begin(), unique_energy.end())
                     );
                     voxels.labels.emplace_back(unique_labels[arg_max_energy]);
+                    voxels.levels.emplace_back(unique_levels[arg_max_energy]);
                 }
             }
             else {

@@ -34,6 +34,7 @@ namespace extractor
         std::vector<Int_t> labels;
         std::vector<Double_t> energy;
         std::vector<std::vector<Int_t>> edep_idxs;
+        std::vector<Int_t> levels;
     };
 
     class MCVoxels
