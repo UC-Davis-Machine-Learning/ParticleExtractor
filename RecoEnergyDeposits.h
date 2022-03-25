@@ -84,6 +84,8 @@ namespace extractor
         void setPDGLevels(std::vector<Int_t> PDGLevels) { fPDGLevels = PDGLevels; }
         void setPDGLevels(std::vector<std::string> PDGLevels);
 
+        void setBoundingBoxType(std::string volumeType);
+
         void processEvent(
             const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
             const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
@@ -104,6 +106,7 @@ namespace extractor
         DetectorGeometry* fGeometry = DetectorGeometry::getInstance("RecoEnergyDeposits");
 
         // pdg codes to construct
+        VolumeType fBoundingBoxType;
         std::vector<Int_t> fPDGCodes;
         std::vector<Int_t> fPDGLevels;
 

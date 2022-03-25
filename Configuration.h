@@ -92,6 +92,11 @@ namespace extractor
             fhicl::Name("FillRecoEnergyDeposits"),
             fhicl::Comment("Whether to save Reco edep information.")
         };
+        fhicl::Atom<std::string> RecoEdepBoundingBox
+        {
+            fhicl::Name("RecoEdepBoundingBox"),
+            fhicl::Comment("Which bounding box to use for the Reco edeps.")
+        };
 
         /**
          * Below are a set of parameters for extracting energy deposition

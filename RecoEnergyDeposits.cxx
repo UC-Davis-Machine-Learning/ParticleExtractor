@@ -29,6 +29,19 @@ namespace extractor
     RecoEnergyDeposits::~RecoEnergyDeposits()
     {}
 
+    void RecoEnergyDeposits::setBoundingBoxType(std::string volumeType)
+    {
+        if (volumeType == "TPC" or volumeType == "tpc") { 
+            fBoundingBoxType = VolumeType::TPC;
+        }
+        else if (volumeType == "Cryo" or volumeType == "cryo") {
+            fBoundingBoxType = VolumeType::Cryostat;
+        }
+        else {
+            fBoundingBoxType = VolumeType::World;
+        }
+    }
+
     void RecoEnergyDeposits::processEvent(
         const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
         const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
@@ -102,16 +115,26 @@ namespace extractor
                     temp_summed_adc.emplace_back(hit->SummedADC());
                 }
                 // collect results
+                auto xyz = pointsList[i]->XYZ();
+                // check if point is in active volume
+                // Determine if edep is within the desired volume
+                DetectorVolume edep_volume = fGeometry->getVolume(
+                    xyz[0], xyz[1], xyz[2]
+                );
+                if (edep_volume.volume_type != fBoundingBoxType) {
+                    continue;
+                }
+                recoEdep.sp_x.emplace_back(xyz[0]);
+                recoEdep.sp_y.emplace_back(xyz[1]);
+                recoEdep.sp_z.emplace_back(xyz[2]);
+
                 recoEdep.pdg.emplace_back(temp_pdg);
                 recoEdep.track_id.emplace_back(temp_track_id);
                 recoEdep.ancestor_id.emplace_back(temp_ancestor_id);
                 recoEdep.channel_id.emplace_back(temp_channel_id);
                 recoEdep.summed_adc.emplace_back(temp_summed_adc);
 
-                auto xyz = pointsList[i]->XYZ();
-                recoEdep.sp_x.emplace_back(xyz[0]);
-                recoEdep.sp_y.emplace_back(xyz[1]);
-                recoEdep.sp_z.emplace_back(xyz[2]);
+                
             }
         }
         fRecoEdep = recoEdep;

@@ -33,14 +33,15 @@ ParticleExtractor:
 
     # Reco energy deposit parameters
     FillRecoEnergyDeposits: true
+    RecoEdepBoundingBox:    "TPC"
 
     # MC Voxelizer parameters
     # For the voxel labeling, we can choose from either
     # "largest", or "mixed".
-    FillRecoVoxels:           true
-    RecoEdepPDGLabels:        [0, 1, 2, 3, 4, 5]
-    RecoVoxelSize:            4.7
-    RecoVoxelLabeling:        "largest"
+    FillRecoVoxels:         true
+    RecoEdepPDGLabels:      [0, 1, 2, 3, 4, 5]
+    RecoVoxelSize:          4.7
+    RecoVoxelLabeling:      "largest"
 }
 
 END_PROLOG

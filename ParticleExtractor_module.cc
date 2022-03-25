@@ -109,6 +109,7 @@ namespace extractor
 
         // Reco edep variables
         std::vector<Int_t> fRecoEdepPDGCodes;
+        std::string fRecoEdepBoundingBox;
         Double_t fRecoEdepEnergyCutoff;
 
         // Reco voxel variables
@@ -182,6 +183,9 @@ namespace extractor
         fMCVoxelSize = fParameters().MCVoxelSize();
         fMCVoxelBoundingBox = fParameters().MCVoxelBoundingBox();
         fMCVoxelLabeling = fParameters().MCVoxelLabeling();
+
+        // Reco edep information
+        fRecoEdepBoundingBox = fParameters().RecoEdepBoundingBox();
 
         // Reco Voxel information
         fRecoVoxelSize = fParameters().RecoVoxelSize();
@@ -289,6 +293,8 @@ namespace extractor
         fMCVoxels.setVoxelSize(fMCVoxelSize);
         fMCVoxels.setBoundingBox(fMCVoxelBoundingBox);
         fMCVoxels.setVoxelLabeling(fMCVoxelLabeling);
+
+        fRecoEnergyDeposits.setBoundingBoxType(fRecoEdepBoundingBox);
 
         fRecoVoxels.setPDGCodes(fMCEdepPDGCodes);
         fRecoVoxels.setVoxelLabels(fRecoEdepPDGLabels);
