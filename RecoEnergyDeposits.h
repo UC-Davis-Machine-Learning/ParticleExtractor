@@ -68,6 +68,7 @@ namespace extractor
         std::vector<std::vector<Double_t>> summed_adc;
         std::vector<Double_t> energy;
         std::vector<Int_t> num_electrons;
+        std::vector<std::vector<Int_t>> level;
     };
 
     /**

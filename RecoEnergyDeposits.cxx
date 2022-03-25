@@ -24,6 +24,7 @@ namespace extractor
         fRecoEnergyDepositsTree->Branch("sp_y", &fRecoEdep.sp_y);
         fRecoEnergyDepositsTree->Branch("sp_z", &fRecoEdep.sp_z);
         fRecoEnergyDepositsTree->Branch("summed_adc", &fRecoEdep.summed_adc);
+        fRecoEnergyDepositsTree->Branch("level", &fRecoEdep.level);
     }
 
     RecoEnergyDeposits::~RecoEnergyDeposits()
@@ -84,6 +85,7 @@ namespace extractor
                 std::vector<Int_t> temp_ancestor_id;
                 std::vector<Int_t> temp_channel_id;
                 std::vector<Double_t> temp_summed_adc;
+                std::vector<Int_t> temp_level;
                 auto& spsHit = hitSpacePointAssn.at(i);
                 auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
@@ -104,8 +106,10 @@ namespace extractor
                     track_id = trackIDs[0].trackID;
                     
                     Int_t mother = parentDaughterMap[track_id];
+                    Int_t level = 0;
                     while (mother != 0)
                     {
+                        level += 1;
                         track_id = mother;
                         mother = parentDaughterMap[track_id];
                     }
@@ -113,6 +117,7 @@ namespace extractor
                     temp_ancestor_id.emplace_back(track_id);
                     temp_pdg.emplace_back(particlePDGMap[track_id]);
                     temp_summed_adc.emplace_back(hit->SummedADC());
+                    temp_level.emplace_back(level);
                 }
                 // collect results
                 auto xyz = pointsList[i]->XYZ();
@@ -133,8 +138,7 @@ namespace extractor
                 recoEdep.ancestor_id.emplace_back(temp_ancestor_id);
                 recoEdep.channel_id.emplace_back(temp_channel_id);
                 recoEdep.summed_adc.emplace_back(temp_summed_adc);
-
-                
+                recoEdep.level.emplace_back(temp_level);
             }
         }
         fRecoEdep = recoEdep;
