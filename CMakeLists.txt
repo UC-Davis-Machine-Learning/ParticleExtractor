@@ -1,6 +1,7 @@
 art_make(LIB_LIBRARIES
             lardataobj_RecoBase
             larsim_MCSTReco
+            larsim_Utils
             lardataobj_MCBase
             lardataobj_Simulation
             larcorealg_Geometry
@@ -27,6 +28,7 @@ art_make(LIB_LIBRARIES
             larana_OpticalDetector_OpDigiProperties_service
             larana_OpticalDetector_OpHitFinder
             larana_OpticalDetector
+            larsim_Utils
             larsim_PhotonPropagation_PhotonVisibilityService_service
             larsim_MCCheater_BackTrackerService_service
             larsim_MCCheater_ParticleInventoryService_service
