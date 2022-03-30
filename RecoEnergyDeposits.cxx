@@ -104,7 +104,7 @@ namespace extractor
                     }
                     // track_id = trackIDs[0].trackID;
                     track_id = TruthMatchUtils::TrueParticleID(
-                        clockData, hit
+                        clockData, hit, false
                     )
                     // check that track_id is present in parentDaughterMap
                     if (parentDaughterMap.find(track_id) == parentDaughterMap.end())
