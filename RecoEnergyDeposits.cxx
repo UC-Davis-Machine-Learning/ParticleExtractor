@@ -51,6 +51,7 @@ namespace extractor
     )
     {
         RecoEdep recoEdep;
+        detinfo::DetectorClocksData const& clockData;
         if (mcParticles.isValid() and mcChannels.isValid() and recoSpacePoints.isValid())
         {
             /**
@@ -101,7 +102,10 @@ namespace extractor
                     if (trackIDs.size() == 0) {
                         continue;
                     }
-                    track_id = trackIDs[0].trackID;
+                    // track_id = trackIDs[0].trackID;
+                    track_id = TruthMatchUtils::TrueParticleID(
+                        clockData, hit
+                    )
                     // check that track_id is present in parentDaughterMap
                     if (parentDaughterMap.find(track_id) == parentDaughterMap.end())
                     {
@@ -114,7 +118,7 @@ namespace extractor
                         continue;
                     }
                     temp_channel_id.emplace_back(channel.Channel());
-                    temp_track_id.emplace_back(trackIDs[0].trackID);
+                    temp_track_id.emplace_back(track_id);
                     Int_t mother = parentDaughterMap[track_id];
                     Int_t level = 0;
                     while (mother != 0)

@@ -45,10 +45,16 @@
 #include "lardataobj/RecoBase/OpFlash.h"
 #include "larcoreobj/SimpleTypesAndConstants/geo_types.h"
 
+#include "larsim/Utils/TruthMatchUtils.h"
+
 #include <vector>
 #include <algorithm>
 
 #include "DetectorGeometry.h"
+
+namespace detinfo {
+  class DetectorClocksData;
+}
 
 namespace extractor
 {
