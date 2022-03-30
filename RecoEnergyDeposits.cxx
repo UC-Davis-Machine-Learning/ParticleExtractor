@@ -101,10 +101,20 @@ namespace extractor
                     if (trackIDs.size() == 0) {
                         continue;
                     }
+                    track_id = trackIDs[0].trackID;
+                    // check that track_id is present in parentDaughterMap
+                    if (parentDaughterMap.find(track_id) == parentDaughterMap.end())
+                    {
+                        std::cout << "Track ID: " << track_id << " does not have an associated mother!" << std::endl;
+                        continue;
+                    }
+                    if (particlePDGMap.find(track_id) == particlePDGMap.end())
+                    {
+                        std::cout << "Track ID: " << track_id << " does not have an associated pdg!" << std::endl;
+                        continue;
+                    }
                     temp_channel_id.emplace_back(channel.Channel());
                     temp_track_id.emplace_back(trackIDs[0].trackID);
-                    track_id = trackIDs[0].trackID;
-                    
                     Int_t mother = parentDaughterMap[track_id];
                     Int_t level = 0;
                     while (mother != 0)
