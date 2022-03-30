@@ -94,6 +94,7 @@ namespace extractor
         void setBoundingBoxType(std::string volumeType);
 
         void processEvent(
+            detinfo::DetectorClocksData const& clockData,
             const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
             const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
             const art::ValidHandle<std::vector<recob::SpacePoint>>& recoSpacePoints,

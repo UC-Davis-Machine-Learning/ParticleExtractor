@@ -346,6 +346,7 @@ namespace extractor
         }
         if (fFillRecoEnergyDeposits) 
         {
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(
                     art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
@@ -354,6 +355,7 @@ namespace extractor
             auto recoSpacePoints =  event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
             art::FindManyP<recob::Hit> hitsFromSpacePointsAssn(recoSpacePoints, event, fSpacePointProducerLabel);
             fRecoEnergyDeposits.processEvent(
+                clockData,
                 mcParticles, 
                 mcSimChannels,
                 recoSpacePoints,

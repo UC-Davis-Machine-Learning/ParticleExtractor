@@ -44,6 +44,7 @@ namespace extractor
     }
 
     void RecoEnergyDeposits::processEvent(
+        detinfo::DetectorClocksData const& clockData,
         const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
         const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
         const art::ValidHandle<std::vector<recob::SpacePoint>>& recoSpacePoints,
@@ -51,7 +52,6 @@ namespace extractor
     )
     {
         RecoEdep recoEdep;
-        detinfo::DetectorClocksData const& clockData;
         if (mcParticles.isValid() and mcChannels.isValid() and recoSpacePoints.isValid())
         {
             /**
