@@ -156,6 +156,30 @@ namespace extractor
         };
 
         /**
+         * 
+         */
+        fhicl::Atom<bool> FillRawDecoder
+        {
+            fhicl::Name("FillRawDecoder"),
+            fhicl::Comment("Whether to save MC voxel information.")
+        };
+        fhicl::Sequence<int> RawDecoderPDGCodes
+        {
+            fhicl::Name("RawDecoderPDGCodes"),
+            fhicl::Comment("PDG IDs of the particles to extracted.")
+        };
+        fhicl::Sequence<std::string> RawDecoderPDGLevels
+        {
+            fhicl::Name("RawDecoderPDGLevels"),
+            fhicl::Comment("Heirarchy of particles to keep.")
+        };
+        fhicl::Atom<double> RawDecoderEnergyCutoff
+        {
+            fhicl::Name("RawDecoderEnergyCutoff"),
+            fhicl::Comment("Cutoff for storing Edeps.")
+        };
+
+        /**
          * Below are a set of voxelization parameters for Reco energy depositions.
          */
         fhicl::Atom<bool> FillRecoVoxels

@@ -92,6 +92,7 @@ namespace extractor
         bool fFillMCNeutronCaptures;
         bool fFillMCEnergyDeposits;
         bool fFillMCVoxels;
+        bool fFillRawDecoder;
         bool fFillRecoEnergyDeposits;
         bool fFillRecoVoxels;
 
@@ -106,6 +107,11 @@ namespace extractor
         Double_t fMCVoxelSize;
         std::string fMCVoxelBoundingBox;
         std::string fMCVoxelLabeling;
+
+        // raw decoder variables
+        std::vector<Int_t> fRawDecoderPDGCodes;
+        std::vector<std::string> fRawDecoderPDGLevels;
+        Double_t fRawDecoderEnergyCutoff;
 
         // Reco edep variables
         std::vector<Int_t> fRecoEdepPDGCodes;
@@ -169,6 +175,7 @@ namespace extractor
         fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
         fFillMCEnergyDeposits = fParameters().FillMCEnergyDeposits();
         fFillMCVoxels = fParameters().FillMCVoxels();
+        fFillRawDecoder = fParameters().FillRawDecoder();
         fFillRecoEnergyDeposits = fParameters().FillRecoEnergyDeposits();
         fFillRecoVoxels = fParameters().FillRecoVoxels();
 
@@ -178,6 +185,11 @@ namespace extractor
         fMCEdepPDGLevels = fParameters().MCEdepPDGLevels();
         fMCEdepPDGLabels = fParameters().MCEdepPDGLabels();
         fMCEdepEnergyCutoff = fParameters().MCEdepEnergyCutoff();
+
+        // Raw decoder information
+        fRawDecoderPDGCodes = fParameters().RawDecoderPDGCodes();
+        fRawDecoderPDGLevels = fParameters().RawDecoderPDGLevels();
+        fRawDecoderEnergyCutoff = fParameters().RawDecoderEnergyCutoff();
 
         // MC Voxel information
         fMCVoxelSize = fParameters().MCVoxelSize();
@@ -295,6 +307,10 @@ namespace extractor
         fMCVoxels.setBoundingBox(fMCVoxelBoundingBox);
         fMCVoxels.setVoxelLabeling(fMCVoxelLabeling);
 
+        fRawDecoder.setPDGCodes(fRawDecoderPDGCodes);
+        fRawDecoder.setPDGLevels(fRawDecoderPDGLevels);
+        fRawDecoder.setEnergyCutoff(fRawDecoderEnergyCutoff);
+
         fRecoEnergyDeposits.setBoundingBoxType(fRecoEdepBoundingBox);
 
         fRecoVoxels.setPDGCodes(fMCEdepPDGCodes);
@@ -343,6 +359,20 @@ namespace extractor
         }
         if (fFillMCVoxels) {
             fMCVoxels.processEvent(fMCEnergyDeposits);
+        }
+        if (fFillRawDecoder) 
+        {
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto rawDigits = 
+                event.getValidHandle<std::vector<raw::RawDigit>>();
+            fRawDecoder.processEvent(
+                mcParticles, 
+                mcSimChannels,
+                rawDigits
+            );
         }
         if (fFillRecoEnergyDeposits) 
         {
