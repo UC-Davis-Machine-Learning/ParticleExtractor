@@ -25,10 +25,11 @@ namespace extractor
 {
     struct WireTDC
     {
-        std::vector<std::vector<Int_t>> adc;
-        std::vector<std::vector<Int_t>> track_id;
-        std::vector<std::vector<Int_t>> pdg;
-        std::vector<std::vector<Int_t>> ancestor_id;
+        std::vector<std::vector<Int_t>> scTrackID;
+        std::vector<std::vector<Int_t>> scChannelID;
+        std::vector<std::vector<Int_t>> scPeakTime;
+        std::vector<std::vector<Int_t>> scAncestorPDG;
+        std::vector<std::vector<Int_t>> scAncestor;
         std::vector<std::vector<Int_t>> level;
     };
 
@@ -37,15 +38,10 @@ namespace extractor
     public:
         RawDecoder();
         ~RawDecoder();
-        
-        void setPDGCodes(std::vector<Int_t> PDGCodes) { fPDGCodes = PDGCodes; }
-        void setPDGLevels(std::vector<Int_t> PDGLevels) { fPDGLevels = PDGLevels; }
-        void setPDGLevels(std::vector<std::string> PDGLevels);
 
         void processEvent(
             const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
-            const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
-            const art::ValidHandle<std::vector<raw::RawDigit>>& rawDigits,
+            const art::ValidHandle<std::vector<sim::SimChannel>>& scs,
         );
     private:
         /// ROOT output through art::TFileService
@@ -54,11 +50,8 @@ namespace extractor
          */ 
         art::ServiceHandle<art::TFileService> fTFileService;
         TTree *fRawDecoderTree;
-
-        // pdg codes to construct
-        std::vector<Int_t> fPDGCodes;
-        std::vector<Int_t> fPDGLevels;
-        Double_t fEnergyCutoff;
+        std::map<int,int> getmother;
+        std::map<int,int> getpdg;
 
         // struct for holding event information
         WireTDC fWireTDC;

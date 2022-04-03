@@ -65,6 +65,7 @@
 #include "MCVoxels.h"
 #include "RecoEnergyDeposits.h"
 #include "RecoVoxels.h"
+#include "RawDecoder.h
 
 namespace extractor
 {
@@ -185,11 +186,6 @@ namespace extractor
         fMCEdepPDGLevels = fParameters().MCEdepPDGLevels();
         fMCEdepPDGLabels = fParameters().MCEdepPDGLabels();
         fMCEdepEnergyCutoff = fParameters().MCEdepEnergyCutoff();
-
-        // Raw decoder information
-        fRawDecoderPDGCodes = fParameters().RawDecoderPDGCodes();
-        fRawDecoderPDGLevels = fParameters().RawDecoderPDGLevels();
-        fRawDecoderEnergyCutoff = fParameters().RawDecoderEnergyCutoff();
 
         // MC Voxel information
         fMCVoxelSize = fParameters().MCVoxelSize();
@@ -351,6 +347,13 @@ namespace extractor
         auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
 
         // now pass the list of particles to each of the appropriate submodules
+        if (fFillRawDecoder) {
+            auto mcSimChannels =
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            RawDecoder.processEvent(mcParticles, mcSimChannels);
+        }
         if (fFillMCNeutronCaptures) {
             fMCNeutronCaptures.processEvent(mcParticles, mcEnergyDeposit);
         }
@@ -359,20 +362,6 @@ namespace extractor
         }
         if (fFillMCVoxels) {
             fMCVoxels.processEvent(fMCEnergyDeposits);
-        }
-        if (fFillRawDecoder) 
-        {
-            auto mcSimChannels = 
-                event.getValidHandle<std::vector<sim::SimChannel>>(
-                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
-                );
-            auto rawDigits = 
-                event.getValidHandle<std::vector<raw::RawDigit>>();
-            fRawDecoder.processEvent(
-                mcParticles, 
-                mcSimChannels,
-                rawDigits
-            );
         }
         if (fFillRecoEnergyDeposits) 
         {

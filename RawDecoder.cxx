@@ -13,54 +13,74 @@ namespace extractor
 {
     RawDecoder::RawDecoder()
     {
-        fWireTDCTree = fTFileService->make<TTree>("raw_decoder", "raw_decoder");
-        fWireTDCTree->Branch("pdg", &fWireTDC.pdg);
-        fWireTDCTree->Branch("track_id", &fWireTDC.track_id);
-        fWireTDCTree->Branch("ancestor_id", &fWireTDC.ancestor_id);
-        fWireTDCTree->Branch("level", &fWireTDC.level);
-        fWireTDCTree->Branch("adc", &fWireTDC.adc);
+        fRawDecoderTree = fTFileService->make<TTree>("raw_decoder", "raw_decoder");
+        fRawDecoderTree->Branch("scTrackID", &fWireTDC.scTrackID);
+        fRawDecoderTree->Branch("scChannelID", &fWireTDC.scChannelID);
+        fRawDecoderTree->Branch("ancestor_id", &fWireTDC.scPeakTime);
+        fRawDecoderTree->Branch("scAncestorPDG", &fWireTDC.scAncestorPDG);
+        fRawDecoderTree->Branch("scAncestor", &fWireTDC.scAncestor);
+        fRawDecoderTree->Branch("level", &fWireTDC.level);
     }
     RawDecoder::~RawDecoder()
     {
 
     }
         
-    void RawDecoder::setPDGLevels(std::vector<std::string> PDGLevels)
-    {
-        std::vector<Int_t> levels;
-        for (size_t i = 0; i < PDGLevels.size(); i++)
-        {
-            if (PDGLevels[i] == "parent") {
-                levels.emplace_back(0);
-            }
-            else if (PDGLevels[i] == "daughters") { 
-                levels.emplace_back(1);
-            }
-            else if (PDGLevels[i] == "electrons") {
-                levels.emplace_back(2);
-            }
-            else if (PDGLevels[i] == "parent_electrons") {
-                levels.emplace_back(3);
-            }
-            else {
-                levels.emplace_back(4);
-            }
-        }
-        fPDGLevels = levels;
-    }
 
     void RawDecoder::processEvent(
         const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
-        const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
-        const art::ValidHandle<std::vector<raw::RawDigit>>& rawDigits,
+        const art::ValidHandle<std::vector<sim::SimChannel>>& scs,
     )
     {
+        getmother.clear();
+        getpdg.clear();
         WireTDC wireTDC;
-        if (mcParticles.isValid() and mcChannels.isValid() and rawDigits.isValid())
+        if (mcParticles.isValid() and mcChannels.isValid())
         {
-        }
+            for(auto &trueParticle : *mcParticles) {
+                getmother.insert(std::pair<int,int>(trueParticle.TrackId(),trueParticle.Mother()));
+                getpdg.insert(std::pair<int,int>(trueParticle.TrackId(),trueParticle.PdgCode()));
+            }
+            int mother=-1;
+            int mothertemp=-1;
+            int pdg=-1;
+            int scid=-1;
+            for(auto &sc : *scs) {
+                for(int pt=0;pt<6000;pt++){
+                    auto simChannelNumber = sc.Channel();
+                    auto const& trackInfo=sc.TrackIDEs(pt, pt);
+                    if(trackInfo.size()!=0){
+                        scChannelID.push_back((int)simChannelNumber);
+                        scTrackID.push_back(trackInfo[0].trackID);
+                        scPeakTime.push_back(pt);
+                        scid=trackInfo[0].trackID;
+                    }
+                    /*std::cout<<"tracksize: "<<trackInfo.size()<<std::endl;
+                    for(int j = 0; j < (int) trackInfo.size(); ++j){
+                        std::cout<<"trackid: "<<trackInfo[j].trackID<<std::endl;
+                    }*/
+                    if(scid!=-1){
+                        for(auto &trueParticle : *mcParticles) {
+                            auto mcid=trueParticle.TrackId();
+                            if (mcid != scid) continue;
+                            mother = trueParticle.Mother();
+                            mothertemp=scid;
+                            while (mother != 0)
+                            {
+                                mothertemp=mother;
+                                mother=getmother[mother];
+                            }
+                            pdg=getpdg[mothertemp];
+                            scAncestor.push_back(mothertemp);
+                            scAncestorPDG.push_back(pdg);
+                            break;
+                        }
+                    }
+                    
+                }
+            }
         fWireTDC = wireTDC;
-        fWireTDCTree->Fill();
+        fRawDecoderTree->Fill();
     }
     
 }
