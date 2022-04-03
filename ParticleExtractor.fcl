@@ -31,6 +31,12 @@ ParticleExtractor:
     MCVoxelBoundingBox:     "TPC"
     MCVoxelLabeling:        "largest"   
 
+    # Rawdecoder parameters
+    FillRawDecoder:         true
+    RawDecoderPDGCodes:     [2212, 2112, 13, -13, 11, -11]
+    RawDecoderPDGLevels:    ["electrons", "parent_electrons", "parent_electrons", "parent_electrons", "parent_electrons"]
+    RawDecoderEnergyCutoff: 0.0
+
     # Reco energy deposit parameters
     FillRecoEnergyDeposits: true
     RecoEdepBoundingBox:    "TPC"
