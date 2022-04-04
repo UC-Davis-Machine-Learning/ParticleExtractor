@@ -47,7 +47,7 @@ namespace extractor
             int scid=-1;
             for(auto &sc : *scs) {
                 for(int pt=0;pt<6000;pt++){
-                    auto simChannelNumber = (int)sc.Channel();
+                    auto simChannelNumber = static_cast<int>sc.Channel();
                     auto const& trackInfo=sc.TrackIDEs(pt, pt);
                     if(trackInfo.size()!=0){
                         fWireTDC.scChannelID.push_back(simChannelNumber);
@@ -65,14 +65,17 @@ namespace extractor
                             if (mcid != scid) continue;
                             mother = trueParticle.Mother();
                             mothertemp=scid;
+                            Int_t level = 0;
                             while (mother != 0)
                             {
                                 mothertemp=mother;
                                 mother=getmother[mother];
+                                level += 1;
                             }
                             pdg=getpdg[mothertemp];
                             fWireTDC.scAncestor.push_back(mothertemp);
                             fWireTDC.scAncestorPDG.push_back(pdg);
+                            fWireTDC.level.push_back(level);
                             break;
                         }
                     }
