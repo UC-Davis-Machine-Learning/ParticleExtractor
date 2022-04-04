@@ -35,7 +35,7 @@ namespace extractor
         getmother.clear();
         getpdg.clear();
         WireTDC wireTDC;
-        if (mcParticles.isValid() and mcChannels.isValid())
+        if (mcParticles.isValid() and scs.isValid())
         {
             for(auto &trueParticle : *mcParticles) {
                 getmother.insert(std::pair<int,int>(trueParticle.TrackId(),trueParticle.Mother()));
@@ -50,9 +50,9 @@ namespace extractor
                     auto simChannelNumber = sc.Channel();
                     auto const& trackInfo=sc.TrackIDEs(pt, pt);
                     if(trackInfo.size()!=0){
-                        scChannelID.push_back((int)simChannelNumber);
-                        scTrackID.push_back(trackInfo[0].trackID);
-                        scPeakTime.push_back(pt);
+                        fWireTDC.scChannelID.push_back((int)simChannelNumber);
+                        fWireTDC.scTrackID.push_back(trackInfo[0].trackID);
+                        fWireTDC.scPeakTime.push_back(pt);
                         scid=trackInfo[0].trackID;
                     }
                     /*std::cout<<"tracksize: "<<trackInfo.size()<<std::endl;
@@ -71,8 +71,8 @@ namespace extractor
                                 mother=getmother[mother];
                             }
                             pdg=getpdg[mothertemp];
-                            scAncestor.push_back(mothertemp);
-                            scAncestorPDG.push_back(pdg);
+                            fWireTDC.scAncestor.push_back(mothertemp);
+                            fWireTDC.scAncestorPDG.push_back(pdg);
                             break;
                         }
                     }
