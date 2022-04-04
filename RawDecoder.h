@@ -21,6 +21,8 @@
 #include <numeric>
 #include <map>
 
+#include "RecoEnergyDeposits.h"
+
 namespace extractor
 {
     struct WireTDC
