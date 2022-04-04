@@ -149,6 +149,8 @@ namespace extractor
         RecoEnergyDeposits fRecoEnergyDeposits;
         // Reco Voxels
         RecoVoxels fRecoVoxels;
+        // rawdecoder
+        RawDecoder fRawDecoder;
     };
 
     // constructor
@@ -344,7 +346,7 @@ namespace extractor
                 event.getValidHandle<std::vector<sim::SimChannel>>(
                     art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
                 );
-            RawDecoder.processEvent(mcParticles, mcSimChannels);
+            fRawDecoder.processEvent(mcParticles, mcSimChannels);
         }
         if (fFillMCNeutronCaptures) {
             fMCNeutronCaptures.processEvent(mcParticles, mcEnergyDeposit);

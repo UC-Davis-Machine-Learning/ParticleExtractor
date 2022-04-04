@@ -41,7 +41,7 @@ namespace extractor
 
         void processEvent(
             const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
-            const art::ValidHandle<std::vector<sim::SimChannel>>& scs,
+            const art::ValidHandle<std::vector<sim::SimChannel>>& scs
         );
     private:
         /// ROOT output through art::TFileService
