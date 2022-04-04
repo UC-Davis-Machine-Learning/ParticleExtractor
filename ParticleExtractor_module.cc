@@ -65,7 +65,7 @@
 #include "MCVoxels.h"
 #include "RecoEnergyDeposits.h"
 #include "RecoVoxels.h"
-#include "RawDecoder.h
+#include "RawDecoder.h"
 
 namespace extractor
 {
@@ -108,11 +108,7 @@ namespace extractor
         Double_t fMCVoxelSize;
         std::string fMCVoxelBoundingBox;
         std::string fMCVoxelLabeling;
-
-        // raw decoder variables
-        std::vector<Int_t> fRawDecoderPDGCodes;
-        std::vector<std::string> fRawDecoderPDGLevels;
-        Double_t fRawDecoderEnergyCutoff;
+        
 
         // Reco edep variables
         std::vector<Int_t> fRecoEdepPDGCodes;
@@ -302,10 +298,6 @@ namespace extractor
         fMCVoxels.setVoxelSize(fMCVoxelSize);
         fMCVoxels.setBoundingBox(fMCVoxelBoundingBox);
         fMCVoxels.setVoxelLabeling(fMCVoxelLabeling);
-
-        fRawDecoder.setPDGCodes(fRawDecoderPDGCodes);
-        fRawDecoder.setPDGLevels(fRawDecoderPDGLevels);
-        fRawDecoder.setEnergyCutoff(fRawDecoderEnergyCutoff);
 
         fRecoEnergyDeposits.setBoundingBoxType(fRecoEdepBoundingBox);
 
