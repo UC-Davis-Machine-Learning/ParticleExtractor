@@ -54,7 +54,7 @@ namespace extractor
         TTree *fRawDecoderTree;
         std::map<int,int> getmother;
         std::map<int,int> getpdg;
-
+        geo::GeometryCore const * fGeom = &*(art::ServiceHandle<geo::Geometry>());
         // struct for holding event information
         WireTDC fWireTDC;
     };

@@ -8,6 +8,10 @@
  * @date 2022-04-01
  */
 #include "RawDecoder.h"
+#include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
+#include "lardataalg/DetectorInfo/DetectorProperties.h"
+#include "larcorealg/Geometry/GeometryCore.h"
+#include "larcoreobj/SimpleTypesAndConstants/geo_types.h"
 
 namespace extractor
 {
@@ -49,7 +53,7 @@ namespace extractor
                 for(int pt=0;pt<6000;pt++){
                     int simChannelNumber = static_cast<int>(sc.Channel());
                     auto const& trackInfo=sc.TrackIDEs(pt, pt);
-                    if(trackInfo.size()!=0){
+                    if(trackInfo.size()!=0 && fGeom->View(simChannelNumber) == geo::kZ){
                         fWireTDC.scChannelID.push_back(simChannelNumber);
                         fWireTDC.scTrackID.push_back(trackInfo[0].trackID);
                         fWireTDC.scPeakTime.push_back(pt);
@@ -73,9 +77,13 @@ namespace extractor
                                 level1 += 1;
                             }
                             pdg=getpdg[mothertemp];
-                            fWireTDC.scAncestor.push_back(mothertemp);
-                            fWireTDC.scAncestorPDG.push_back(pdg);
-                            fWireTDC.level.push_back(level1);
+                            if(pdg==13||pdg==-13){
+                                fWireTDC.scChannelID.push_back(simChannelNumber);
+                                fWireTDC.scTrackID.push_back(trackInfo[0].trackID);
+                                fWireTDC.scPeakTime.push_back(pt);
+                                fWireTDC.scAncestor.push_back(mothertemp);
+                                fWireTDC.scAncestorPDG.push_back(pdg);
+                                fWireTDC.level.push_back(level1);}
                             scid=-1;
                             break;
                         }
