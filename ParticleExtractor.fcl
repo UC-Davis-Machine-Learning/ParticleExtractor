@@ -19,7 +19,7 @@ ParticleExtractor:
     FillMCEnergyDeposits:   true
     MCEdepBoundingBox:      "TPC"
     MCEdepPDGCodes:         [2212, 2112, 13, -13, 11, -11]
-    MCEdepPDGLevels:        ["electrons", "parent_electrons", "parent_electrons", "parent_electrons", "parent_electrons"]
+    MCEdepPDGLevels:        ["electrons", "parent_electrons", "parent_electrons", "parent_electrons", "parent_electrons", "parent_electrons"]
     MCEdepEnergyCutoff:     0.0
 
     # MC Voxelizer parameters
