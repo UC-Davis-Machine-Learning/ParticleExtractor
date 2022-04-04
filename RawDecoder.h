@@ -27,12 +27,12 @@ namespace extractor
 {
     struct WireTDC
     {
-        std::vector<std::vector<Int_t>> scTrackID;
-        std::vector<std::vector<Int_t>> scChannelID;
-        std::vector<std::vector<Int_t>> scPeakTime;
-        std::vector<std::vector<Int_t>> scAncestorPDG;
-        std::vector<std::vector<Int_t>> scAncestor;
-        std::vector<std::vector<Int_t>> level;
+        std::vector<int> scTrackID;
+        std::vector<int> scChannelID;
+        std::vector<int> scPeakTime;
+        std::vector<int> scAncestorPDG;
+        std::vector<int> scAncestor;
+        std::vector<int> level;
     };
 
     class RawDecoder
