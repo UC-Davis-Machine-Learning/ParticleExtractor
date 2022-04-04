@@ -39,5 +39,5 @@ source.fileNames:                       ["/dune/data2/users/ncarrara/NeutronCali
 source.maxEvents:                       50
 physics.analyzers.ana.FillRecoEnergyDeposits:   false
 physics.analyzers.ana.FillMCEnergyDeposits:   false
-physics.analyzers.ana.FillMCVoxel:   false
+physics.analyzers.ana.FillMCVoxels:   false
 physics.analyzers.ana.FillRecoVoxels:   false
