@@ -29,7 +29,7 @@ namespace extractor
 
     void RawDecoder::processEvent(
         const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
-        const art::ValidHandle<std::vector<sim::SimChannel>>& scs,
+        const art::ValidHandle<std::vector<sim::SimChannel>>& scs
     )
     {
         getmother.clear();
@@ -83,4 +83,5 @@ namespace extractor
         fRawDecoderTree->Fill();
     }
     
+}
 }
