@@ -47,7 +47,7 @@ namespace extractor
             int scid=-1;
             for(auto &sc : *scs) {
                 for(int pt=0;pt<6000;pt++){
-                    auto simChannelNumber = sc.Channel();
+                    auto simChannelNumber = (int)sc.Channel();
                     auto const& trackInfo=sc.TrackIDEs(pt, pt);
                     if(trackInfo.size()!=0){
                         fWireTDC.scChannelID.push_back(simChannelNumber);
