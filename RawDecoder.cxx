@@ -50,7 +50,7 @@ namespace extractor
                     auto simChannelNumber = sc.Channel();
                     auto const& trackInfo=sc.TrackIDEs(pt, pt);
                     if(trackInfo.size()!=0){
-                        fWireTDC.scChannelID.push_back((int)simChannelNumber);
+                        fWireTDC.scChannelID.push_back(simChannelNumber);
                         fWireTDC.scTrackID.push_back(trackInfo[0].trackID);
                         fWireTDC.scPeakTime.push_back(pt);
                         scid=trackInfo[0].trackID;
