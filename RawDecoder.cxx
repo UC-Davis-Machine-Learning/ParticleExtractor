@@ -16,7 +16,7 @@ namespace extractor
         fRawDecoderTree = fTFileService->make<TTree>("raw_decoder", "raw_decoder");
         fRawDecoderTree->Branch("scTrackID", &fWireTDC.scTrackID);
         fRawDecoderTree->Branch("scChannelID", &fWireTDC.scChannelID);
-        fRawDecoderTree->Branch("ancestor_id", &fWireTDC.scPeakTime);
+        fRawDecoderTree->Branch("scPeakTime", &fWireTDC.scPeakTime);
         fRawDecoderTree->Branch("scAncestorPDG", &fWireTDC.scAncestorPDG);
         fRawDecoderTree->Branch("scAncestor", &fWireTDC.scAncestor);
         fRawDecoderTree->Branch("level", &fWireTDC.level);
@@ -76,6 +76,7 @@ namespace extractor
                             fWireTDC.scAncestor.push_back(mothertemp);
                             fWireTDC.scAncestorPDG.push_back(pdg);
                             fWireTDC.level.push_back(level1);
+                            scid=-1;
                             break;
                         }
                     }
