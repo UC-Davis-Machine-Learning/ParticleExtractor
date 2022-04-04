@@ -15,6 +15,10 @@
 #include "art/Framework/Principal/Run.h"
 #include "art/Framework/Principal/SubRun.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
+#include "lardataalg/DetectorInfo/DetectorProperties.h"
+#include "larcorealg/Geometry/GeometryCore.h"
+#include "larcoreobj/SimpleTypesAndConstants/geo_types.h"
 
 #include <vector>
 #include <algorithm>
