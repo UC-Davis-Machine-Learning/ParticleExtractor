@@ -40,8 +40,8 @@ namespace extractor
     }
 
     void RecoTracks::makeGridHitMap(
-        std::vector<art::Ptr<recob::Hit>>& List,
-        std::map<gridStruct, std::vector<art::Ptr<recob::Hit>>>& Map
+        std::vector<recob::Hit>& List,
+        std::map<gridStruct, std::vector<recob::Hit>>& Map
     )
     {
         for(size_t j=0;j< List.size();j++)
@@ -50,12 +50,12 @@ namespace extractor
             grid.gridPT = (int) (List[j]->Channel()/50) + 1;
             grid.gridCID = (int) (List[j]->PeakTime()/250) + 1);
             
-            std::map<gridStruct, std::vector<art::Ptr<recob::Hit>>>::iterator gridItr = Map.find(grid);
+            std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
 
             if(gridItr != Map.end()){
                 Map[grid].insert( List[j] );
             } else {
-                Map.insert( make_pair(grid, std::vector<art::Ptr<recob::Hit>>()) );
+                Map.insert( make_pair(grid, std::vector<recob::Hit>()) );
                 Map[grid].insert( List[j] );
             }
         }
@@ -63,14 +63,14 @@ namespace extractor
 
     bool Recotracks::searchGrid(
         recob::Hit hit,
-        std::map<gridStruct, std::vector<art::Ptr<recob::Hit>>>& Map
+        std::map<gridStruct, std::vector<recob::Hit>>& Map
     )
     {
         gridStruct grid;
         grid.gridPT = (int) (hit->Channel()/50) + 1;
-        grid.gridCID = (int) (hit->PeakTime()/250) + 1);
+        grid.gridCID = (int) (hit->PeakTime()/250) + 1;
 
-        std::map<gridStruct, std::vector<art::Ptr<recob::Hit>>>::iterator gridItr = Map.find(grid);
+        std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
 
         if(gridItr != Map.end())
         {
@@ -127,15 +127,15 @@ namespace extractor
             //Making a vector of track hits
             std::vector<art::Ptr<recob::Track>> trackList;
             art::fill_ptr_vector(trackList, recoTracks);
-            std::vector<art::Ptr<recob::Hit>> trackHitList;
+            std::vector<recob::Hit> trackHitList;
             for (size_t i = 0; i < trackList.size(); i++)
             {
-                std::vector<art::Ptr<recob::Hit>> allHits = hitTrackAssn.at(i); //storing hits for ith track
-                trackHitList.insert(std::end(trackHitList), std::begin(allHits), std::end(allHits))
+                auto allHits = hitTrackAssn.at(i); //storing hits for ith track
+                trackHitList.insert(std::end(trackHitList), std::begin(allHits), std::end(allHits));
             }
 
             //Making a map of grids and hits in them
-            std::map<gridStruct, std::vector<art::Ptr<recob::Hit>>> GridHitMap;
+            std::map<gridStruct, std::vector<recob::Hit>> GridHitMap;
             makeGridHitMap(trackHitList, GridHitMap);
 
             std::vector<art::Ptr<recob::SpacePoint>> pointsList;
@@ -174,7 +174,6 @@ namespace extractor
                         std::cout << "Track ID: " << track_id << " does not have an associated pdg!" << std::endl;
                         continue;
                     }
-                    temp_track_id.emplace_back(track_id);
                     Int_t mother = parentDaughterMap[track_id];
                     Int_t level = 0;
                     while (mother != 0)
@@ -185,7 +184,7 @@ namespace extractor
                     }
 
                     bool isTrackHit = searchGrid(hit, GridHitMap);
-                    if (isTrackHit = 0)
+                    if (isTrackHit == 0)
                     {
                         if (particlePDGMap[track_id] == 2112)
                         {

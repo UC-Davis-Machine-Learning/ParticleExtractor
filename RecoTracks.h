@@ -102,13 +102,13 @@ namespace extractor
         void setBoundingBoxType(std::string volumeType);
 
         void makeGridHitMap(
-            std::vector<art::Ptr<recob::Hit>>& List,
-            std::map<gridStruct, std::vector<art::Ptr<recob::Hit>>>& Map
+            std::vector<recob::Hit>& List,
+            std::map<gridStruct, std::vector<recob::Hit>>& Map
         );
 
-        bool Recotracks::searchGrid(
+        bool searchGrid(
             recob::Hit hit,
-            std::map<gridStruct, std::vector<art::Ptr<recob::Hit>>>& Map
+            std::map<gridStruct, std::vector<recob::Hit>>& Map
         );
 
         void processEvent(
@@ -129,7 +129,7 @@ namespace extractor
          *  by the directories for each type.
          */ 
         art::ServiceHandle<art::TFileService> fTFileService;
-        TTree *RecoTracks;
+        TTree *RecoTracksTree;
         // geometry information
         DetectorGeometry* fGeometry = DetectorGeometry::getInstance("RecoTracks");
 
