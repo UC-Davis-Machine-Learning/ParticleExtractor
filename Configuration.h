@@ -71,6 +71,18 @@ namespace extractor
             fhicl::Comment("Tag of the input data product for the SpacePoint side of the simulation.")
         };
 
+        fhicl::Atom<art::InputTag> PandoraLabel
+        {
+            fhicl::Name("PandoraLabel"),
+            fhicl::Comment("Tag of the input data product for the SpacePoints from Pandora.")
+        };
+
+        fhicl::Atom<art::InputTag> PandoraTrackLabel
+        {
+            fhicl::Name("PandoraTrackLabel"),
+            fhicl::Comment("Tag of the input data product for the track hits from Pandora.")
+        };
+
         /**
          * These options generate TTrees called "mc_neutron_captures",
          * "mc_energy_deposits", "reco_energy_deposits",
@@ -206,6 +218,14 @@ namespace extractor
         {
             fhicl::Name("RecoVoxelLabeling"),
             fhicl::Comment("Labeling scheme for the voxels.")
+        };
+
+        // RecoTracks
+
+        fhicl::Atom<bool> FillRecoTracks
+        {
+            fhicl::Name("FillRecoTracks"),
+            fhicl::Comment("Whether to save Reco tracks information.")
         };
     };
 

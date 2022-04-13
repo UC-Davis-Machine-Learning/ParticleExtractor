@@ -49,6 +49,11 @@ ParticleExtractor:
     RecoVoxelSize:          4.7
     RecoVoxelBoundingBox:   "TPC"
     RecoVoxelLabeling:      "largest"
+
+    # RecoTracks parameters
+    FillRecoTracks:         true
+    PandoraLabel:           "pandora"
+    PandoraTrackLabel:      "pandoraTrack"
 }
 
 END_PROLOG
