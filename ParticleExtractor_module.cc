@@ -66,6 +66,7 @@
 #include "RecoEnergyDeposits.h"
 #include "RecoVoxels.h"
 #include "RawDecoder.h"
+#include "RecoTracks.h"
 
 namespace extractor
 {
