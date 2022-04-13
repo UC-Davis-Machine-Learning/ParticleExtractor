@@ -47,8 +47,8 @@ namespace extractor
         for(size_t j=0;j< List.size();j++)
         {
             gridStruct grid;
-            grid.gridPT = (int) (List[j]->Channel()/50) + 1;
-            grid.gridCID = (int) (List[j]->PeakTime()/250) + 1);
+            grid.gridPT = (int) (List[j].Channel()/50) + 1;
+            grid.gridCID = (int) (List[j].PeakTime()/250) + 1);
             
             std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
 
@@ -67,8 +67,8 @@ namespace extractor
     )
     {
         gridStruct grid;
-        grid.gridPT = (int) (hit->Channel()/50) + 1;
-        grid.gridCID = (int) (hit->PeakTime()/250) + 1;
+        grid.gridPT = (int) (hit.Channel()/50) + 1;
+        grid.gridCID = (int) (hit.PeakTime()/250) + 1;
 
         std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
 

@@ -129,7 +129,7 @@ namespace extractor
          *  by the directories for each type.
          */ 
         art::ServiceHandle<art::TFileService> fTFileService;
-        TTree *RecoTracksTree;
+        TTree *fRecoTracksTree;
         // geometry information
         DetectorGeometry* fGeometry = DetectorGeometry::getInstance("RecoTracks");
 
