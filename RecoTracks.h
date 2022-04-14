@@ -107,7 +107,7 @@ namespace extractor
         );
 
         bool searchGrid(
-            recob::Hit hit,
+            art::Ptr<recob::Hit> hit,
             std::map<gridStruct, std::vector<recob::Hit>>& Map
         );
 
