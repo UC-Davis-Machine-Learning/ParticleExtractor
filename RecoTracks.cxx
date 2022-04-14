@@ -53,10 +53,10 @@ namespace extractor
             std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
 
             if(gridItr != Map.end()){
-                Map[grid].insert( List[j] );
+                Map[grid].push_back( List[j] );
             } else {
                 Map.insert( make_pair(grid, std::vector<recob::Hit>()) );
-                Map[grid].insert( List[j] );
+                Map[grid].push_back( List[j] );
             }
         }
     }
