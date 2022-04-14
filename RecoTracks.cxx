@@ -48,7 +48,7 @@ namespace extractor
         {
             gridStruct grid;
             grid.gridPT = (int) (List[j].Channel()/50) + 1;
-            grid.gridCID = (int) (List[j].PeakTime()/250) + 1);
+            grid.gridCID = (int) (List[j].PeakTime()/250) + 1;
             
             std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
 
@@ -62,26 +62,27 @@ namespace extractor
     }
 
     bool Recotracks::searchGrid(
-        recob::Hit hit,
+        art::Ptr<recob::Hit> hit,
         std::map<gridStruct, std::vector<recob::Hit>>& Map
     )
     {
         gridStruct grid;
-        grid.gridPT = (int) (hit.Channel()/50) + 1;
-        grid.gridCID = (int) (hit.PeakTime()/250) + 1;
+        grid.gridPT = (int) (hit->Channel()/50) + 1;
+        grid.gridCID = (int) (hit->PeakTime()/250) + 1;
 
         std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
 
         if(gridItr != Map.end())
         {
-            
-            if (std::find(gridItr->second.begin(), gridItr->second.end(), hit) != gridItr->second.end())
+            std::vector<recob::Hit>::iterator ptr;
+            for (ptr = gridItr->second.begin(); ptr < gridItr->second.end(); ptr++)
             {
-                return 1;
-            } else {
-                return 0;
+                if (*ptr.Channel() == hit->Channel() && *ptr.PeakTime() == hit->PeakTime())
+                {
+                    return 1;
+                }
             }
-            
+            return 0;   
         } else {
             return 0;
         }
@@ -130,7 +131,7 @@ namespace extractor
             std::vector<recob::Hit> trackHitList;
             for (size_t i = 0; i < trackList.size(); i++)
             {
-                auto allHits = hitTrackAssn.at(i); //storing hits for ith track
+                auto& allHits = hitTrackAssn.at(i); //storing hits for ith track
                 trackHitList.insert(std::end(trackHitList), std::begin(allHits), std::end(allHits));
             }
 
