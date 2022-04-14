@@ -61,7 +61,7 @@ namespace extractor
         }
     }
 
-    bool Recotracks::searchGrid(
+    bool RecoTracks::searchGrid(
         art::Ptr<recob::Hit> hit,
         std::map<gridStruct, std::vector<recob::Hit>>& Map
     )
