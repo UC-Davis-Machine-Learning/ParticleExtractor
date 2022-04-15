@@ -72,6 +72,19 @@ namespace extractor
         std::vector<std::vector<Double_t>> summed_adc;
     };
 
+    struct hitStruct {
+        double PT;
+        int cID;
+
+        bool operator==(const hitStruct &o) const {
+            return PT == o.PT && cID == o.cID;
+        }
+
+        bool operator<(const hitStruct &o)  const {
+            return PT < o.PT || (PT == o.PT && cID < o.cID);
+        }
+    };
+
     struct gridStruct {
         double gridPT;
         int gridCID;
@@ -102,13 +115,13 @@ namespace extractor
         void setBoundingBoxType(std::string volumeType);
 
         void makeGridHitMap(
-            std::vector<recob::Hit>& List,
-            std::map<gridStruct, std::vector<recob::Hit>>& Map
+            std::vector<hitStruct>& List,
+            std::map<gridStruct, std::vector<hitStruct>>& Map
         );
 
         bool searchGrid(
             art::Ptr<recob::Hit> hit,
-            std::map<gridStruct, std::vector<recob::Hit>>& Map
+            std::map<gridStruct, std::vector<hitStruct>>& Map
         );
 
         void processEvent(

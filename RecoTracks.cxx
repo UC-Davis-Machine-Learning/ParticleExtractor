@@ -40,8 +40,8 @@ namespace extractor
     }
 
     void RecoTracks::makeGridHitMap(
-        std::vector<recob::Hit>& List,
-        std::map<gridStruct, std::vector<recob::Hit>>& Map
+        std::vector<hitStruct>& List,
+        std::map<gridStruct, std::vector<hitStruct>>& Map
     )
     {
         for(size_t j=0;j< List.size();j++)
@@ -50,12 +50,12 @@ namespace extractor
             grid.gridPT = (int) (List[j].Channel()/50) + 1;
             grid.gridCID = (int) (List[j].PeakTime()/250) + 1;
             
-            std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
+            std::map<gridStruct, std::vector<hitStruct>>::iterator gridItr = Map.find(grid);
 
             if(gridItr != Map.end()){
                 Map[grid].push_back( List[j] );
             } else {
-                Map.insert( make_pair(grid, std::vector<recob::Hit>()) );
+                Map.insert( make_pair(grid, std::vector<hitStruct>()) );
                 Map[grid].push_back( List[j] );
             }
         }
@@ -63,21 +63,20 @@ namespace extractor
 
     bool RecoTracks::searchGrid(
         art::Ptr<recob::Hit> hit,
-        std::map<gridStruct, std::vector<recob::Hit>>& Map
+        std::map<gridStruct, std::vector<hitStruct>>& Map
     )
     {
         gridStruct grid;    
         grid.gridPT = (int) (hit->Channel()/50) + 1;
         grid.gridCID = (int) (hit->PeakTime()/250) + 1;
 
-        std::map<gridStruct, std::vector<recob::Hit>>::iterator gridItr = Map.find(grid);
+        std::map<gridStruct, std::vector<hitStruct>>::iterator gridItr = Map.find(grid);
 
         if(gridItr != Map.end())
         {
-            std::vector<recob::Hit>::iterator ptr;
             for(auto & elem : gridItr->second)
             {
-                if (elem.Channel() == hit->Channel() && elem.PeakTime() == hit->PeakTime())
+                if (elem.cID == hit->Channel() && elem.PT == hit->PeakTime())
                 {
                     return 1;
                 }
@@ -128,15 +127,21 @@ namespace extractor
             //Making a vector of track hits
             std::vector<art::Ptr<recob::Track>> trackList;
             art::fill_ptr_vector(trackList, recoTracks);
-            std::vector<recob::Hit> trackHitList;
+            std::vector<hitStruct> trackHitList;
             for (size_t i = 0; i < trackList.size(); i++)
             {
-                auto& allHits = hitTrackAssn.at(i); //storing hits for ith track
-                trackHitList.insert(std::end(trackHitList), std::begin(allHits), std::end(allHits));
+                std::vector<art::Ptr<recob::Hit>> allHits = hitTrackAssn.at(i); //storing hits for ith track
+                for (size_t j = 0; j < allHits.size(); j++)
+                {
+                    hitStruct hit;
+                    hit.cID = allHits->Channel();
+                    hit.PT = allHits->PeakTime();
+                    trackHitList.push_back(hit);
+                }  
             }
 
             //Making a map of grids and hits in them
-            std::map<gridStruct, std::vector<recob::Hit>> GridHitMap;
+            std::map<gridStruct, std::vector<hitStruct>> GridHitMap;
             makeGridHitMap(trackHitList, GridHitMap);
 
             std::vector<art::Ptr<recob::SpacePoint>> pointsList;
