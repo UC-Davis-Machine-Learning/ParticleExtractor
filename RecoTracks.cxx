@@ -47,8 +47,8 @@ namespace extractor
         for(size_t j=0;j< List.size();j++)
         {
             gridStruct grid;
-            grid.gridPT = (int) (List[j].Channel()/50) + 1;
-            grid.gridCID = (int) (List[j].PeakTime()/250) + 1;
+            grid.gridPT = (int) (List[j].cID/50) + 1;
+            grid.gridCID = (int) (List[j].PT/250) + 1;
             
             std::map<gridStruct, std::vector<hitStruct>>::iterator gridItr = Map.find(grid);
 
@@ -76,7 +76,7 @@ namespace extractor
         {
             for(auto & elem : gridItr->second)
             {
-                if (elem.cID == hit->Channel() && elem.PT == hit->PeakTime())
+                if (elem.cID == (int) hit->Channel() && elem.PT == (int) hit->PeakTime())
                 {
                     return 1;
                 }
@@ -134,8 +134,8 @@ namespace extractor
                 for (size_t j = 0; j < allHits.size(); j++)
                 {
                     hitStruct hit;
-                    hit.cID = allHits->Channel();
-                    hit.PT = allHits->PeakTime();
+                    hit.cID = allHits[j]->Channel();
+                    hit.PT = allHits[j]->PeakTime();
                     trackHitList.push_back(hit);
                 }  
             }
