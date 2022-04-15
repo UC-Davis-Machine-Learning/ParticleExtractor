@@ -66,7 +66,7 @@ namespace extractor
         std::map<gridStruct, std::vector<recob::Hit>>& Map
     )
     {
-        gridStruct grid;
+        gridStruct grid;    
         grid.gridPT = (int) (hit->Channel()/50) + 1;
         grid.gridCID = (int) (hit->PeakTime()/250) + 1;
 
@@ -75,9 +75,9 @@ namespace extractor
         if(gridItr != Map.end())
         {
             std::vector<recob::Hit>::iterator ptr;
-            for (ptr = gridItr->second.begin(); ptr < gridItr->second.end(); ptr++)
+            for(auto & elem : gridItr->second)
             {
-                if (*ptr.Channel() == hit->Channel() && *ptr.PeakTime() == hit->PeakTime())
+                if (elem.Channel() == hit->Channel() && elem.PeakTime() == hit->PeakTime())
                 {
                     return 1;
                 }
