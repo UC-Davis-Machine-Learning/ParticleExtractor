@@ -320,6 +320,8 @@ namespace extractor
         fRecoVoxels.setBoundingBox(fRecoVoxelBoundingBox);
         fRecoVoxels.setVoxelLabeling(fRecoVoxelLabeling);
 
+        fRecoTracks.setBoundingBoxType(fRecoEdepBoundingBox);
+
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
     }
 
