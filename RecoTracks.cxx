@@ -44,6 +44,7 @@ namespace extractor
         std::map<gridStruct, std::vector<hitStruct>>& Map
     )
     {
+        cout << "Making a Grid-Hit Map....." << endl;
         for(size_t j=0;j< List.size();j++)
         {
             gridStruct grid;
@@ -59,6 +60,12 @@ namespace extractor
                 Map[grid].push_back( List[j] );
             }
         }
+        if(Map.empty() == 1)
+        {
+            cout << "Failed to make a Grid-Hit Map" << endl;
+        } else {
+            cout << "Completed making a Grid-Hit Map" << endl;
+        }
     }
 
     bool RecoTracks::searchGrid(
@@ -66,6 +73,10 @@ namespace extractor
         std::map<gridStruct, std::vector<hitStruct>>& Map
     )
     {
+        /*
+        ** Returns 0 if it's not a track spt
+        ** Returns 1 if it's a track spt
+        */
         gridStruct grid;    
         grid.gridPT = (int) (hit->Channel()/50) + 1;
         grid.gridCID = (int) (hit->PeakTime()/250) + 1;
@@ -74,13 +85,22 @@ namespace extractor
 
         if(gridItr != Map.end())
         {
-            for(auto & elem : gridItr->second)
+            for(int i=0; i < gridItr->second.size(); i++)
+            {
+                if (gridItr->second[i].cID == (int) hit->Channel() && gridItr->second[i].PT == (int) hit->PeakTime())
+                {
+                    return 1;
+                }
+            }
+            /*
+            for(auto elem : gridItr->second)
             {
                 if (elem.cID == (int) hit->Channel() && elem.PT == (int) hit->PeakTime())
                 {
                     return 1;
                 }
             }
+            */
             return 0;   
         } else {
             return 0;
@@ -205,6 +225,7 @@ namespace extractor
                     
                     temp_summed_adc.emplace_back(hit->SummedADC());
                 }
+                cout << "Is temp_label empty: " << temp_label.empty() << endl;
                 // collect results
                 auto xyz = pointsList[i]->XYZ();
                 // check if point is in active volume
