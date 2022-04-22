@@ -45,6 +45,7 @@ namespace extractor
     )
     {
         std::cout << "Making a Grid-Hit Map....." << std::endl;
+        std::cout << "Is the hit list empty: " << List.empty() << std::endl;
         for(size_t j=0;j< List.size();j++)
         {
             gridStruct grid;
@@ -92,15 +93,7 @@ namespace extractor
                     return 1;
                 }
             }
-            /*
-            for(auto elem : gridItr->second)
-            {
-                if (elem.cID == (int) hit->Channel() && elem.PT == (int) hit->PeakTime())
-                {
-                    return 1;
-                }
-            }
-            */
+
             return 0;   
         } else {
             return 0;
@@ -148,6 +141,7 @@ namespace extractor
             std::vector<art::Ptr<recob::Track>> trackList;
             art::fill_ptr_vector(trackList, recoTracks);
             std::vector<hitStruct> trackHitList;
+            std::cout << "Making a list of track hits....." << std::endl;
             for (size_t i = 0; i < trackList.size(); i++)
             {
                 std::vector<art::Ptr<recob::Hit>> allHits = hitTrackAssn.at(i); //storing hits for ith track
@@ -159,6 +153,7 @@ namespace extractor
                     trackHitList.push_back(hit);
                 }  
             }
+            std::cout << "Is the track-hit list empty: " << trackHitList.empty() << std::endl;
 
             //Making a map of grids and hits in them
             std::map<gridStruct, std::vector<hitStruct>> GridHitMap;
@@ -225,7 +220,7 @@ namespace extractor
                     
                     temp_summed_adc.emplace_back(hit->SummedADC());
                 }
-                std::cout << "Is temp_label empty: " << temp_label.empty() << std::endl;
+
                 // collect results
                 auto xyz = pointsList[i]->XYZ();
                 // check if point is in active volume
