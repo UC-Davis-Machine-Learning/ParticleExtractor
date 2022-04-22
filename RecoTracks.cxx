@@ -44,7 +44,7 @@ namespace extractor
         std::map<gridStruct, std::vector<hitStruct>>& Map
     )
     {
-        cout << "Making a Grid-Hit Map....." << endl;
+        std::cout << "Making a Grid-Hit Map....." << std::endl;
         for(size_t j=0;j< List.size();j++)
         {
             gridStruct grid;
@@ -62,9 +62,9 @@ namespace extractor
         }
         if(Map.empty() == 1)
         {
-            cout << "Failed to make a Grid-Hit Map" << endl;
+            std::cout << "Failed to make a Grid-Hit Map" << std::endl;
         } else {
-            cout << "Completed making a Grid-Hit Map" << endl;
+            std::cout << "Completed making a Grid-Hit Map" << std::endl;
         }
     }
 
@@ -85,7 +85,7 @@ namespace extractor
 
         if(gridItr != Map.end())
         {
-            for(int i=0; i < gridItr->second.size(); i++)
+            for(int i=0; i < (int) gridItr->second.size(); i++)
             {
                 if (gridItr->second[i].cID == (int) hit->Channel() && gridItr->second[i].PT == (int) hit->PeakTime())
                 {
@@ -225,7 +225,7 @@ namespace extractor
                     
                     temp_summed_adc.emplace_back(hit->SummedADC());
                 }
-                cout << "Is temp_label empty: " << temp_label.empty() << endl;
+                std::cout << "Is temp_label empty: " << temp_label.empty() << std::endl;
                 // collect results
                 auto xyz = pointsList[i]->XYZ();
                 // check if point is in active volume
