@@ -71,11 +71,13 @@ namespace extractor
             std::map<Int_t, Int_t> ancestorPDGMap;
             std::map<Int_t, Int_t> ancestorTrackIdMap;
             std::map<Int_t, Int_t> levelMap;
+            std::cout << "here" << std::endl;
             for (auto particle : *mcParticles)
             {
                 parentDaughterMap[particle.TrackId()] = particle.Mother();
                 particlePDGMap[particle.TrackId()] = particle.PdgCode();
             }
+            std::cout << "here" << std::endl;
             for (auto particle : *mcParticles)
             {
                 Int_t mother = particle.Mother();
