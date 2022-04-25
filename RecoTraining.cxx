@@ -133,7 +133,6 @@ namespace extractor
                 std::vector<Double_t> temp_sigma_adc;
                 std::vector<Int_t> temp_level;
                 auto& spsHit = hitSpacePointAssn.at(i);
-                auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
                 {  
                     Int_t track_id = TruthMatchUtils::TrueParticleID(
@@ -165,7 +164,6 @@ namespace extractor
                         temp_label.emplace_back(-2);
                     }
                     Int_t pdg = particlePDGMap[track_id];
-                    Int_t mother = parentDaughterMap[track_id];
                     Int_t ancestor = ancestorTrackIdMap[track_id];
                     Int_t ancestorpdg = ancestorPDGMap[track_id];
                     Int_t level = levelMap[track_id];
@@ -201,15 +199,15 @@ namespace extractor
                     std::max_element(temp_summed_adc.begin(), temp_summed_adc.end())
                 );
 
-                recoTrainingSet.pdg.emplace_back(temp_pdg[max_index]);
-                recoTrainingSet.track_id.emplace_back(temp_track_id[max_index]);
-                recoTrainingSet.ancestor_id.emplace_back(temp_ancestor_id[max_index]);
+                recoTrainingSet.sp_pdg.emplace_back(temp_pdg[max_index]);
+                recoTrainingSet.sp_track_id.emplace_back(temp_track_id[max_index]);
+                recoTrainingSet.ancestor_track_id.emplace_back(temp_ancestor_id[max_index]);
                 recoTrainingSet.ancestor_pdg.emplace_back(temp_ancestor_pdg[max_index]);
                 recoTrainingSet.summed_adc.emplace_back(temp_summed_adc[max_index]);
                 recoTrainingSet.mean_adc.emplace_back(temp_mean_adc[max_index]);
                 recoTrainingSet.peak_adc.emplace_back(temp_peak_adc[max_index]);
                 recoTrainingSet.sigma_adc.emplace_back(temp_sigma_adc[max_index]);
-                recoTrainingSet.level.emplace_back(temp_level[max_index]);
+                recoTrainingSet.ancestor_level.emplace_back(temp_level[max_index]);
                 recoTrainingSet.track_label.emplace_back(temp_label[max_index]);
             }
         }
