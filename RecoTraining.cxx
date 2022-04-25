@@ -132,7 +132,7 @@ namespace extractor
                 std::vector<Double_t> temp_peak_adc;
                 std::vector<Double_t> temp_sigma_adc;
                 std::vector<Int_t> temp_level;
-                auto& spsHit = hitSpacePointAssn.at(i);
+                auto& spsHit = hitPandoraSPsAssn.at(i);
                 for (auto hit : spsHit)
                 {  
                     Int_t track_id = TruthMatchUtils::TrueParticleID(
