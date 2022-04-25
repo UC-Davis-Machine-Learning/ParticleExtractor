@@ -71,13 +71,11 @@ namespace extractor
             std::map<Int_t, Int_t> ancestorPDGMap;
             std::map<Int_t, Int_t> ancestorTrackIdMap;
             std::map<Int_t, Int_t> levelMap;
-            std::cout << "here" << std::endl;
             for (auto particle : *mcParticles)
             {
                 parentDaughterMap[particle.TrackId()] = particle.Mother();
                 particlePDGMap[particle.TrackId()] = particle.PdgCode();
             }
-            std::cout << "here" << std::endl;
             for (auto particle : *mcParticles)
             {
                 Int_t mother = particle.Mother();
@@ -92,7 +90,6 @@ namespace extractor
                 levelMap[particle.TrackId()] = level;
                 ancestorPDGMap[particle.TrackId()] = particlePDGMap[track_id];
                 ancestorTrackIdMap[particle.TrackId()] = track_id;
-                std::cout << "found parent: " << track_id << std::endl;
             }
             
             std::vector<art::Ptr<recob::Track>> trackList;
@@ -186,6 +183,7 @@ namespace extractor
                     temp_sigma_adc.emplace_back(hit->RMS());
                     temp_level.emplace_back(level);
                 }
+                std::cout << "here" << std::endl;
                 // collect results
                 auto xyz = pointsList[i]->XYZ();
                 // check if point is in active volume
