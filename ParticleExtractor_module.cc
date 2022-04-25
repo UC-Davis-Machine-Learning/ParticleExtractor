@@ -67,6 +67,7 @@
 #include "RecoVoxels.h"
 #include "RawDecoder.h"
 #include "RecoTracks.h"
+#include "RecoTraining.h"
 
 namespace extractor
 {
@@ -98,6 +99,7 @@ namespace extractor
         bool fFillRecoEnergyDeposits;
         bool fFillRecoVoxels;
         bool fFillRecoTracks;
+        bool fFillRecoTraining;
 
         // MC edep variables
         std::string fMCEdepBoundingBox;
@@ -157,6 +159,8 @@ namespace extractor
         RawDecoder fRawDecoder;
         // recotracks
         RecoTracks fRecoTracks;
+        // reco trianing
+        RecoTraining fRecoTraining;
     };
 
     // constructor
@@ -188,6 +192,9 @@ namespace extractor
 
         //RecoTracks
         fFillRecoTracks = fParameters().FillRecoTracks();
+
+        //RecoTracks
+        fFillRecoTraining = fParameters().FillRecoTraining();
 
         // MC edep information
         fMCEdepBoundingBox = fParameters().MCEdepBoundingBox();
@@ -322,6 +329,8 @@ namespace extractor
 
         fRecoTracks.setBoundingBoxType(fRecoEdepBoundingBox);
 
+        fRecoTraining.setBoundingBoxType(fRecoEdepBoundingBox);
+
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
     }
 
@@ -403,6 +412,26 @@ namespace extractor
             art::FindManyP<recob::Hit> hitsFromSpsPandoraAssn(recoSpacePoints, event, fPandoraLabel); //to associate space point from pandora to hit
             art::FindManyP<recob::Hit> hitsFromTracksAssn(recoTracks, event, fPandoraTrackLabel); // to associate tracks and hits
             fRecoTracks.processEvent(
+                clockData,
+                mcParticles, 
+                mcSimChannels,
+                recoSpacePoints,
+                recoTracks,
+                hitsFromSpsPandoraAssn,
+                hitsFromTracksAssn
+            );
+        }
+        if (fFillRecoTraining) {
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fPandoraLabel);
+            auto recoTracks = event.getValidHandle< std::vector<recob::Track> >(fPandoraTrackLabel);
+            art::FindManyP<recob::Hit> hitsFromSpsPandoraAssn(recoSpacePoints, event, fPandoraLabel); //to associate space point from pandora to hit
+            art::FindManyP<recob::Hit> hitsFromTracksAssn(recoTracks, event, fPandoraTrackLabel); // to associate tracks and hits
+            fRecoTraining.processEvent(
                 clockData,
                 mcParticles, 
                 mcSimChannels,
