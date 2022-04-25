@@ -186,14 +186,17 @@ namespace extractor
                 std::cout << "here" << std::endl;
                 // collect results
                 auto xyz = pointsList[i]->XYZ();
+                std::cout << "xyz" << std::endl;
                 // check if point is in active volume
                 // Determine if edep is within the desired volume
                 DetectorVolume edep_volume = fGeometry->getVolume(
                     xyz[0], xyz[1], xyz[2]
                 );
+                std::cout << "vol" << std::endl;
                 if (edep_volume.volume_type != fBoundingBoxType) {
                     continue;
                 }
+                std::cout << "vol2" << std::endl;
                 recoTrainingSet.sp_x.emplace_back(xyz[0]);
                 recoTrainingSet.sp_y.emplace_back(xyz[1]);
                 recoTrainingSet.sp_z.emplace_back(xyz[2]);
@@ -204,7 +207,7 @@ namespace extractor
                     temp_summed_adc.begin(), 
                     std::max_element(temp_summed_adc.begin(), temp_summed_adc.end())
                 );
-
+                std::cout << "max" << std::endl;
                 recoTrainingSet.sp_pdg.emplace_back(temp_pdg[max_index]);
                 recoTrainingSet.sp_track_id.emplace_back(temp_track_id[max_index]);
                 recoTrainingSet.ancestor_track_id.emplace_back(temp_ancestor_id[max_index]);
@@ -215,6 +218,7 @@ namespace extractor
                 recoTrainingSet.sigma_adc.emplace_back(temp_sigma_adc[max_index]);
                 recoTrainingSet.ancestor_level.emplace_back(temp_level[max_index]);
                 recoTrainingSet.track_label.emplace_back(temp_label[max_index]);
+                std::cout << "end" << std::endl;
             }
         }
         fRecoTrainingSet = recoTrainingSet;
