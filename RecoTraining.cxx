@@ -136,7 +136,7 @@ namespace extractor
                 auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
                 {  
-                    track_id = TruthMatchUtils::TrueParticleID(
+                    Int_t track_id = TruthMatchUtils::TrueParticleID(
                         clockData, hit, false
                     );
                     // check that track_id is present in parentDaughterMap

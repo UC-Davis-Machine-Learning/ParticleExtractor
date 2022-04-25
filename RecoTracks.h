@@ -98,6 +98,67 @@ namespace extractor
         }
     };
 
+    void RecoTracks::makeGridHitMap(
+        std::vector<hitStruct>& List,
+        std::map<gridStruct, std::vector<hitStruct>>& Map
+    )
+    {
+        std::cout << "Making a Grid-Hit Map....." << std::endl;
+        std::cout << "Is the hit list empty: " << List.empty() << std::endl;
+        for(size_t j=0;j< List.size();j++)
+        {
+            gridStruct grid;
+            grid.gridPT = (int) (List[j].cID/50) + 1;
+            grid.gridCID = (int) (List[j].PT/250) + 1;
+            
+            std::map<gridStruct, std::vector<hitStruct>>::iterator gridItr = Map.find(grid);
+
+            if(gridItr != Map.end()){
+                Map[grid].push_back( List[j] );
+            } else {
+                Map.insert( make_pair(grid, std::vector<hitStruct>()) );
+                Map[grid].push_back( List[j] );
+            }
+        }
+        if(Map.empty() == 1)
+        {
+            std::cout << "Failed to make a Grid-Hit Map" << std::endl;
+        } else {
+            std::cout << "Completed making a Grid-Hit Map" << std::endl;
+        }
+    }
+
+    bool RecoTracks::searchGrid(
+        art::Ptr<recob::Hit> hit,
+        std::map<gridStruct, std::vector<hitStruct>>& Map
+    )
+    {
+        /*
+        ** Returns 0 if it's not a track spt
+        ** Returns 1 if it's a track spt
+        */
+        gridStruct grid;    
+        grid.gridPT = (int) (hit->Channel()/50) + 1;
+        grid.gridCID = (int) (hit->PeakTime()/250) + 1;
+
+        std::map<gridStruct, std::vector<hitStruct>>::iterator gridItr = Map.find(grid);
+
+        if(gridItr != Map.end())
+        {
+            for(int i=0; i < (int) gridItr->second.size(); i++)
+            {
+                if (gridItr->second[i].cID == (int) hit->Channel() && gridItr->second[i].PT == (int) hit->PeakTime())
+                {
+                    return 1;
+                }
+            }
+
+            return 0;   
+        } else {
+            return 0;
+        }
+    }
+
     /**
      * @brief 
      * 
