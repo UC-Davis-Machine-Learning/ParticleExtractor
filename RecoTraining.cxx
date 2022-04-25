@@ -90,8 +90,9 @@ namespace extractor
                 levelMap[particle.TrackId()] = level;
                 ancestorPDGMap[particle.TrackId()] = particlePDGMap[track_id];
                 ancestorTrackIdMap[particle.TrackId()] = track_id;
+                std::cout << "found parent: " << track_id << std::endl;
             }
-            std::cout << "Here" << std::endl;
+            
             std::vector<art::Ptr<recob::Track>> trackList;
             art::fill_ptr_vector(trackList, recoTracks);
 
