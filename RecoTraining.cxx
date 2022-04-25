@@ -75,6 +75,9 @@ namespace extractor
             {
                 parentDaughterMap[particle.TrackId()] = particle.Mother();
                 particlePDGMap[particle.TrackId()] = particle.PdgCode();
+            }
+            for (auto particle : *mcParticles)
+            {
                 Int_t mother = particle.Mother();
                 Int_t track_id = particle.TrackId();
                 Int_t level = 0;
@@ -88,6 +91,7 @@ namespace extractor
                 ancestorPDGMap[particle.TrackId()] = particlePDGMap[track_id];
                 ancestorTrackIdMap[particle.TrackId()] = track_id;
             }
+            std::cout << "Here" << std::endl;
             std::vector<art::Ptr<recob::Track>> trackList;
             art::fill_ptr_vector(trackList, recoTracks);
 
