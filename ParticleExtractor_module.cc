@@ -422,6 +422,7 @@ namespace extractor
             );
         }
         if (fFillRecoTraining) {
+            std::cout << "here" << std::endl;
             auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(
