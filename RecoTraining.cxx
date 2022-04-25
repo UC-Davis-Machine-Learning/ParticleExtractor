@@ -207,7 +207,7 @@ namespace extractor
                     temp_summed_adc.begin(), 
                     std::max_element(temp_summed_adc.begin(), temp_summed_adc.end())
                 );
-                std::cout << "max" << std::endl;
+                std::cout << "max: " << max_index << std::endl;
                 recoTrainingSet.sp_pdg.emplace_back(temp_pdg[max_index]);
                 recoTrainingSet.sp_track_id.emplace_back(temp_track_id[max_index]);
                 recoTrainingSet.ancestor_track_id.emplace_back(temp_ancestor_id[max_index]);
