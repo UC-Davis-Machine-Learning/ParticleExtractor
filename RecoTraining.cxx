@@ -154,7 +154,15 @@ namespace extractor
                         continue;
                     }
                     // find track hits
-                    bool is_track_hit = searchGrid(hit, GridHitMap);
+                    //bool is_track_hit = searchGrid(hit, GridHitMap);
+                    bool is_track_hit = false;
+                    for (size_t i = 0; i < trackHitList.size(); i++) 
+                    {
+                        if (trackHitList[i].cID == hit->Channel() and trackHitList[i].PT == hit->PeakTime()) {
+                            is_track_hit = true;
+                            break;
+                        }
+                    }
                     if (is_track_hit == 0)
                     {
                         if (ancestorPDGMap[track_id] == 2112)
