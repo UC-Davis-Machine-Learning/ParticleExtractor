@@ -15,7 +15,7 @@ namespace extractor
 {
     RecoTraining::RecoTraining()
     {
-        fRecoTrainingTree = fTFileService->make<TTree>("reco_track_info", "reco_track_info");
+        fRecoTrainingTree = fTFileService->make<TTree>("reco_training", "reco_training");
         fRecoTrainingTree->Branch("sp_x", &fRecoTrainingSet.sp_x);
         fRecoTrainingTree->Branch("sp_y", &fRecoTrainingSet.sp_y);
         fRecoTrainingTree->Branch("sp_z", &fRecoTrainingSet.sp_z);
@@ -197,7 +197,7 @@ namespace extractor
                 recoTrainingSet.sp_y.emplace_back(xyz[1]);
                 recoTrainingSet.sp_z.emplace_back(xyz[2]);
 
-                if (sp_pdg.size() == 0) 
+                if (temp_pdg.size() == 0) 
                 {
                     recoTrainingSet.sp_pdg.emplace_back(-999);
                     recoTrainingSet.sp_track_id.emplace_back(-999);
