@@ -208,6 +208,16 @@ namespace extractor
                     std::max_element(temp_summed_adc.begin(), temp_summed_adc.end())
                 );
                 std::cout << "max: " << max_index << std::endl;
+                std::cout << "pdg: " << temp_pdg.size() << std::endl;
+                std::cout << "track_id: " << temp_track_id.size() << std::endl;
+                std::cout << "ancestor_id: " << temp_ancestor_id.size() << std::endl;
+                std::cout << "ancestor_pdg: " << temp_ancestor_pdg.size() << std::endl;
+                std::cout << "summed_adc: " << temp_summed_adc.size() << std::endl;
+                std::cout << "mean_adc: " << temp_mean_adc.size() << std::endl;
+                std::cout << "peak_adc: " << temp_peak_adc.size() << std::endl;
+                std::cout << "sigma_adc: " << temp_sigma_adc.size() << std::endl;
+                std::cout << "level: " << temp_level.size() << std::endl;
+                std::cout << "label: " << temp_label.size() << std::endl;
                 recoTrainingSet.sp_pdg.emplace_back(temp_pdg[max_index]);
                 recoTrainingSet.sp_track_id.emplace_back(temp_track_id[max_index]);
                 recoTrainingSet.ancestor_track_id.emplace_back(temp_ancestor_id[max_index]);
