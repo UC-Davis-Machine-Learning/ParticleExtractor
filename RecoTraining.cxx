@@ -137,7 +137,6 @@ namespace extractor
                 std::vector<Double_t> temp_sigma_adc;
                 std::vector<Int_t> temp_level;
                 auto& spsHit = hitPandoraSPsAssn.at(i);
-                std::cout << "here: " << i << std::endl;
                 for (auto hit : spsHit)
                 {  
                     Int_t track_id = TruthMatchUtils::TrueParticleID(
@@ -183,52 +182,54 @@ namespace extractor
                     temp_sigma_adc.emplace_back(hit->RMS());
                     temp_level.emplace_back(level);
                 }
-                std::cout << "here" << std::endl;
                 // collect results
                 auto xyz = pointsList[i]->XYZ();
-                std::cout << "xyz" << std::endl;
                 // check if point is in active volume
                 // Determine if edep is within the desired volume
                 DetectorVolume edep_volume = fGeometry->getVolume(
                     xyz[0], xyz[1], xyz[2]
                 );
-                std::cout << "vol" << std::endl;
                 if (edep_volume.volume_type != fBoundingBoxType) {
                     continue;
                 }
-                std::cout << "vol2" << std::endl;
+                
                 recoTrainingSet.sp_x.emplace_back(xyz[0]);
                 recoTrainingSet.sp_y.emplace_back(xyz[1]);
                 recoTrainingSet.sp_z.emplace_back(xyz[2]);
 
-                // now decide how to assign labels
-                // take the value with the largest summed adc
-                int max_index = std::distance(
-                    temp_summed_adc.begin(), 
-                    std::max_element(temp_summed_adc.begin(), temp_summed_adc.end())
-                );
-                std::cout << "max: " << max_index << std::endl;
-                std::cout << "pdg: " << temp_pdg.size() << std::endl;
-                std::cout << "track_id: " << temp_track_id.size() << std::endl;
-                std::cout << "ancestor_id: " << temp_ancestor_id.size() << std::endl;
-                std::cout << "ancestor_pdg: " << temp_ancestor_pdg.size() << std::endl;
-                std::cout << "summed_adc: " << temp_summed_adc.size() << std::endl;
-                std::cout << "mean_adc: " << temp_mean_adc.size() << std::endl;
-                std::cout << "peak_adc: " << temp_peak_adc.size() << std::endl;
-                std::cout << "sigma_adc: " << temp_sigma_adc.size() << std::endl;
-                std::cout << "level: " << temp_level.size() << std::endl;
-                std::cout << "label: " << temp_label.size() << std::endl;
-                recoTrainingSet.sp_pdg.emplace_back(temp_pdg[max_index]);
-                recoTrainingSet.sp_track_id.emplace_back(temp_track_id[max_index]);
-                recoTrainingSet.ancestor_track_id.emplace_back(temp_ancestor_id[max_index]);
-                recoTrainingSet.ancestor_pdg.emplace_back(temp_ancestor_pdg[max_index]);
-                recoTrainingSet.summed_adc.emplace_back(temp_summed_adc[max_index]);
-                recoTrainingSet.mean_adc.emplace_back(temp_mean_adc[max_index]);
-                recoTrainingSet.peak_adc.emplace_back(temp_peak_adc[max_index]);
-                recoTrainingSet.sigma_adc.emplace_back(temp_sigma_adc[max_index]);
-                recoTrainingSet.ancestor_level.emplace_back(temp_level[max_index]);
-                recoTrainingSet.track_label.emplace_back(temp_label[max_index]);
-                std::cout << "end" << std::endl;
+                if (sp_pdg.size() == 0) 
+                {
+                    recoTrainingSet.sp_pdg.emplace_back(-999);
+                    recoTrainingSet.sp_track_id.emplace_back(-999);
+                    recoTrainingSet.ancestor_track_id.emplace_back(-999);
+                    recoTrainingSet.ancestor_pdg.emplace_back(-999);
+                    recoTrainingSet.summed_adc.emplace_back(-999);
+                    recoTrainingSet.mean_adc.emplace_back(-999);
+                    recoTrainingSet.peak_adc.emplace_back(-999);
+                    recoTrainingSet.sigma_adc.emplace_back(-999);
+                    recoTrainingSet.ancestor_level.emplace_back(-999);
+                    recoTrainingSet.track_label.emplace_back(-999);
+                }
+                else 
+                {
+                    // now decide how to assign labels
+                    // take the value with the largest summed adc
+                    int max_index = std::distance(
+                        temp_summed_adc.begin(), 
+                        std::max_element(temp_summed_adc.begin(), temp_summed_adc.end())
+                    );
+                    
+                    recoTrainingSet.sp_pdg.emplace_back(temp_pdg[max_index]);
+                    recoTrainingSet.sp_track_id.emplace_back(temp_track_id[max_index]);
+                    recoTrainingSet.ancestor_track_id.emplace_back(temp_ancestor_id[max_index]);
+                    recoTrainingSet.ancestor_pdg.emplace_back(temp_ancestor_pdg[max_index]);
+                    recoTrainingSet.summed_adc.emplace_back(temp_summed_adc[max_index]);
+                    recoTrainingSet.mean_adc.emplace_back(temp_mean_adc[max_index]);
+                    recoTrainingSet.peak_adc.emplace_back(temp_peak_adc[max_index]);
+                    recoTrainingSet.sigma_adc.emplace_back(temp_sigma_adc[max_index]);
+                    recoTrainingSet.ancestor_level.emplace_back(temp_level[max_index]);
+                    recoTrainingSet.track_label.emplace_back(temp_label[max_index]);
+                }
             }
         }
         fRecoTrainingSet = recoTrainingSet;
