@@ -167,7 +167,7 @@ namespace extractor
                 std::vector<Int_t> temp_label;
                 std::vector<Double_t> temp_summed_adc;
                 auto& spsHit = hitPandoraSPsAssn.at(i);
-                auto num_channels = mcChannels->size();
+                // auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
                 {  
                     // find the corresponding sim channels
@@ -214,7 +214,6 @@ namespace extractor
                     HIT.PT = hit->PeakTime();
 
                     // bool isTrackHit = searchGrid(hit, GridHitMap);
-                    std::find(trackHitList.begin(), trackHitList.end(), HIT) != trackHitList.end()
                     if ( std::find(trackHitList.begin(), trackHitList.end(), HIT) != trackHitList.end() ) //isTrackHit == 0
                     {
                         temp_label.emplace_back(-2);                                               
