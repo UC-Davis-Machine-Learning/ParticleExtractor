@@ -227,6 +227,12 @@ namespace extractor
             fhicl::Name("FillRecoTracks"),
             fhicl::Comment("Whether to save Reco tracks information.")
         };
+
+        fhicl::Atom<bool> FillRecoTraining
+        {
+            fhicl::Name("FillRecoTraining"),
+            fhicl::Comment("Whether to save Reco Training information.")
+        };
     };
 
     using Parameters = art::EDAnalyzer::Table<Configuration>;

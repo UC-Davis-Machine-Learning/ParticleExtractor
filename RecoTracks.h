@@ -97,6 +97,7 @@ namespace extractor
             return gridPT < o.gridPT || (gridPT == o.gridPT && gridCID < o.gridCID);
         }
     };
+    
 
     /**
      * @brief 

@@ -16,7 +16,7 @@ ParticleExtractor:
     FillMCNeutronCaptures:  false
     
     # MC Edep parameters
-    FillMCEnergyDeposits:   true
+    FillMCEnergyDeposits:   false
     MCEdepBoundingBox:      "TPC"
     MCEdepPDGCodes:         [2212, 2112, 13, -13, 11, -11]
     MCEdepPDGLevels:        ["electrons", "parent_electrons", "parent_electrons", "parent_electrons", "parent_electrons", "parent_electrons"]
@@ -25,35 +25,38 @@ ParticleExtractor:
     # MC Voxelizer parameters
     # For the voxel labeling, we can choose from either
     # "largest", or "mixed".
-    FillMCVoxels:           true
+    FillMCVoxels:           false
     MCEdepPDGLabels:        [0, 1, 2, 3, 4, 5]
     MCVoxelSize:            4.7
     MCVoxelBoundingBox:     "TPC"
     MCVoxelLabeling:        "largest"   
 
     # Rawdecoder parameters
-    FillRawDecoder:         true
+    FillRawDecoder:         false
     RawDecoderPDGCodes:     [2212, 2112, 13, -13, 11, -11]
     RawDecoderPDGLevels:    ["electrons", "parent_electrons", "parent_electrons", "parent_electrons", "parent_electrons"]
     RawDecoderEnergyCutoff: 0.0
 
     # Reco energy deposit parameters
-    FillRecoEnergyDeposits: true
+    FillRecoEnergyDeposits: false
     RecoEdepBoundingBox:    "TPC"
 
     # MC Voxelizer parameters
     # For the voxel labeling, we can choose from either
     # "largest", or "mixed".
-    FillRecoVoxels:         true
+    FillRecoVoxels:         false
     RecoEdepPDGLabels:      [0, 1, 2, 3, 4, 5]
     RecoVoxelSize:          4.7
     RecoVoxelBoundingBox:   "TPC"
     RecoVoxelLabeling:      "largest"
 
     # RecoTracks parameters
-    FillRecoTracks:         true
+    FillRecoTracks:         false
     PandoraLabel:           "pandora"
     PandoraTrackLabel:      "pandoraTrack"
+
+    # RecoTraining parameters
+    FillRecoTraining:       true
 }
 
 END_PROLOG
