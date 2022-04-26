@@ -38,7 +38,7 @@ namespace extractor
             fBoundingBoxType = VolumeType::World;
         }
     }
-
+/*
     void RecoTracks::makeGridHitMap(
         std::vector<hitStruct>& List,
         std::map<gridStruct, std::vector<hitStruct>>& Map
@@ -74,10 +74,10 @@ namespace extractor
         std::map<gridStruct, std::vector<hitStruct>>& Map
     )
     {
-        /*
-        ** Returns 0 if it's not a track spt
-        ** Returns 1 if it's a track spt
-        */
+        
+        // Returns 0 if it's not a track spt
+        // Returns 1 if it's a track spt
+        
         gridStruct grid;    
         grid.gridPT = (int) (hit->Channel()/50) + 1;
         grid.gridCID = (int) (hit->PeakTime()/250) + 1;
@@ -99,6 +99,7 @@ namespace extractor
             return 0;
         }
     }
+*/
 
     void RecoTracks::processEvent(
         detinfo::DetectorClocksData const& clockData,
@@ -156,8 +157,8 @@ namespace extractor
             std::cout << "Is the track-hit list empty: " << trackHitList.empty() << std::endl;
 
             //Making a map of grids and hits in them
-            std::map<gridStruct, std::vector<hitStruct>> GridHitMap;
-            makeGridHitMap(trackHitList, GridHitMap);
+            // std::map<gridStruct, std::vector<hitStruct>> GridHitMap;
+            // makeGridHitMap(trackHitList, GridHitMap);
 
             std::vector<art::Ptr<recob::SpacePoint>> pointsList;
             art::fill_ptr_vector(pointsList, recoSpacePoints);            
@@ -171,6 +172,7 @@ namespace extractor
                 {  
                     // find the corresponding sim channels
                     Int_t track_id;
+                    /*
                     // check if hit channel is reached
                     if (hit->Channel() >= num_channels) {
                         break;
@@ -180,11 +182,13 @@ namespace extractor
                     if (trackIDs.size() == 0) {
                         continue;
                     }
+                    */
                     // track_id = trackIDs[0].trackID;
                     track_id = TruthMatchUtils::TrueParticleID(
                         clockData, hit, false
                     );
                     // check that track_id is present in parentDaughterMap
+                    /*
                     if (parentDaughterMap.find(track_id) == parentDaughterMap.end())
                     {
                         std::cout << "Track ID: " << track_id << " does not have an associated mother!" << std::endl;
@@ -195,27 +199,32 @@ namespace extractor
                         std::cout << "Track ID: " << track_id << " does not have an associated pdg!" << std::endl;
                         continue;
                     }
+                    */
                     Int_t mother = parentDaughterMap[track_id];
-                    Int_t level = 0;
+                    //Int_t level = 0;
                     while (mother != 0)
                     {
-                        level += 1;
+                        //level += 1;
                         track_id = mother;
                         mother = parentDaughterMap[track_id];
                     }
 
-                    bool isTrackHit = searchGrid(hit, GridHitMap);
-                    if (isTrackHit == 0)
+                    hitStruct HIT;
+                    HIT.cID = hit->Channel();
+                    HIT.PT = hit->PeakTime();
+
+                    // bool isTrackHit = searchGrid(hit, GridHitMap);
+                    std::find(trackHitList.begin(), trackHitList.end(), HIT) != trackHitList.end()
+                    if ( std::find(trackHitList.begin(), trackHitList.end(), HIT) != trackHitList.end() ) //isTrackHit == 0
                     {
+                        temp_label.emplace_back(-2);                                               
+                    } else {
                         if (particlePDGMap[track_id] == 2112)
                         {
                             temp_label.emplace_back(track_id);
                         } else {
                             temp_label.emplace_back(-1);
                         }
-                        
-                    } else {
-                        temp_label.emplace_back(-2);
                     }
                     
                     temp_summed_adc.emplace_back(hit->SummedADC());

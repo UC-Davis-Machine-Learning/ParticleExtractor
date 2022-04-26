@@ -114,15 +114,15 @@ namespace extractor
 
         void setBoundingBoxType(std::string volumeType);
 
-        void makeGridHitMap(
-            std::vector<hitStruct>& List,
-            std::map<gridStruct, std::vector<hitStruct>>& Map
-        );
+        // void makeGridHitMap(
+        //     std::vector<hitStruct>& List,
+        //     std::map<gridStruct, std::vector<hitStruct>>& Map
+        // );
 
-        bool searchGrid(
-            art::Ptr<recob::Hit> hit,
-            std::map<gridStruct, std::vector<hitStruct>>& Map
-        );
+        // bool searchGrid(
+        //     art::Ptr<recob::Hit> hit,
+        //     std::map<gridStruct, std::vector<hitStruct>>& Map
+        // );
 
         void processEvent(
             detinfo::DetectorClocksData const& clockData,
