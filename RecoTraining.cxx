@@ -158,7 +158,7 @@ namespace extractor
                     bool is_track_hit = false;
                     for (size_t i = 0; i < trackHitList.size(); i++) 
                     {
-                        if (trackHitList[i].cID == hit->Channel() and trackHitList[i].PT == hit->PeakTime()) {
+                        if (trackHitList[i].cID == (int)hit->Channel() and trackHitList[i].PT == hit->PeakTime()) {
                             is_track_hit = true;
                             break;
                         }
