@@ -85,18 +85,18 @@ namespace extractor
         // }
     };
 
-    // struct gridStruct {
-    //     double gridPT;
-    //     int gridCID;
+    struct gridStruct {
+        double gridPT;
+        int gridCID;
 
-    //     bool operator==(const gridStruct &o) const {
-    //         return gridPT == o.gridPT && gridCID == o.gridCID;
-    //     }
+        bool operator==(const gridStruct &o) const {
+            return gridPT == o.gridPT && gridCID == o.gridCID;
+        }
 
-    //     bool operator<(const gridStruct &o)  const {
-    //         return gridPT < o.gridPT || (gridPT == o.gridPT && gridCID < o.gridCID);
-    //     }
-    // };
+        bool operator<(const gridStruct &o)  const {
+            return gridPT < o.gridPT || (gridPT == o.gridPT && gridCID < o.gridCID);
+        }
+    };
     
 
     /**
