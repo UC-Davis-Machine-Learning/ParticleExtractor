@@ -144,7 +144,7 @@ namespace extractor
             {
                 for(int i=0; i < (int) gridItr->second.size(); i++)
                 {
-                    if (gridItr->second[i].cID == (int) hit->Channel() && gridItr->second[i].PT == (int) hit->PeakTime())
+                    if (gridItr->second[i].cID == (int) hit->Channel() && gridItr->second[i].PT == (double) hit->PeakTime())
                     {
                         return 1;
                     }

@@ -76,27 +76,27 @@ namespace extractor
         double PT;
         int cID;
 
-        bool operator==(const hitStruct &o) const {
-            return PT == o.PT && cID == o.cID;
-        }
+        // bool operator==(const hitStruct &o) const {
+        //     return PT == o.PT && cID == o.cID;
+        // }
 
-        bool operator<(const hitStruct &o)  const {
-            return PT < o.PT || (PT == o.PT && cID < o.cID);
-        }
+        // bool operator<(const hitStruct &o)  const {
+        //     return PT < o.PT || (PT == o.PT && cID < o.cID);
+        // }
     };
 
-    struct gridStruct {
-        double gridPT;
-        int gridCID;
+    // struct gridStruct {
+    //     double gridPT;
+    //     int gridCID;
 
-        bool operator==(const gridStruct &o) const {
-            return gridPT == o.gridPT && gridCID == o.gridCID;
-        }
+    //     bool operator==(const gridStruct &o) const {
+    //         return gridPT == o.gridPT && gridCID == o.gridCID;
+    //     }
 
-        bool operator<(const gridStruct &o)  const {
-            return gridPT < o.gridPT || (gridPT == o.gridPT && gridCID < o.gridCID);
-        }
-    };
+    //     bool operator<(const gridStruct &o)  const {
+    //         return gridPT < o.gridPT || (gridPT == o.gridPT && gridCID < o.gridCID);
+    //     }
+    // };
     
 
     /**
@@ -115,15 +115,15 @@ namespace extractor
 
         void setBoundingBoxType(std::string volumeType);
 
-        // void makeGridHitMap(
-        //     std::vector<hitStruct>& List,
-        //     std::map<gridStruct, std::vector<hitStruct>>& Map
-        // );
+        void makeGridHitMap(
+            std::vector<hitStruct>& List,
+            std::map<int, std::vector<hitStruct>>& Map
+        );
 
-        // bool searchGrid(
-        //     art::Ptr<recob::Hit> hit,
-        //     std::map<gridStruct, std::vector<hitStruct>>& Map
-        // );
+        bool searchGrid(
+            art::Ptr<recob::Hit> hit,
+            std::map<int, std::vector<hitStruct>>& Map
+        );
 
         void processEvent(
             detinfo::DetectorClocksData const& clockData,

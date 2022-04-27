@@ -38,26 +38,32 @@ namespace extractor
             fBoundingBoxType = VolumeType::World;
         }
     }
-/*
+
     void RecoTracks::makeGridHitMap(
         std::vector<hitStruct>& List,
-        std::map<gridStruct, std::vector<hitStruct>>& Map
+        std::map<int, std::vector<hitStruct>>& Map
     )
     {
         std::cout << "Making a Grid-Hit Map....." << std::endl;
         std::cout << "Is the hit list empty: " << List.empty() << std::endl;
         for(size_t j=0;j< List.size();j++)
         {
-            gridStruct grid;
-            grid.gridPT = (int) (List[j].cID/50) + 1;
-            grid.gridCID = (int) (List[j].PT/250) + 1;
-            
-            std::map<gridStruct, std::vector<hitStruct>>::iterator gridItr = Map.find(grid);
+            // gridStruct grid;
+            // grid.gridPT = (int) (List[j].cID/50) + 1;
+            // grid.gridCID = (int) (List[j].PT/250) + 1;
+
+            // Cantor pairing function
+            // Pairing function to create a bijective NxN -> N mapping
+            int x = (int) (List[j].cID/50) + 1;
+            int y = (int) (List[j].PT/250) + 1;
+            int gridNum = ( (x + y) * (x + y + 1) )/2 + y;
+
+            std::map<int, std::vector<hitStruct>>::iterator gridItr = Map.find(gridNum);
 
             if(gridItr != Map.end()){
                 Map[grid].push_back( List[j] );
             } else {
-                Map.insert( make_pair(grid, std::vector<hitStruct>()) );
+                Map.insert( make_pair(gridNum, std::vector<hitStruct>()) );
                 Map[grid].push_back( List[j] );
             }
         }
@@ -78,28 +84,32 @@ namespace extractor
         // Returns 0 if it's not a track spt
         // Returns 1 if it's a track spt
         
-        gridStruct grid;    
-        grid.gridPT = (int) (hit->Channel()/50) + 1;
-        grid.gridCID = (int) (hit->PeakTime()/250) + 1;
+        // gridStruct grid;    
+        // grid.gridPT = (int) (hit->Channel()/50) + 1;
+        // grid.gridCID = (int) (hit->PeakTime()/250) + 1;
 
-        std::map<gridStruct, std::vector<hitStruct>>::iterator gridItr = Map.find(grid);
+        // Cantor pairing function
+        // Pairing function to create a bijective NxN -> N mapping
+        int x = (int) (hit->Channel()/50) + 1;
+        int y = (int) (hit->PeakTime()/250) + 1;
+        int gridNum = ( (x + y) * (x + y + 1) )/2 + y;
+
+        std::map<int, std::vector<hitStruct>>::iterator gridItr = Map.find(gridNum);
 
         if(gridItr != Map.end())
         {
             for(int i=0; i < (int) gridItr->second.size(); i++)
             {
-                if (gridItr->second[i].cID == (int) hit->Channel() && gridItr->second[i].PT == (int) hit->PeakTime())
+                if (gridItr->second[i].cID == (int) hit->Channel() && gridItr->second[i].PT == (double) hit->PeakTime())
                 {
                     return 1;
                 }
             }
-
             return 0;   
         } else {
             return 0;
         }
     }
-*/
 
     void RecoTracks::processEvent(
         detinfo::DetectorClocksData const& clockData,
@@ -157,8 +167,8 @@ namespace extractor
             std::cout << "Is the track-hit list empty: " << trackHitList.empty() << std::endl;
 
             //Making a map of grids and hits in them
-            // std::map<gridStruct, std::vector<hitStruct>> GridHitMap;
-            // makeGridHitMap(trackHitList, GridHitMap);
+            std::map<int, std::vector<hitStruct>> GridHitMap;
+            makeGridHitMap(trackHitList, GridHitMap);
 
             std::vector<art::Ptr<recob::SpacePoint>> pointsList;
             art::fill_ptr_vector(pointsList, recoSpacePoints);            
@@ -170,36 +180,12 @@ namespace extractor
                 // auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
                 {  
-                    // find the corresponding sim channels
+                    
                     Int_t track_id;
-                    /*
-                    // check if hit channel is reached
-                    if (hit->Channel() >= num_channels) {
-                        break;
-                    }
-                    auto channel = mcChannels->at(hit->Channel());
-                    auto const& trackIDs = channel.TrackIDEs((int)hit->PeakTime(), (int)hit->PeakTime());
-                    if (trackIDs.size() == 0) {
-                        continue;
-                    }
-                    */
-                    // track_id = trackIDs[0].trackID;
                     track_id = TruthMatchUtils::TrueParticleID(
                         clockData, hit, false
                     );
-                    // check that track_id is present in parentDaughterMap
-                    /*
-                    if (parentDaughterMap.find(track_id) == parentDaughterMap.end())
-                    {
-                        std::cout << "Track ID: " << track_id << " does not have an associated mother!" << std::endl;
-                        continue;
-                    }
-                    if (particlePDGMap.find(track_id) == particlePDGMap.end())
-                    {
-                        std::cout << "Track ID: " << track_id << " does not have an associated pdg!" << std::endl;
-                        continue;
-                    }
-                    */
+                    
                     Int_t mother = parentDaughterMap[track_id];
                     //Int_t level = 0;
                     while (mother != 0)
@@ -209,12 +195,12 @@ namespace extractor
                         mother = parentDaughterMap[track_id];
                     }
 
-                    hitStruct HIT;
-                    HIT.cID = hit->Channel();
-                    HIT.PT = hit->PeakTime();
+                    // hitStruct HIT;
+                    // HIT.cID = hit->Channel();
+                    // HIT.PT = hit->PeakTime();
 
-                    // bool isTrackHit = searchGrid(hit, GridHitMap);
-                    if ( std::find(trackHitList.begin(), trackHitList.end(), HIT) != trackHitList.end() ) //isTrackHit == 0
+                    bool isTrackHit = searchGrid(hit, GridHitMap);
+                    if ( isTrackHit == 1 ) //std::find(trackHitList.begin(), trackHitList.end(), HIT) != trackHitList.end()
                     {
                         temp_label.emplace_back(-2);                                               
                     } else {
