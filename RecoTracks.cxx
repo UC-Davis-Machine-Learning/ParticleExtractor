@@ -77,7 +77,7 @@ namespace extractor
 
     bool RecoTracks::searchGrid(
         art::Ptr<recob::Hit> hit,
-        std::map<gridStruct, std::vector<hitStruct>>& Map
+        std::map<int, std::vector<hitStruct>>& Map
     )
     {
         
