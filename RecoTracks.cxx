@@ -61,10 +61,10 @@ namespace extractor
             std::map<int, std::vector<hitStruct>>::iterator gridItr = Map.find(gridNum);
 
             if(gridItr != Map.end()){
-                Map[grid].push_back( List[j] );
+                Map[gridNum].push_back( List[j] );
             } else {
                 Map.insert( make_pair(gridNum, std::vector<hitStruct>()) );
-                Map[grid].push_back( List[j] );
+                Map[gridNum].push_back( List[j] );
             }
         }
         if(Map.empty() == 1)
