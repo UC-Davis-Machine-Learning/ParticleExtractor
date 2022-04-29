@@ -42,7 +42,7 @@ namespace extractor
         }
     }
 
-    void RecoTracks::processEvent(
+    void RecoDBScan3D::processEvent(
         detinfo::DetectorClocksData const& clockData,
         const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
         const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,

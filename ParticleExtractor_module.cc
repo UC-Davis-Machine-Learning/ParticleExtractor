@@ -463,7 +463,7 @@ namespace extractor
             auto recoSlices = event.getValidHandle< std::vector<recob::Track> >(fPandoraTrackLabel);
             art::FindManyP<recob::Hit> hitsFromSpacePointsAssn(recoSpacePoints, event, fSpacePointProducerLabel);
             art::FindManyP<recob::SpacePoint> spacePointSliceAssn(recoSlices, event, fDBScan3DLabel);
-            frecoSlices.processEvent(
+            fRecoDBScan3D.processEvent(
                 clockData,
                 mcParticles, 
                 mcSimChannels,
