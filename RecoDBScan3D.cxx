@@ -61,6 +61,7 @@ namespace extractor
              * recursively for ancestors of each particle.
              */
             std::map<Int_t, Int_t> particlePDGMap;
+            for (auto particle : *mcParticles)
             {
                 particlePDGMap[particle.TrackId()] = particle.PdgCode();
             }
@@ -162,6 +163,6 @@ namespace extractor
             }
         }
         fRecoDBScanSP = recoDBScanSP;
-        fRecoDBScanSPTree->Fill();
+        fRecoDBScan3DTree->Fill();
     }
 }

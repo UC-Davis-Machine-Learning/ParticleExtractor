@@ -460,7 +460,7 @@ namespace extractor
                     art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
                 );
             auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
-            auto recoSlices = event.getValidHandle< std::vector<recob::Track> >(fPandoraTrackLabel);
+            auto recoSlices = event.getValidHandle< std::vector<recob::Slice> >(fDBScan3DLabel);
             art::FindManyP<recob::Hit> hitsFromSpacePointsAssn(recoSpacePoints, event, fSpacePointProducerLabel);
             art::FindManyP<recob::SpacePoint> spacePointSliceAssn(recoSlices, event, fDBScan3DLabel);
             fRecoDBScan3D.processEvent(
