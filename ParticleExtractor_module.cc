@@ -68,6 +68,7 @@
 #include "RawDecoder.h"
 #include "RecoTracks.h"
 #include "RecoTraining.h"
+#include "RecoDBScan3D.h"
 
 namespace extractor
 {
@@ -100,6 +101,7 @@ namespace extractor
         bool fFillRecoVoxels;
         bool fFillRecoTracks;
         bool fFillRecoTraining;
+        bool fFillRecoDBScan3D;
 
         // MC edep variables
         std::string fMCEdepBoundingBox;
@@ -134,6 +136,7 @@ namespace extractor
         art::InputTag fSpacePointProducerLabel;
         art::InputTag fPandoraLabel;
         art::InputTag fPandoraTrackLabel;
+        art::InputTag fDBScan3DLabel;
 
         /// ROOT output through art::TFileService
         /** We will save different TTrees to different TFiles specified 
@@ -161,6 +164,8 @@ namespace extractor
         RecoTracks fRecoTracks;
         // reco trianing
         RecoTraining fRecoTraining;
+        // reco DBScan
+        RecoDBScan3D fRecoDBScan3D;
     };
 
     // constructor
@@ -181,6 +186,7 @@ namespace extractor
         fSpacePointProducerLabel = fParameters().SpacePointProducerLabel();
         fPandoraLabel = fParameters().PandoraLabel();
         fPandoraTrackLabel = fParameters().PandoraTrackLabel();
+        fDBScan3DLabel = fParameters().DBScan3DLabel();
 
         // Which submodules to run
         fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
@@ -193,8 +199,11 @@ namespace extractor
         //RecoTracks
         fFillRecoTracks = fParameters().FillRecoTracks();
 
-        //RecoTracks
+        //RecoTraining
         fFillRecoTraining = fParameters().FillRecoTraining();
+
+        //DBScan3D
+        fFillRecoDBScan3D = fParameters().FillRecoDBScan3D();
 
         // MC edep information
         fMCEdepBoundingBox = fParameters().MCEdepBoundingBox();
@@ -331,6 +340,8 @@ namespace extractor
 
         fRecoTraining.setBoundingBoxType(fRecoEdepBoundingBox);
 
+        fRecoDBScan3D.setBoundingBoxType(fRecoEdepBoundingBox);
+
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
     }
 
@@ -440,6 +451,26 @@ namespace extractor
                 recoTracks,
                 hitsFromSpsPandoraAssn,
                 hitsFromTracksAssn
+            );
+        }
+        if (fFillRecoDBScan3D) {
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
+            auto recoSlices = event.getValidHandle< std::vector<recob::Track> >(fPandoraTrackLabel);
+            art::FindManyP<recob::Hit> hitsFromSpacePointsAssn(recoSpacePoints, event, fSpacePointProducerLabel);
+            art::FindManyP<recob::SpacePoint> spacePointSliceAssn(recoSlices, event, fDBScan3DLabel);
+            frecoSlices.processEvent(
+                clockData,
+                mcParticles, 
+                mcSimChannels,
+                recoSpacePoints,
+                recoSlices,
+                hitsFromSpacePointsAssn,
+                spacePointSliceAssn
             );
         }
     }

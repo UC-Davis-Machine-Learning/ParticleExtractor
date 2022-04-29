@@ -83,6 +83,12 @@ namespace extractor
             fhicl::Comment("Tag of the input data product for the track hits from Pandora.")
         };
 
+        fhicl::Atom<art::InputTag> DBScan3DLabel
+        {
+            fhicl::Name("DBScan3DLabel"),
+            fhicl::Comment("Tag of the input data product for the slices from DBScan3D.")
+        };
+
         /**
          * These options generate TTrees called "mc_neutron_captures",
          * "mc_energy_deposits", "reco_energy_deposits",
@@ -232,6 +238,12 @@ namespace extractor
         {
             fhicl::Name("FillRecoTraining"),
             fhicl::Comment("Whether to save Reco Training information.")
+        };
+
+        fhicl::Atom<bool> FillDBScan3D
+        {
+            fhicl::Name("FillDBScan3D"),
+            fhicl::Comment("Whether to save Reco DBScan3D information.")
         };
     };
 

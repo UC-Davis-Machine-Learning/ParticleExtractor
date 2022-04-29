@@ -57,6 +57,10 @@ ParticleExtractor:
 
     # RecoTraining parameters
     FillRecoTraining:       true
+
+    # RecoDBScan3D parameters
+    FillRecoDBScan3D:       true
+    DBScan3DLabel:          "dbcluster"
 }
 
 END_PROLOG
