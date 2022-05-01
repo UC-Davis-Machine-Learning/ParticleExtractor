@@ -16,7 +16,7 @@ namespace extractor
 {
     RecoDBScan3D::RecoDBScan3D()
     {
-        fRecoDBScan3DTree = fTFileService->make<TTree>("reco_track_info", "reco_track_info");
+        fRecoDBScan3DTree = fTFileService->make<TTree>("reco_DBScan3D", "reco_DBScan3D");
         fRecoDBScan3DTree->Branch("sp_cluster_size", &fRecoDBScanSP.sp_cluster_size);
         fRecoDBScan3DTree->Branch("sp_cluster_num", &fRecoDBScanSP.sp_cluster_num);
         fRecoDBScan3DTree->Branch("sp_pdg", &fRecoDBScanSP.sp_pdg);
