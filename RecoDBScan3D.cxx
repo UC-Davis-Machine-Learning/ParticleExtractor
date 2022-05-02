@@ -125,8 +125,8 @@ namespace extractor
                 }
 
                 recoDBScanSP.sp_x.emplace_back(xyz[0]);
-                recoDBScanSP.sp_x.emplace_back(xyz[1]);
-                recoDBScanSP.sp_x.emplace_back(xyz[2]);
+                recoDBScanSP.sp_y.emplace_back(xyz[1]);
+                recoDBScanSP.sp_z.emplace_back(xyz[2]);
 
                 std::vector<Int_t> temp_pdg;
                 std::vector<Double_t> temp_summed_adc;
