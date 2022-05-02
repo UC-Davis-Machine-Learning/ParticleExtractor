@@ -131,7 +131,6 @@ namespace extractor
              */
             std::map<Int_t, Int_t> parentDaughterMap;
             std::map<Int_t, Int_t> particlePDGMap;
-            std::map<Int_t, Int_t> ancestorMap;
             for (auto particle : *mcParticles)
             {
                 parentDaughterMap[particle.TrackId()] = particle.Mother();

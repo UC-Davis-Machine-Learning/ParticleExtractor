@@ -60,9 +60,11 @@ namespace extractor
              * parent-daughter pairs for track ids.  This way we can search
              * recursively for ancestors of each particle.
              */
+            std::map<Int_t, Int_t> parentDaughterMap;
             std::map<Int_t, Int_t> particlePDGMap;
             for (auto particle : *mcParticles)
             {
+                parentDaughterMap[particle.TrackId()] = particle.Mother();
                 particlePDGMap[particle.TrackId()] = particle.PdgCode();
             }
 
@@ -137,6 +139,13 @@ namespace extractor
                     Int_t track_id = TruthMatchUtils::TrueParticleID(
                         clockData, hit, false
                     );
+
+                    Int_t mother = parentDaughterMap[track_id];
+                    while (mother != 0)
+                    {
+                        track_id = mother;
+                        mother = parentDaughterMap[track_id];
+                    }
 
                     Int_t pdg = particlePDGMap[track_id];
                     temp_pdg.emplace_back(pdg);
