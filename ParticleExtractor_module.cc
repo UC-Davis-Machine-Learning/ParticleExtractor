@@ -379,11 +379,12 @@ namespace extractor
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
         // get the list of MC particles from Geant4
+        std::cout << "Collecting MC Particles.." << std::endl;
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
-        auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
 
         // now pass the list of particles to each of the appropriate submodules
         if (fFillRawDecoder) {
+            std::cout << "Filling Raw Decoder.." << std::endl;
             auto mcSimChannels =
                 event.getValidHandle<std::vector<sim::SimChannel>>(
                     art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
@@ -391,16 +392,22 @@ namespace extractor
             fRawDecoder.processEvent(mcParticles, mcSimChannels);
         }
         if (fFillMCNeutronCaptures) {
+            std::cout << "Filling MC Neutron Captures.." << std::endl;
+            auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
             fMCNeutronCaptures.processEvent(mcParticles, mcEnergyDeposit);
         }
         if (fFillMCEnergyDeposits) {
+            std::cout << "Filling MC Energy Deposits.." << std::endl;
+            auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
             fMCEnergyDeposits.processEvent(mcParticles, mcEnergyDeposit);
         }
         if (fFillMCVoxels) {
+            std::cout << "Filling MC Voxels.." << std::endl;
             fMCVoxels.processEvent(fMCEnergyDeposits);
         }
         if (fFillRecoEnergyDeposits) 
         {
+            std::cout << "Filling Reco Energy Deposits.." << std::endl;
             auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(
@@ -418,10 +425,12 @@ namespace extractor
             );
         }
         if (fFillRecoVoxels) {
+            std::cout << "Filling Reco Voxels.." << std::endl;
             fRecoVoxels.processEvent(fRecoEnergyDeposits);
         }
 
         if (fFillRecoTracks) {
+            std::cout << "Filling Reco Tracks.." << std::endl;
             auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(
@@ -442,7 +451,7 @@ namespace extractor
             );
         }
         if (fFillRecoTraining) {
-            std::cout << "here" << std::endl;
+            std::cout << "Filling Reco Training.." << std::endl;
             auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(
@@ -463,6 +472,7 @@ namespace extractor
             );
         }
         if (fFillRecoDBScan3D) {
+            std::cout << "Filling Reco DBScan3D.." << std::endl;
             auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(
@@ -483,7 +493,7 @@ namespace extractor
             );
         }
         if (fFillRecoNeutrons) {
-            std::cout << "here" << std::endl;
+            std::cout << "Filling Reco Neutrons.." << std::endl;
             auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(

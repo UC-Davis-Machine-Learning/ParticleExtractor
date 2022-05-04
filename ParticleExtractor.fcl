@@ -56,13 +56,13 @@ ParticleExtractor:
     PandoraTrackLabel:      "pandoraTrack"
 
     # RecoTraining parameters
-    FillRecoTraining:       true
+    FillRecoTraining:       false
 
     # RecoNeutrons parameters
     FillRecoNeutrons:       true
 
     # RecoDBScan3D parameters
-    FillRecoDBScan3D:       true
+    FillRecoDBScan3D:       false
     DBScan3DLabel:          "dbcluster"
 }
 

@@ -147,7 +147,8 @@ namespace extractor
              */
             
             std::vector<art::Ptr<recob::SpacePoint>> pointsList;
-            art::fill_ptr_vector(pointsList, recoSpacePoints);            
+            art::fill_ptr_vector(pointsList, recoSpacePoints);   
+            std::cout << "Iterating over hits..." << std::endl;         
             for (size_t i = 0; i < pointsList.size(); i++)
             {
                 auto& spsHit = hitPandoraSPsAssn.at(i);
