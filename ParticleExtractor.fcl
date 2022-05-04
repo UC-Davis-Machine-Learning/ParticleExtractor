@@ -58,6 +58,9 @@ ParticleExtractor:
     # RecoTraining parameters
     FillRecoTraining:       true
 
+    # RecoNeutrons parameters
+    FillRecoNeutrons:       true
+
     # RecoDBScan3D parameters
     FillRecoDBScan3D:       true
     DBScan3DLabel:          "dbcluster"

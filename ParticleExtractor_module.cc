@@ -68,6 +68,7 @@
 #include "RawDecoder.h"
 #include "RecoTracks.h"
 #include "RecoTraining.h"
+#include "RecoNeutrons.h"
 #include "RecoDBScan3D.h"
 
 namespace extractor
@@ -101,6 +102,7 @@ namespace extractor
         bool fFillRecoVoxels;
         bool fFillRecoTracks;
         bool fFillRecoTraining;
+        bool fFillRecoNeutrons;
         bool fFillRecoDBScan3D;
 
         // MC edep variables
@@ -164,6 +166,8 @@ namespace extractor
         RecoTracks fRecoTracks;
         // reco trianing
         RecoTraining fRecoTraining;
+        // reco neutrons
+        RecoNeutrons fRecoNeutrons;
         // reco DBScan
         RecoDBScan3D fRecoDBScan3D;
     };
@@ -201,6 +205,9 @@ namespace extractor
 
         //RecoTraining
         fFillRecoTraining = fParameters().FillRecoTraining();
+
+        //RecoTraining
+        fFillRecoNeutrons = fParameters().FillRecoNeutrons();
 
         //DBScan3D
         fFillRecoDBScan3D = fParameters().FillRecoDBScan3D();
@@ -340,6 +347,8 @@ namespace extractor
 
         fRecoTraining.setBoundingBoxType(fRecoEdepBoundingBox);
 
+        fRecoNeutrons.setBoundingBoxType(fRecoEdepBoundingBox);
+
         fRecoDBScan3D.setBoundingBoxType(fRecoEdepBoundingBox);
 
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
@@ -471,6 +480,27 @@ namespace extractor
                 recoSlices,
                 hitsFromSpacePointsAssn,
                 spacePointSliceAssn
+            );
+        }
+        if (fFillRecoNeutrons) {
+            std::cout << "here" << std::endl;
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fPandoraLabel);
+            auto recoTracks = event.getValidHandle< std::vector<recob::Track> >(fPandoraTrackLabel);
+            art::FindManyP<recob::Hit> hitsFromSpsPandoraAssn(recoSpacePoints, event, fPandoraLabel); //to associate space point from pandora to hit
+            art::FindManyP<recob::Hit> hitsFromTracksAssn(recoTracks, event, fPandoraTrackLabel); // to associate tracks and hits
+            fRecoNeutrons.processEvent(
+                clockData,
+                mcParticles, 
+                mcSimChannels,
+                recoSpacePoints,
+                recoTracks,
+                hitsFromSpsPandoraAssn,
+                hitsFromTracksAssn
             );
         }
     }
