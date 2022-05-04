@@ -177,7 +177,7 @@ namespace extractor
                         Int_t mother = parentDaughterMap[temp_track_id];
                         bool neutron_found = false;
                         bool gamma_found = false;
-                        while(!neutron_found)
+                        while(!neutron_found and mother != 0)
                         {
                             for (size_t i = 0; i < neutron_captures.size(); i++) 
                             {
@@ -195,7 +195,7 @@ namespace extractor
                         {
                             Int_t temp_track_id = track_id;
                             Int_t mother = parentDaughterMap[temp_track_id];
-                            while(!gamma_found)
+                            while(!gamma_found and mother != 0)
                             {
                                 for (size_t i = 0; i < gamma_ids[temp_neutron_index].size(); i++) 
                                 {
