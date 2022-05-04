@@ -65,8 +65,10 @@ namespace extractor
         std::vector<double> sp_y;
         std::vector<double> sp_z;
         std::vector<int>    sp_pdg;
+        std::vector<int>    secondary_pdg;
         std::vector<int>    ancestor_pdg;
         std::vector<int>    sp_track_id;
+        std::vector<int>    secondary_track_id;
         std::vector<int>    ancestor_track_id;
         std::vector<int>    ancestor_level;
         std::vector<double> summed_adc;

@@ -20,8 +20,10 @@ namespace extractor
         fRecoTrainingTree->Branch("sp_y", &fRecoTrainingSet.sp_y);
         fRecoTrainingTree->Branch("sp_z", &fRecoTrainingSet.sp_z);
         fRecoTrainingTree->Branch("sp_pdg", &fRecoTrainingSet.sp_pdg);
+        fRecoTrainingTree->Branch("secondary_pdg", &fRecoTrainingSet.secondary_pdg);
         fRecoTrainingTree->Branch("ancestor_pdg", &fRecoTrainingSet.ancestor_pdg);
         fRecoTrainingTree->Branch("sp_track_id", &fRecoTrainingSet.sp_track_id);
+        fRecoTrainingTree->Branch("secondary_track_id", &fRecoTrainingSet.secondary_track_id);
         fRecoTrainingTree->Branch("ancestor_track_id", &fRecoTrainingSet.ancestor_track_id);
         fRecoTrainingTree->Branch("ancestor_level", &fRecoTrainingSet.ancestor_level);
         fRecoTrainingTree->Branch("summed_adc", &fRecoTrainingSet.summed_adc);
@@ -68,7 +70,9 @@ namespace extractor
              */
             std::map<Int_t, Int_t> parentDaughterMap;
             std::map<Int_t, Int_t> particlePDGMap;
+            std::map<Int_t, Int_t> secondaryPDGMap;
             std::map<Int_t, Int_t> ancestorPDGMap;
+            std::map<Int_t, Int_t> secondaryTrackIdMap;
             std::map<Int_t, Int_t> ancestorTrackIdMap;
             std::map<Int_t, Int_t> levelMap;
             for (auto particle : *mcParticles)
@@ -80,15 +84,19 @@ namespace extractor
             {
                 Int_t mother = particle.Mother();
                 Int_t track_id = particle.TrackId();
+                Int_t prev_track_id = 0;
                 Int_t level = 0;
                 while (mother != 0)
                 {
                     level += 1;
+                    prev_track_id = track_id;
                     track_id = mother;
                     mother = parentDaughterMap[track_id];
                 }
                 levelMap[particle.TrackId()] = level;
+                secondaryPDGMap[particle.TrackId()] = particlePDGMap[prev_track_id];
                 ancestorPDGMap[particle.TrackId()] = particlePDGMap[track_id];
+                secondaryTrackIdMap[particle.TrackId()] = prev_track_id;
                 ancestorTrackIdMap[particle.TrackId()] = track_id;
             }
             
@@ -128,6 +136,8 @@ namespace extractor
             {
                 std::vector<Int_t> temp_pdg;
                 std::vector<Int_t> temp_track_id;
+                std::vector<Int_t> temp_secondary_pdg;
+                std::vector<Int_t> temp_secondary_track_id;
                 std::vector<Int_t> temp_ancestor_id;
                 std::vector<Int_t> temp_ancestor_pdg;
                 std::vector<Int_t> temp_label;
@@ -176,12 +186,16 @@ namespace extractor
                         temp_label.emplace_back(-2);
                     }
                     Int_t pdg = particlePDGMap[track_id];
+                    Int_t secondary_pdg = secondaryPDGMap[track_id];
+                    Int_t secondary = secondaryTrackIdMap[track_id];
                     Int_t ancestor = ancestorTrackIdMap[track_id];
                     Int_t ancestorpdg = ancestorPDGMap[track_id];
                     Int_t level = levelMap[track_id];
                     
                     temp_pdg.emplace_back(pdg);
                     temp_track_id.emplace_back(track_id);
+                    temp_secondary_pdg.emplace_back(secondary_pdg);
+                    temp_secondary_track_id.emplace_back(secondary);
                     temp_ancestor_id.emplace_back(ancestor);
                     temp_ancestor_pdg.emplace_back(ancestorpdg);
                     temp_summed_adc.emplace_back(hit->SummedADC());
@@ -209,6 +223,8 @@ namespace extractor
                 {
                     recoTrainingSet.sp_pdg.emplace_back(-999);
                     recoTrainingSet.sp_track_id.emplace_back(-999);
+                    recoTrainingSet.secondary_pdg.emplace_back(-999);
+                    recoTrainingSet.secondary_track_id.emplace_back(-999);
                     recoTrainingSet.ancestor_track_id.emplace_back(-999);
                     recoTrainingSet.ancestor_pdg.emplace_back(-999);
                     recoTrainingSet.summed_adc.emplace_back(-999);
@@ -229,6 +245,8 @@ namespace extractor
                     
                     recoTrainingSet.sp_pdg.emplace_back(temp_pdg[max_index]);
                     recoTrainingSet.sp_track_id.emplace_back(temp_track_id[max_index]);
+                    recoTrainingSet.secondary_pdg.emplace_back(temp_secondary_pdg[max_index]);
+                    recoTrainingSet.secondary_track_id.emplace_back(temp_secondary_track_id[max_index]);
                     recoTrainingSet.ancestor_track_id.emplace_back(temp_ancestor_id[max_index]);
                     recoTrainingSet.ancestor_pdg.emplace_back(temp_ancestor_pdg[max_index]);
                     recoTrainingSet.summed_adc.emplace_back(temp_summed_adc[max_index]);
