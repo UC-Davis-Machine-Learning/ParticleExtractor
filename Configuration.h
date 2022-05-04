@@ -240,6 +240,12 @@ namespace extractor
             fhicl::Comment("Whether to save Reco Training information.")
         };
 
+        fhicl::Atom<bool> FillRecoNeutrons
+        {
+            fhicl::Name("FillRecoNeutrons"),
+            fhicl::Comment("Whether to save Reco Neutrons information.")
+        };
+
         fhicl::Atom<bool> FillRecoDBScan3D
         {
             fhicl::Name("FillRecoDBScan3D"),
