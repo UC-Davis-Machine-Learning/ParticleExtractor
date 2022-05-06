@@ -15,7 +15,7 @@ namespace extractor
 {
     RecoNeutrons::RecoNeutrons()
     {
-        fRecoNeutronsTree = fTFileService->make<TTree>("reco_training", "reco_training");
+        fRecoNeutronsTree = fTFileService->make<TTree>("reco_neutrons", "reco_neutrons");
         fRecoNeutronsTree->Branch("sp_x", &fRecoNeutronsSet.sp_x);
         fRecoNeutronsTree->Branch("sp_y", &fRecoNeutronsSet.sp_y);
         fRecoNeutronsTree->Branch("sp_z", &fRecoNeutronsSet.sp_z);
@@ -63,34 +63,18 @@ namespace extractor
              */
             std::map<Int_t, Int_t> parentDaughterMap;
             std::map<Int_t, Int_t> particlePDGMap;
-            std::map<Int_t, Int_t> ancestorPDGMap;
-            std::map<Int_t, Int_t> ancestorTrackIdMap;
-            std::map<Int_t, bool> ancestorCapture;
-            std::map<Int_t, Int_t> levelMap;
 
             std::vector<int> neutron_captures;
             std::vector<std::vector<int>> gamma_ids;
+
+            std::map<Int_t, Int_t> neutronMap;
+            std::map<Int_t, Int_t> gammaMap;
+            std::map<Int_t, bool> neutronCapture;
 
             for (auto particle : *mcParticles)
             {
                 parentDaughterMap[particle.TrackId()] = particle.Mother();
                 particlePDGMap[particle.TrackId()] = particle.PdgCode();
-            }
-            for (auto particle : *mcParticles)
-            {
-                Int_t mother = particle.Mother();
-                Int_t track_id = particle.TrackId();
-                Int_t level = 0;
-                while (mother != 0)
-                {
-                    level += 1;
-                    track_id = mother;
-                    mother = parentDaughterMap[track_id];
-                }
-                levelMap[particle.TrackId()] = level;
-                ancestorPDGMap[particle.TrackId()] = particlePDGMap[track_id];
-                ancestorTrackIdMap[particle.TrackId()] = track_id;
-                ancestorCapture[particle.TrackId()] = false;
             }
             for (auto particle : *mcParticles)
             {
@@ -100,7 +84,6 @@ namespace extractor
                     if (particle.EndProcess() == "nCapture")
                     {
                         neutron_captures.emplace_back(particle.TrackId());
-                        ancestorCapture[ancestorTrackIdMap[particle.TrackId()]] = true;
                         gamma_ids.emplace_back(std::vector<int>());
                     }
                 }
@@ -115,36 +98,37 @@ namespace extractor
                         }
                     }
                 }
-            }
-            std::vector<art::Ptr<recob::Track>> trackList;
-            art::fill_ptr_vector(trackList, recoTracks);
-
-            std::vector<hitStruct> trackHitList;
-            std::cout << "Making a list of track hits....." << std::endl;
-            for (size_t i = 0; i < trackList.size(); i++)
-            {
-                std::vector<art::Ptr<recob::Hit>> allHits = hitTrackAssn.at(i); //storing hits for ith track
-                for (size_t j = 0; j < allHits.size(); j++)
+                // otherwise see if the particle is from a neutron capture
+                else
                 {
-                    hitStruct hit;
-                    hit.cID = allHits[j]->Channel();
-                    hit.PT = allHits[j]->PeakTime();
-                    trackHitList.emplace_back(hit);
-                }  
+                    Int_t mother = particle.Mother();
+                    Int_t track_id = particle.TrackId();
+                    while (mother != 0)
+                    {
+                        for(size_t i = 0; i < neutron_captures.size(); i++)
+                        {
+                            if (neutron_captures[i] == mother)
+                            {
+                                std::cout << "Found capture: " << neutron_captures[i] << " for track id: " << particle.TrackId() << std::endl;
+                                neutronMap[particle.TrackId()] = i;
+                                for (size_t j = 0; j < gamma_ids[i].size(); j++)
+                                {
+                                    if (gamma_ids[i][j] == track_id)
+                                    {
+                                        std::cout << "Found gamma: " << gamma_ids[i][j] << " for track id: " << particle.TrackId() << std::endl;
+                                        gammaMap[particle.TrackId()] = j;
+                                        neutronCapture[particle.TrackId()] = true;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        track_id = mother;
+                        mother = parentDaughterMap[track_id];
+                    }
+                }
             }
-            //Making a map of grids and hits in them
-            std::map<gridStruct, std::vector<hitStruct>> GridHitMap;
-            makeGridHitMap(trackHitList, GridHitMap);
-            // get a list of hits associated to each space point
-            /**
-             * We iterate over the list of hits and look for the 
-             * SimChannel which matches the hits Channel() value.
-             * We then use the Hits PeakTime to find the track IDs
-             * that live within that SimChannels PeakTime window, from 
-             * which we can associate an MCParticle.
-             *      MCParticle.TrackId() -> SimChannel.TrackIDEs(peaktime, peaktime) -> Hit.Channel()  
-             * 
-             */
             
             std::vector<art::Ptr<recob::SpacePoint>> pointsList;
             art::fill_ptr_vector(pointsList, recoSpacePoints);            
@@ -167,70 +151,31 @@ namespace extractor
                         std::cout << "Track ID: " << track_id << " does not have an associated pdg!" << std::endl;
                         continue;
                     }
-                    if (ancestorCapture[track_id])
+                    if (neutronCapture[track_id])
                     {
-                        Int_t temp_neutron = 0;
-                        Int_t temp_gamma = 0;
-                        Int_t temp_neutron_index = 0;
-                        Int_t temp_track_id = track_id;
-                        Int_t mother = parentDaughterMap[temp_track_id];
-                        bool neutron_found = false;
-                        bool gamma_found = false;
-                        while(!neutron_found)
-                        {
-                            for (size_t i = 0; i < neutron_captures.size(); i++) 
-                            {
-                                if (neutron_captures[i] == mother) {
-                                    temp_neutron = mother;
-                                    temp_neutron_index = i;
-                                    neutron_found = true;
-                                    break;
-                                }
-                            }
-                            temp_track_id = mother;
-                            mother = parentDaughterMap[temp_track_id];
+                        std::cout << "Found hit: " << track_id << " with capture: ";
+                        std::cout << neutron_captures[neutronMap[track_id]] << " and gamma: ";
+                        std::cout << gamma_ids[neutronMap[track_id]][gammaMap[track_id]] << std::endl;
+                        // collect results
+                        auto xyz = pointsList[i]->XYZ();
+                        // check if point is in active volume
+                        // Determine if edep is within the desired volume
+                        DetectorVolume edep_volume = fGeometry->getVolume(
+                            xyz[0], xyz[1], xyz[2]
+                        );
+                        if (edep_volume.volume_type != fBoundingBoxType) {
+                            continue;
                         }
-                        if (neutron_found)
-                        {
-                            Int_t temp_track_id = track_id;
-                            Int_t mother = parentDaughterMap[temp_track_id];
-                            while(!gamma_found)
-                            {
-                                for (size_t i = 0; i < gamma_ids[temp_neutron_index].size(); i++) 
-                                {
-                                    if (gamma_ids[temp_neutron_index][i] == mother) {
-                                        temp_gamma = mother;
-                                        gamma_found = true;
-                                        break;
-                                    }
-                                }
-                                temp_track_id = mother;
-                                mother = parentDaughterMap[temp_track_id];
-                            }
-                        }
-                        if (gamma_found)
-                        {
-                            // collect results
-                            auto xyz = pointsList[i]->XYZ();
-                            // check if point is in active volume
-                            // Determine if edep is within the desired volume
-                            DetectorVolume edep_volume = fGeometry->getVolume(
-                                xyz[0], xyz[1], xyz[2]
-                            );
-                            if (edep_volume.volume_type != fBoundingBoxType) {
-                                continue;
-                            }
-                            
-                            RecoNeutronsSet.sp_x.emplace_back(xyz[0]);
-                            RecoNeutronsSet.sp_y.emplace_back(xyz[1]);
-                            RecoNeutronsSet.sp_z.emplace_back(xyz[2]);
-                            RecoNeutronsSet.neutron_id.emplace_back(temp_neutron);
-                            RecoNeutronsSet.gamma_id.emplace_back(temp_gamma);
-                            RecoNeutronsSet.summed_adc.emplace_back(hit->SummedADC());
-                            RecoNeutronsSet.mean_adc.emplace_back(hit->PeakTime());
-                            RecoNeutronsSet.peak_adc.emplace_back(hit->PeakAmplitude());
-                            RecoNeutronsSet.sigma_adc.emplace_back(hit->RMS());
-                        }
+                        
+                        RecoNeutronsSet.sp_x.emplace_back(xyz[0]);
+                        RecoNeutronsSet.sp_y.emplace_back(xyz[1]);
+                        RecoNeutronsSet.sp_z.emplace_back(xyz[2]);
+                        RecoNeutronsSet.neutron_id.emplace_back(neutron_captures[neutronMap[track_id]]);
+                        RecoNeutronsSet.gamma_id.emplace_back(gamma_ids[neutronMap[track_id]][gammaMap[track_id]]);
+                        RecoNeutronsSet.summed_adc.emplace_back(hit->SummedADC());
+                        RecoNeutronsSet.mean_adc.emplace_back(hit->PeakTime());
+                        RecoNeutronsSet.peak_adc.emplace_back(hit->PeakAmplitude());
+                        RecoNeutronsSet.sigma_adc.emplace_back(hit->RMS());
                     }
                 }
             }
