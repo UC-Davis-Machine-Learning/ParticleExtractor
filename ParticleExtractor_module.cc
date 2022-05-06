@@ -506,7 +506,7 @@ namespace extractor
                 mcParticles, 
                 mcSimChannels,
                 recoSpacePoints,
-                hitsFromSpsPandoraAssn,
+                hitsFromSpsPandoraAssn
             );
         }
     }

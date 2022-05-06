@@ -83,7 +83,7 @@ namespace extractor
             const art::ValidHandle<std::vector<simb::MCParticle>>& mcParticles,
             const art::ValidHandle<std::vector<sim::SimChannel>>& mcChannels,
             const art::ValidHandle<std::vector<recob::SpacePoint>>& recoSpacePoints,
-            const art::FindManyP<recob::Hit>& hitPandoraSPsAssn, //to associate space points from pandora to hits
+            const art::FindManyP<recob::Hit>& hitPandoraSPsAssn //to associate space points from pandora to hits
         );
 
         void makeGridHitMap(
