@@ -52,7 +52,7 @@ namespace extractor
     )
     {
         RecoNeutronsSet RecoNeutronsSet;
-        if (mcParticles.isValid() and mcChannels.isValid() and recoSpacePoints.isValid() and recoTracks.isValid())
+        if (mcParticles.isValid() and mcChannels.isValid() and recoSpacePoints.isValid())
         {
             /**
              * We first iterate through all particles and create a map of 
