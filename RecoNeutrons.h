@@ -64,6 +64,7 @@ namespace extractor
         std::vector<double> sp_z;
         std::vector<int>    neutron_id;
         std::vector<int>    gamma_id;
+        std::vector<double> gamma_energy;
         std::vector<double> summed_adc;
         std::vector<double> mean_adc;
         std::vector<double> peak_adc;

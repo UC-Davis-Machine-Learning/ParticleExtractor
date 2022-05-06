@@ -21,6 +21,7 @@ namespace extractor
         fRecoNeutronsTree->Branch("sp_z", &fRecoNeutronsSet.sp_z);
         fRecoNeutronsTree->Branch("neutron_id", &fRecoNeutronsSet.neutron_id);
         fRecoNeutronsTree->Branch("gamma_id", &fRecoNeutronsSet.gamma_id);
+        fRecoNeutronsTree->Branch("gamma_energy", &fRecoNeutronsSet.gamma_energy);
         fRecoNeutronsTree->Branch("summed_adc", &fRecoNeutronsSet.summed_adc);
         fRecoNeutronsTree->Branch("mean_adc", &fRecoNeutronsSet.mean_adc);
         fRecoNeutronsTree->Branch("peak_adc", &fRecoNeutronsSet.peak_adc);
@@ -64,6 +65,7 @@ namespace extractor
 
             std::vector<int> neutron_captures;
             std::vector<std::vector<int>> gamma_ids;
+            std::vector<std::vector<double>> gamma_energy;
 
             std::map<Int_t, Int_t> neutronMap;
             std::map<Int_t, Int_t> gammaMap;
@@ -83,6 +85,7 @@ namespace extractor
                     {
                         neutron_captures.emplace_back(particle.TrackId());
                         gamma_ids.emplace_back(std::vector<int>());
+                        gamma_energy.emplace_back(std::vector<double>());
                     }
                 }
                 // check if the particle is a gamma
@@ -93,6 +96,7 @@ namespace extractor
                         if (neutron_captures[i] == particle.Mother())
                         {
                             gamma_ids[i].emplace_back(particle.TrackId());
+                            gamma_energy[i].emplace_back(particle.E());
                         }
                     }
                 }
@@ -170,6 +174,7 @@ namespace extractor
                         RecoNeutronsSet.sp_z.emplace_back(xyz[2]);
                         RecoNeutronsSet.neutron_id.emplace_back(neutron_captures[neutronMap[track_id]]);
                         RecoNeutronsSet.gamma_id.emplace_back(gamma_ids[neutronMap[track_id]][gammaMap[track_id]]);
+                        RecoNeutronsSet.gamma_energy.emplace_back(gamma_energy[neutronMap[track_id]][gammaMap[track_id]]);
                         RecoNeutronsSet.summed_adc.emplace_back(hit->SummedADC());
                         RecoNeutronsSet.mean_adc.emplace_back(hit->PeakTime());
                         RecoNeutronsSet.peak_adc.emplace_back(hit->PeakAmplitude());
