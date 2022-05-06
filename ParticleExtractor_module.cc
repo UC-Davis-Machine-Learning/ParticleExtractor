@@ -500,17 +500,13 @@ namespace extractor
                     art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
                 );
             auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fPandoraLabel);
-            auto recoTracks = event.getValidHandle< std::vector<recob::Track> >(fPandoraTrackLabel);
             art::FindManyP<recob::Hit> hitsFromSpsPandoraAssn(recoSpacePoints, event, fPandoraLabel); //to associate space point from pandora to hit
-            art::FindManyP<recob::Hit> hitsFromTracksAssn(recoTracks, event, fPandoraTrackLabel); // to associate tracks and hits
             fRecoNeutrons.processEvent(
                 clockData,
                 mcParticles, 
                 mcSimChannels,
                 recoSpacePoints,
-                recoTracks,
                 hitsFromSpsPandoraAssn,
-                hitsFromTracksAssn
             );
         }
     }
