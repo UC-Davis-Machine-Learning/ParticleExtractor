@@ -71,6 +71,24 @@ namespace extractor
             fhicl::Comment("Tag of the input data product for the SpacePoint side of the simulation.")
         };
 
+        fhicl::Atom<art::InputTag> PandoraLabel
+        {
+            fhicl::Name("PandoraLabel"),
+            fhicl::Comment("Tag of the input data product for the SpacePoints from Pandora.")
+        };
+
+        fhicl::Atom<art::InputTag> PandoraTrackLabel
+        {
+            fhicl::Name("PandoraTrackLabel"),
+            fhicl::Comment("Tag of the input data product for the track hits from Pandora.")
+        };
+
+        fhicl::Atom<art::InputTag> DBScan3DLabel
+        {
+            fhicl::Name("DBScan3DLabel"),
+            fhicl::Comment("Tag of the input data product for the slices from DBScan3D.")
+        };
+
         /**
          * These options generate TTrees called "mc_neutron_captures",
          * "mc_energy_deposits", "reco_energy_deposits",
@@ -206,6 +224,32 @@ namespace extractor
         {
             fhicl::Name("RecoVoxelLabeling"),
             fhicl::Comment("Labeling scheme for the voxels.")
+        };
+
+        // RecoTracks
+
+        fhicl::Atom<bool> FillRecoTracks
+        {
+            fhicl::Name("FillRecoTracks"),
+            fhicl::Comment("Whether to save Reco tracks information.")
+        };
+
+        fhicl::Atom<bool> FillRecoTraining
+        {
+            fhicl::Name("FillRecoTraining"),
+            fhicl::Comment("Whether to save Reco Training information.")
+        };
+
+        fhicl::Atom<bool> FillRecoNeutrons
+        {
+            fhicl::Name("FillRecoNeutrons"),
+            fhicl::Comment("Whether to save Reco Neutrons information.")
+        };
+
+        fhicl::Atom<bool> FillRecoDBScan3D
+        {
+            fhicl::Name("FillRecoDBScan3D"),
+            fhicl::Comment("Whether to save Reco DBScan3D information.")
         };
     };
 

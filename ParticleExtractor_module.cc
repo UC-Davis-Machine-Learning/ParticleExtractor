@@ -66,6 +66,10 @@
 #include "RecoEnergyDeposits.h"
 #include "RecoVoxels.h"
 #include "RawDecoder.h"
+#include "RecoTracks.h"
+#include "RecoTraining.h"
+#include "RecoNeutrons.h"
+#include "RecoDBScan3D.h"
 
 namespace extractor
 {
@@ -96,6 +100,10 @@ namespace extractor
         bool fFillRawDecoder;
         bool fFillRecoEnergyDeposits;
         bool fFillRecoVoxels;
+        bool fFillRecoTracks;
+        bool fFillRecoTraining;
+        bool fFillRecoNeutrons;
+        bool fFillRecoDBScan3D;
 
         // MC edep variables
         std::string fMCEdepBoundingBox;
@@ -128,6 +136,9 @@ namespace extractor
         art::InputTag fSimChannelInstanceProducerLabel;
         art::InputTag fHitProducerLabel;
         art::InputTag fSpacePointProducerLabel;
+        art::InputTag fPandoraLabel;
+        art::InputTag fPandoraTrackLabel;
+        art::InputTag fDBScan3DLabel;
 
         /// ROOT output through art::TFileService
         /** We will save different TTrees to different TFiles specified 
@@ -151,6 +162,14 @@ namespace extractor
         RecoVoxels fRecoVoxels;
         // rawdecoder
         RawDecoder fRawDecoder;
+        // recotracks
+        RecoTracks fRecoTracks;
+        // reco trianing
+        RecoTraining fRecoTraining;
+        // reco neutrons
+        RecoNeutrons fRecoNeutrons;
+        // reco DBScan
+        RecoDBScan3D fRecoDBScan3D;
     };
 
     // constructor
@@ -169,6 +188,9 @@ namespace extractor
         fSimChannelInstanceProducerLabel = fParameters().SimChannelInstanceProducerLabel();
         fHitProducerLabel = fParameters().HitProducerLabel();
         fSpacePointProducerLabel = fParameters().SpacePointProducerLabel();
+        fPandoraLabel = fParameters().PandoraLabel();
+        fPandoraTrackLabel = fParameters().PandoraTrackLabel();
+        fDBScan3DLabel = fParameters().DBScan3DLabel();
 
         // Which submodules to run
         fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
@@ -177,6 +199,18 @@ namespace extractor
         fFillRawDecoder = fParameters().FillRawDecoder();
         fFillRecoEnergyDeposits = fParameters().FillRecoEnergyDeposits();
         fFillRecoVoxels = fParameters().FillRecoVoxels();
+
+        //RecoTracks
+        fFillRecoTracks = fParameters().FillRecoTracks();
+
+        //RecoTraining
+        fFillRecoTraining = fParameters().FillRecoTraining();
+
+        //RecoTraining
+        fFillRecoNeutrons = fParameters().FillRecoNeutrons();
+
+        //DBScan3D
+        fFillRecoDBScan3D = fParameters().FillRecoDBScan3D();
 
         // MC edep information
         fMCEdepBoundingBox = fParameters().MCEdepBoundingBox();
@@ -309,6 +343,14 @@ namespace extractor
         fRecoVoxels.setBoundingBox(fRecoVoxelBoundingBox);
         fRecoVoxels.setVoxelLabeling(fRecoVoxelLabeling);
 
+        fRecoTracks.setBoundingBoxType(fRecoEdepBoundingBox);
+
+        fRecoTraining.setBoundingBoxType(fRecoEdepBoundingBox);
+
+        fRecoNeutrons.setBoundingBoxType(fRecoEdepBoundingBox);
+
+        fRecoDBScan3D.setBoundingBoxType(fRecoEdepBoundingBox);
+
         fMetaTree = fTFileService->make<TTree>("meta", "meta");
     }
 
@@ -337,11 +379,12 @@ namespace extractor
                 << " Line " << __LINE__ << " in file " << __FILE__ << std::endl;
         }
         // get the list of MC particles from Geant4
+        std::cout << "Collecting MC Particles.." << std::endl;
         auto mcParticles = event.getValidHandle<std::vector<simb::MCParticle>>(fLArGeantProducerLabel);
-        auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
 
         // now pass the list of particles to each of the appropriate submodules
         if (fFillRawDecoder) {
+            std::cout << "Filling Raw Decoder.." << std::endl;
             auto mcSimChannels =
                 event.getValidHandle<std::vector<sim::SimChannel>>(
                     art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
@@ -349,16 +392,22 @@ namespace extractor
             fRawDecoder.processEvent(mcParticles, mcSimChannels);
         }
         if (fFillMCNeutronCaptures) {
+            std::cout << "Filling MC Neutron Captures.." << std::endl;
+            auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
             fMCNeutronCaptures.processEvent(mcParticles, mcEnergyDeposit);
         }
         if (fFillMCEnergyDeposits) {
+            std::cout << "Filling MC Energy Deposits.." << std::endl;
+            auto mcEnergyDeposit = event.getValidHandle<std::vector<sim::SimEnergyDeposit>>(fIonAndScintProducerLabel);
             fMCEnergyDeposits.processEvent(mcParticles, mcEnergyDeposit);
         }
         if (fFillMCVoxels) {
+            std::cout << "Filling MC Voxels.." << std::endl;
             fMCVoxels.processEvent(fMCEnergyDeposits);
         }
         if (fFillRecoEnergyDeposits) 
         {
+            std::cout << "Filling Reco Energy Deposits.." << std::endl;
             auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
             auto mcSimChannels = 
                 event.getValidHandle<std::vector<sim::SimChannel>>(
@@ -376,7 +425,89 @@ namespace extractor
             );
         }
         if (fFillRecoVoxels) {
+            std::cout << "Filling Reco Voxels.." << std::endl;
             fRecoVoxels.processEvent(fRecoEnergyDeposits);
+        }
+
+        if (fFillRecoTracks) {
+            std::cout << "Filling Reco Tracks.." << std::endl;
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fPandoraLabel);
+            auto recoTracks = event.getValidHandle< std::vector<recob::Track> >(fPandoraTrackLabel);
+            art::FindManyP<recob::Hit> hitsFromSpsPandoraAssn(recoSpacePoints, event, fPandoraLabel); //to associate space point from pandora to hit
+            art::FindManyP<recob::Hit> hitsFromTracksAssn(recoTracks, event, fPandoraTrackLabel); // to associate tracks and hits
+            fRecoTracks.processEvent(
+                clockData,
+                mcParticles, 
+                mcSimChannels,
+                recoSpacePoints,
+                recoTracks,
+                hitsFromSpsPandoraAssn,
+                hitsFromTracksAssn
+            );
+        }
+        if (fFillRecoTraining) {
+            std::cout << "Filling Reco Training.." << std::endl;
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fPandoraLabel);
+            auto recoTracks = event.getValidHandle< std::vector<recob::Track> >(fPandoraTrackLabel);
+            art::FindManyP<recob::Hit> hitsFromSpsPandoraAssn(recoSpacePoints, event, fPandoraLabel); //to associate space point from pandora to hit
+            art::FindManyP<recob::Hit> hitsFromTracksAssn(recoTracks, event, fPandoraTrackLabel); // to associate tracks and hits
+            fRecoTraining.processEvent(
+                clockData,
+                mcParticles, 
+                mcSimChannels,
+                recoSpacePoints,
+                recoTracks,
+                hitsFromSpsPandoraAssn,
+                hitsFromTracksAssn
+            );
+        }
+        if (fFillRecoDBScan3D) {
+            std::cout << "Filling Reco DBScan3D.." << std::endl;
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fSpacePointProducerLabel);
+            auto recoSlices = event.getValidHandle< std::vector<recob::Slice> >(fDBScan3DLabel);
+            art::FindManyP<recob::Hit> hitsFromSpacePointsAssn(recoSpacePoints, event, fSpacePointProducerLabel);
+            art::FindManyP<recob::SpacePoint> spacePointSliceAssn(recoSlices, event, fDBScan3DLabel);
+            fRecoDBScan3D.processEvent(
+                clockData,
+                mcParticles, 
+                mcSimChannels,
+                recoSpacePoints,
+                recoSlices,
+                hitsFromSpacePointsAssn,
+                spacePointSliceAssn
+            );
+        }
+        if (fFillRecoNeutrons) {
+            std::cout << "Filling Reco Neutrons.." << std::endl;
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            auto recoSpacePoints = event.getValidHandle<std::vector<recob::SpacePoint>>(fPandoraLabel);
+            art::FindManyP<recob::Hit> hitsFromSpsPandoraAssn(recoSpacePoints, event, fPandoraLabel); //to associate space point from pandora to hit
+            fRecoNeutrons.processEvent(
+                clockData,
+                mcParticles, 
+                mcSimChannels,
+                recoSpacePoints,
+                hitsFromSpsPandoraAssn
+            );
         }
     }
 
