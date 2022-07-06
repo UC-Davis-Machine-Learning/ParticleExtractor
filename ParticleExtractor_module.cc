@@ -104,6 +104,7 @@ namespace extractor
         bool fFillRecoTraining;
         bool fFillRecoNeutrons;
         bool fFillRecoDBScan3D;
+        bool fFillRawTrainingSet;
 
         // MC edep variables
         std::string fMCEdepBoundingBox;
@@ -139,6 +140,8 @@ namespace extractor
         art::InputTag fPandoraLabel;
         art::InputTag fPandoraTrackLabel;
         art::InputTag fDBScan3DLabel;
+        art::InputTag fTPCInputLabel;
+        art::InputTag fTPCInstanceLabel;
 
         /// ROOT output through art::TFileService
         /** We will save different TTrees to different TFiles specified 
@@ -170,6 +173,8 @@ namespace extractor
         RecoNeutrons fRecoNeutrons;
         // reco DBScan
         RecoDBScan3D fRecoDBScan3D;
+        // Raw training set
+        RawTrainingSet fRawTrainingSet;
     };
 
     // constructor
@@ -191,6 +196,8 @@ namespace extractor
         fPandoraLabel = fParameters().PandoraLabel();
         fPandoraTrackLabel = fParameters().PandoraTrackLabel();
         fDBScan3DLabel = fParameters().DBScan3DLabel();
+        fTPCInputLabel = fParameters().TPCInputLabel();
+        fTPCInstanceLabel = fParameters().TPCInstanceLabel();
 
         // Which submodules to run
         fFillMCNeutronCaptures = fParameters().FillMCNeutronCaptures();
@@ -199,6 +206,9 @@ namespace extractor
         fFillRawDecoder = fParameters().FillRawDecoder();
         fFillRecoEnergyDeposits = fParameters().FillRecoEnergyDeposits();
         fFillRecoVoxels = fParameters().FillRecoVoxels();
+
+        //RawTrainingSet
+        fFillRawTrainingSet = fParameters().FillRawTrainingSet();
 
         //RecoTracks
         fFillRecoTracks = fParameters().FillRecoTracks();
@@ -342,6 +352,8 @@ namespace extractor
         fRecoVoxels.setVoxelSize(fRecoVoxelSize);
         fRecoVoxels.setBoundingBox(fRecoVoxelBoundingBox);
         fRecoVoxels.setVoxelLabeling(fRecoVoxelLabeling);
+
+        fRawTrainingSet.setBoundingBoxType(fRecoEdepBoundingBox);
 
         fRecoTracks.setBoundingBoxType(fRecoEdepBoundingBox);
 
@@ -507,6 +519,23 @@ namespace extractor
                 mcSimChannels,
                 recoSpacePoints,
                 hitsFromSpsPandoraAssn
+            );
+        }
+
+        if (fFillRawTrainingSet) {
+            std::cout << "Filling Raw Training Set.." << std::endl;
+            auto const clockData(art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event)); 
+            auto mcSimChannels = 
+                event.getValidHandle<std::vector<sim::SimChannel>>(
+                    art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
+                );
+            art::Handle< std::vector<raw::RawDigit> > RawTPC;
+            event.getByLabel(fTPCInputLabel, fTPCInstanceLabel, RawTPC); 
+            fRawTrainingSet.processEvent(
+                clockData,
+                mcParticles, 
+                mcSimChannels,
+                RawTPC
             );
         }
     }

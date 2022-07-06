@@ -64,6 +64,11 @@ ParticleExtractor:
     # RecoDBScan3D parameters
     FillRecoDBScan3D:       false
     DBScan3DLabel:          "dbcluster"
+
+    # RawTrainingSet parameters
+    FillRawTrainingSet:     true
+    TPCInputLabel:          "tpcrawdecoder"
+    fTPCInstanceLabel:      "daq"
 }
 
 END_PROLOG

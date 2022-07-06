@@ -251,6 +251,12 @@ namespace extractor
             fhicl::Name("FillRecoDBScan3D"),
             fhicl::Comment("Whether to save Reco DBScan3D information.")
         };
+
+        fhicl::Atom<bool> FillRawTrainingSet
+        {
+            fhicl::Name("FillRawTrainingSet"),
+            fhicl::Comment("Whether to save training set information.")
+        };
     };
 
     using Parameters = art::EDAnalyzer::Table<Configuration>;
