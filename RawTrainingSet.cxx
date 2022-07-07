@@ -60,8 +60,8 @@ namespace extractor
 
 
         // Accquiring geometry data
-        fNofAPA=fGeometry->NTPC()*fGeometry->Ncryostats()/2; //No. of APAs
-        fChansPerAPA = fGeometry->Nchannels()/fNofAPA; //No. of channels per APA
+        fNofAPA=fGeom->NTPC()*fGeom->Ncryostats()/2; //No. of APAs
+        fChansPerAPA = fGeom->Nchannels()/fNofAPA; //No. of channels per APA
 
         //To get max TDC
         auto const *fDetProp = lar::providerFrom<detinfo::DetectorPropertiesService>();
@@ -73,11 +73,11 @@ namespace extractor
         fUChanMin = 0;
         fZChanMax = fChansPerAPA - 1;
         for ( unsigned int c = fUChanMin + 1; c < fZChanMax; c++ ){
-            if ( fGeometry->View(c) == geo::kV && fGeometry->View(c-1) == geo::kU ){
+            if ( fGeom->View(c) == geo::kV && fGeom->View(c-1) == geo::kU ){
                 fVChanMin = c;
                 fUChanMax = c - 1;
             }
-            if ( fGeometry->View(c) == geo::kZ && fGeometry->View(c-1) == geo::kV ){
+            if ( fGeom->View(c) == geo::kZ && fGeom->View(c-1) == geo::kV ){
                 fZChanMin = c;
                 fVChanMax = c-1;
             }

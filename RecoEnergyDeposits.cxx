@@ -88,7 +88,7 @@ namespace extractor
                 std::vector<Double_t> temp_summed_adc;
                 std::vector<Int_t> temp_level;
                 auto& spsHit = hitSpacePointAssn.at(i);
-                auto num_channels = mcChannels->size();`
+                auto num_channels = mcChannels->size();
                 for (auto hit : spsHit)
                 {  
                     // find the corresponding sim channels
