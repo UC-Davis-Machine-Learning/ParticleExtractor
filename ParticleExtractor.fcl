@@ -68,7 +68,7 @@ ParticleExtractor:
     # RawTrainingSet parameters
     FillRawTrainingSet:     true
     TPCInputLabel:          "tpcrawdecoder"
-    fTPCInstanceLabel:      "daq"
+    TPCInstanceLabel:      "daq"
 }
 
 END_PROLOG

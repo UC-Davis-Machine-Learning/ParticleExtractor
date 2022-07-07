@@ -50,7 +50,7 @@
 #include <map>
 
 #include "DetectorGeometry.h"
-#include "RecoTracks.h"
+#include "TH2.h"
 
 namespace detinfo {
   class DetectorClocksData;

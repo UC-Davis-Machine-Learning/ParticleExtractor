@@ -70,6 +70,7 @@
 #include "RecoTraining.h"
 #include "RecoNeutrons.h"
 #include "RecoDBScan3D.h"
+#include "RawTrainingSet.h"
 
 namespace extractor
 {

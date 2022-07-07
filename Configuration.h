@@ -89,6 +89,18 @@ namespace extractor
             fhicl::Comment("Tag of the input data product for the slices from DBScan3D.")
         };
 
+        fhicl::Atom<art::InputTag> TPCInputLabel
+        {
+            fhicl::Name("TPCInputLabel"),
+            fhicl::Comment("Tag of the input data product for TPCInputLabel.")
+        };
+
+        fhicl::Atom<art::InputTag> TPCInstanceLabel
+        {
+            fhicl::Name("TPCInstanceLabel"),
+            fhicl::Comment("Tag of the input data product for TPCInstanceLabel.")
+        };
+
         /**
          * These options generate TTrees called "mc_neutron_captures",
          * "mc_energy_deposits", "reco_energy_deposits",

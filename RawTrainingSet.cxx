@@ -56,7 +56,7 @@ namespace extractor
         unsigned int VChMax;
         unsigned int ZChMin;
         unsigned int ZChMax;
-        TH2S* TempHisto;
+        TH2I* TempHisto;
 
 
         // Accquiring geometry data
@@ -110,7 +110,7 @@ namespace extractor
             title.str("");
             title << "Raw Time vs Channel(Plane U, APA";
             title << i<<")";
-            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), UChMax - UChMin + 1, UChMin, UChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), UChMax - UChMin + 1, UChMin, UChMax, binT, minT, maxT);
             fRawTimeChanU.push_back(TempHisto);
 
             name.str("");
@@ -119,7 +119,7 @@ namespace extractor
             title.str("");
             title << "Raw Time vs Channel(Plane V, APA";
             title << i<<")";
-            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), VChMax - VChMin + 1, VChMin, VChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), VChMax - VChMin + 1, VChMin, VChMax, binT, minT, maxT);
             fRawTimeChanV.push_back(TempHisto);
 
             name.str("");
@@ -128,7 +128,7 @@ namespace extractor
             title.str("");
             title << "Raw Time vs Channel(Plane Z, APA";
             title <<i<<")";
-            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), ZChMax - ZChMin + 1, ZChMin, ZChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), ZChMax - ZChMin + 1, ZChMin, ZChMax, binT, minT, maxT);
             fRawTimeChanZ.push_back(TempHisto);
 
 
@@ -150,7 +150,7 @@ namespace extractor
             title.str("");
             title << "Truth Time vs Channel(Plane U, APA";
             title << i<<")";
-            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), UChMax - UChMin + 1, UChMin, UChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), UChMax - UChMin + 1, UChMin, UChMax, binT, minT, maxT);
             fTruthTimeChanU.push_back(TempHisto);
 
             name.str("");
@@ -159,7 +159,7 @@ namespace extractor
             title.str("");
             title << "Truth Time vs Channel(Plane V, APA";
             title << i<<")";
-            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), VChMax - VChMin + 1, VChMin, VChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), VChMax - VChMin + 1, VChMin, VChMax, binT, minT, maxT);
             fTruthTimeChanV.push_back(TempHisto);
 
             name.str("");
@@ -168,7 +168,7 @@ namespace extractor
             title.str("");
             title << "Truth Time vs Channel(Plane Z, APA";
             title <<i<<")";
-            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), ZChMax - ZChMin + 1, ZChMin, ZChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), ZChMax - ZChMin + 1, ZChMin, ZChMax, binT, minT, maxT);
             fTruthTimeChanZ.push_back(TempHisto);
 
 
@@ -273,11 +273,11 @@ namespace extractor
                 unsigned int apa = std::floor( chan/fChansPerAPA );	  
                 int pedestal = (int)digit.GetPedestal();
                 
-                std::vector<short> uncompressed(nSamples);
+                std::vector<Int_t> uncompressed(nSamples);
                 // with pedestal	  
                 raw::Uncompress(digit.ADCs(), uncompressed, pedestal, digit.Compression());
                 // subtract pedestals
-                std::vector<short> uncompPed(nSamples);
+                std::vector<Int_t> uncompPed(nSamples);
                 for (int i=0; i<nSamples; i++) uncompPed.at(i)=uncompressed.at(i)-pedestal;
                 
                 // number of ADC uncompressed without pedestal
