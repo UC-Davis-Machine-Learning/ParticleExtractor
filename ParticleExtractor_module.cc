@@ -39,6 +39,8 @@
 #include "lardataobj/RecoBase/Track.h"
 #include "lardataobj/RecoBase/SpacePoint.h"
 #include "lardataobj/RecoBase/Slice.h"
+#include "lardataobj/RawData/RawDigit.h"
+#include "lardataobj/RawData/raw.h"
 #include "lardataobj/Simulation/SimChannel.h"
 #include "larsim/Simulation/LArG4Parameters.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
@@ -530,13 +532,13 @@ namespace extractor
                 event.getValidHandle<std::vector<sim::SimChannel>>(
                     art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
                 );
-            art::Handle< std::vector<raw::RawDigit> > RawTPC;
-            event.getByLabel(fTPCInputLabel, fTPCInstanceLabel, RawTPC); 
+            art::Handle< std::vector<raw::RawDigit> > rawTPC;
+            event.getByLabel(fTPCInputLabel, fTPCInstanceLabel, rawTPC); 
             fRawTrainingSet.processEvent(
                 clockData,
                 mcParticles, 
                 mcSimChannels,
-                RawTPC
+                rawTPC
             );
         }
     }

@@ -56,7 +56,7 @@ namespace extractor
         unsigned int VChMax;
         unsigned int ZChMin;
         unsigned int ZChMax;
-        TH2I* TempHisto;
+        TH2S* TempHisto;
 
 
         // Accquiring geometry data
@@ -110,7 +110,7 @@ namespace extractor
             title.str("");
             title << "Raw Time vs Channel(Plane U, APA";
             title << i<<")";
-            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), UChMax - UChMin + 1, UChMin, UChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), UChMax - UChMin + 1, UChMin, UChMax, binT, minT, maxT);
             fRawTimeChanU.push_back(TempHisto);
 
             name.str("");
@@ -119,7 +119,7 @@ namespace extractor
             title.str("");
             title << "Raw Time vs Channel(Plane V, APA";
             title << i<<")";
-            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), VChMax - VChMin + 1, VChMin, VChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), VChMax - VChMin + 1, VChMin, VChMax, binT, minT, maxT);
             fRawTimeChanV.push_back(TempHisto);
 
             name.str("");
@@ -128,7 +128,7 @@ namespace extractor
             title.str("");
             title << "Raw Time vs Channel(Plane Z, APA";
             title <<i<<")";
-            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), ZChMax - ZChMin + 1, ZChMin, ZChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), ZChMax - ZChMin + 1, ZChMin, ZChMax, binT, minT, maxT);
             fRawTimeChanZ.push_back(TempHisto);
 
 
@@ -150,7 +150,7 @@ namespace extractor
             title.str("");
             title << "Truth Time vs Channel(Plane U, APA";
             title << i<<")";
-            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), UChMax - UChMin + 1, UChMin, UChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), UChMax - UChMin + 1, UChMin, UChMax, binT, minT, maxT);
             fTruthTimeChanU.push_back(TempHisto);
 
             name.str("");
@@ -159,7 +159,7 @@ namespace extractor
             title.str("");
             title << "Truth Time vs Channel(Plane V, APA";
             title << i<<")";
-            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), VChMax - VChMin + 1, VChMin, VChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), VChMax - VChMin + 1, VChMin, VChMax, binT, minT, maxT);
             fTruthTimeChanV.push_back(TempHisto);
 
             name.str("");
@@ -168,7 +168,7 @@ namespace extractor
             title.str("");
             title << "Truth Time vs Channel(Plane Z, APA";
             title <<i<<")";
-            TempHisto = tfs->make<TH2I>(name.str().c_str(),title.str().c_str(), ZChMax - ZChMin + 1, ZChMin, ZChMax, binT, minT, maxT);
+            TempHisto = tfs->make<TH2S>(name.str().c_str(),title.str().c_str(), ZChMax - ZChMin + 1, ZChMin, ZChMax, binT, minT, maxT);
             fTruthTimeChanZ.push_back(TempHisto);
 
 
@@ -183,8 +183,8 @@ namespace extractor
         }
     }
 
-    Int_t RawTrainingSet::getTrackID(std::vector< sim::TrackIDE > trackInfo, std::map<Int_t, Int_t>& parentDaughterMap){
-        Int_t track_id;
+    short RawTrainingSet::getTrackID(std::vector< sim::TrackIDE > trackInfo, std::map<short, short>& parentDaughterMap){
+        short track_id;
         float_t track_energy;
         size_t track_index;
         track_energy = trackInfo[0].energy;
@@ -200,7 +200,7 @@ namespace extractor
 
         track_id = trackInfo[track_index].trackID;
 
-        Int_t mother = parentDaughterMap[track_id];
+        short mother = parentDaughterMap[track_id];
         while (mother != 0)
         {
             track_id = mother;
@@ -217,20 +217,20 @@ namespace extractor
     )
     {
         // RawTrainingSetStruct RawTrainingSet;
-        if (mcParticles.isValid() and mcChannels.isValid() and recoSpacePoints.isValid() and recoTracks.isValid())
+        if (mcParticles.isValid() and mcChannels.isValid() and rawTPC.isValid())
         {
             /**
              * We first iterate through all particles and create a map of 
              * parent-daughter pairs for track ids.  This way we can search
              * recursively for ancestors of each particle.
              */
-            std::map<Int_t, Int_t> parentDaughterMap;
-            std::map<Int_t, Int_t> particlePDGMap;
-            std::map<Int_t, Int_t> secondaryPDGMap;
-            std::map<Int_t, Int_t> ancestorPDGMap;
-            std::map<Int_t, Int_t> secondaryTrackIdMap;
-            std::map<Int_t, Int_t> ancestorTrackIdMap;
-            std::map<Int_t, Int_t> levelMap;
+            std::map<short, short> parentDaughterMap;
+            std::map<short, short> particlePDGMap;
+            std::map<short, short> secondaryPDGMap;
+            std::map<short, short> ancestorPDGMap;
+            std::map<short, short> secondaryTrackIdMap;
+            std::map<short, short> ancestorTrackIdMap;
+            std::map<short, short> levelMap;
             for (auto particle : *mcParticles)
             {
                 parentDaughterMap[particle.TrackId()] = particle.Mother();
@@ -238,10 +238,10 @@ namespace extractor
             }
             for (auto particle : *mcParticles)
             {
-                Int_t mother = particle.Mother();
-                Int_t track_id = particle.TrackId();
-                Int_t prev_track_id = 0;
-                Int_t level = 0;
+                short mother = particle.Mother();
+                short track_id = particle.TrackId();
+                short prev_track_id = 0;
+                short level = 0;
                 while (mother != 0)
                 {
                     level += 1;
@@ -261,7 +261,7 @@ namespace extractor
             // Fill pointer vectors - more useful form for the raw data
             // a more usable form
             std::vector< art::Ptr<raw::RawDigit> > RawDigits;
-            art::fill_ptr_vector(RawDigits, RawTPC);
+            art::fill_ptr_vector(RawDigits, rawTPC);
 
             for(auto const & dptr : RawDigits) {
                 const raw::RawDigit & digit = *dptr;
@@ -277,7 +277,7 @@ namespace extractor
                 // with pedestal	  
                 raw::Uncompress(digit.ADCs(), uncompressed, pedestal, digit.Compression());
                 // subtract pedestals
-                std::vector<Int_t> uncompPed(nSamples);
+                std::vector<short> uncompPed(nSamples);
                 for (int i=0; i<nSamples; i++) uncompPed.at(i)=uncompressed.at(i)-pedestal;
                 
                 // number of ADC uncompressed without pedestal
