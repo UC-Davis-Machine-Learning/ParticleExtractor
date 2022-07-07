@@ -64,13 +64,13 @@ namespace extractor
 {
     // struct RawTrainingSetStruct
     // {
-    //     std::vector<TH2S*> raw_TimeChanU;
-    //     std::vector<TH2S*> raw_TimeChanV;
-    //     std::vector<TH2S*> raw_TimeChanZ;
+    //     std::vector<TH2I*> raw_TimeChanU;
+    //     std::vector<TH2I*> raw_TimeChanV;
+    //     std::vector<TH2I*> raw_TimeChanZ;
 
-    //     std::vector<TH2S*> truth_TimeChanU;
-    //     std::vector<TH2S*> truth_TimeChanV;
-    //     std::vector<TH2S*> truth_TimeChanZ;
+    //     std::vector<TH2I*> truth_TimeChanU;
+    //     std::vector<TH2I*> truth_TimeChanV;
+    //     std::vector<TH2I*> truth_TimeChanZ;
         
     // };
 
@@ -134,15 +134,15 @@ namespace extractor
 
         //Stores channel number, TDC and ADC values
         //Each element is for an APA
-        std::vector<TH2S*> fRawTimeChanU;
-        std::vector<TH2S*> fRawTimeChanV;
-        std::vector<TH2S*> fRawTimeChanZ;
+        std::vector<TH2I*> fRawTimeChanU;
+        std::vector<TH2I*> fRawTimeChanV;
+        std::vector<TH2I*> fRawTimeChanZ;
 
         //Stores channel number, TDC and PDG values
         //Each element is for an APA
-        std::vector<TH2S*> fTruthTimeChanU;
-        std::vector<TH2S*> fTruthTimeChanV;
-        std::vector<TH2S*> fTruthTimeChanZ;
+        std::vector<TH2I*> fTruthTimeChanU;
+        std::vector<TH2I*> fTruthTimeChanV;
+        std::vector<TH2I*> fTruthTimeChanZ;
 
         // define nADC counts for uncompressed vs compressed
         unsigned int nADC_uncompPed;

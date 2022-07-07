@@ -533,7 +533,7 @@ namespace extractor
                     art::InputTag(fSimChannelProducerLabel.label(), fSimChannelInstanceProducerLabel.label())
                 );
             art::Handle< std::vector<raw::RawDigit> > rawTPC;
-            event.getByLabel(fTPCInputLabel, fTPCInstanceLabel, rawTPC); 
+            event.getByLabel(< std::string >fTPCInputLabel, < std::string >fTPCInstanceLabel, rawTPC); 
             fRawTrainingSet.processEvent(
                 clockData,
                 mcParticles, 
