@@ -131,6 +131,18 @@ namespace label_gen{
     std::vector<TH2S*> fTimeChanU;
     std::vector<TH2S*> fTimeChanV;
     std::vector<TH2S*> fTimeChanZ;
+      std::vector<double> U0;
+      std::vector<double> U1;
+      std::vector<double> U2;
+      std::vector<double> U3;
+      std::vector<double> U4;
+      std::vector<double> U5;
+      std::vector<double> V0;
+      std::vector<double> V1;
+      std::vector<double> V2;
+      std::vector<double> V3;
+      std::vector<double> V4;
+      std::vector<double> V5;
     std::vector<double> Z0;
     std::vector<double> Z1;
     std::vector<double> Z2;
@@ -146,6 +158,20 @@ namespace label_gen{
       std::vector<double> Z3l;
       std::vector<double> Z4l;
       std::vector<double> Z5l;
+      std::vector<double> U0l;
+      std::vector<double> U1l;
+      std::vector<double> U2l;
+      std::vector<double> U3l;
+      std::vector<double> U4l;
+      std::vector<double> U5l;
+      std::vector<double> V0l;
+      std::vector<double> V1l;
+      std::vector<double> V2l;
+      std::vector<double> V3l;
+      std::vector<double> V4l;
+      std::vector<double> V5l;
+      
+      
       int scid;
       int cnl;
       int vil;
@@ -196,15 +222,38 @@ namespace label_gen{
       fTree->Branch("Z1", &Z1);
       fTree->Branch("Z2", &Z2);
       fTree->Branch("Z3", &Z3);
-      fTree->Branch("Z4", &Z5);
+      fTree->Branch("Z4", &Z4);
       fTree->Branch("Z5", &Z5);
+      fTree->Branch("U0", &U0);
+      fTree->Branch("U1", &U1);
+      fTree->Branch("U2", &U2);
+      fTree->Branch("U3", &U3);
+      fTree->Branch("U4", &U4);
+      fTree->Branch("U5", &U5);
+      fTree->Branch("V0", &V0);
+      fTree->Branch("V1", &V1);
+      fTree->Branch("V2", &V2);
+      fTree->Branch("V3", &V3);
+      fTree->Branch("V4", &V4);
+      fTree->Branch("V5", &V5);
       fTree->Branch("Z0l", &Z0l);
       fTree->Branch("Z1l", &Z1l);
       fTree->Branch("Z2l", &Z2l);
       fTree->Branch("Z3l", &Z3l);
-      fTree->Branch("Z4l", &Z5l);
+      fTree->Branch("Z4l", &Z4l);
       fTree->Branch("Z5l", &Z5l);
-      
+      fTree->Branch("U0l", &U0l);
+      fTree->Branch("U1l", &U1l);
+      fTree->Branch("U2l", &U2l);
+      fTree->Branch("U3l", &U3l);
+      fTree->Branch("U4l", &U4l);
+      fTree->Branch("U5l", &U5l);
+      fTree->Branch("V0l", &V0l);
+      fTree->Branch("V1l", &V1l);
+      fTree->Branch("V2l", &V2l);
+      fTree->Branch("V3l", &V3l);
+      fTree->Branch("V4l", &V4l);
+      fTree->Branch("V5l", &V5l);
       //getPDGnum.insert(std::pair<int,int>(2112,1));
       getPDGnum.insert(std::pair<int,int>(11,4));
       getPDGnum.insert(std::pair<int,int>(-11,4));
@@ -356,6 +405,30 @@ namespace label_gen{
       Z3l.clear();
       Z4l.clear();
       Z5l.clear();
+      U0.clear();
+      U1.clear();
+      U2.clear();
+      U3.clear();
+      U4.clear();
+      U5.clear();
+        U0l.clear();
+        U1l.clear();
+        U2l.clear();
+        U3l.clear();
+        U4l.clear();
+        U5l.clear();
+      V0.clear();
+      V1.clear();
+      V2.clear();
+      V3.clear();
+      V4.clear();
+      V5.clear();
+        V0l.clear();
+        V1l.clear();
+        V2l.clear();
+        V3l.clear();
+        V4l.clear();
+        V5l.clear();
       getE.clear();
       
       getmother.clear();
@@ -374,6 +447,30 @@ namespace label_gen{
           Z3l.push_back(0);
           Z4l.push_back(0);
           Z5l.push_back(0);
+          U0.push_back(0);
+          U1.push_back(0);
+          U2.push_back(0);
+          U3.push_back(0);
+          U4.push_back(0);
+          U5.push_back(0);
+          U0l.push_back(0);
+          U1l.push_back(0);
+          U2l.push_back(0);
+          U3l.push_back(0);
+          U4l.push_back(0);
+          U5l.push_back(0);
+          V0.push_back(0);
+          V1.push_back(0);
+          V2.push_back(0);
+          V3.push_back(0);
+          V4.push_back(0);
+          V5.push_back(0);
+          V0l.push_back(0);
+          V1l.push_back(0);
+          V2l.push_back(0);
+          V3l.push_back(0);
+          V4l.push_back(0);
+          V5l.push_back(0);
       }
 
     // Get the objects holding raw information: RawDigit for TPC data
@@ -415,20 +512,60 @@ namespace label_gen{
 				for(unsigned int l=0;l<nADC_uncompPed;l++) {
 	  			if(uncompPed.at(l)!=0){
 	    			fTimeChanU[apa]->Fill(chan,l, uncompPed.at(l));
+                    cn=chan-apa*fChansPerAPA;
+                    vi=6000*cn+l;
+                    if(apa==0){
+                        U0[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==1){
+                        U1[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==2){
+                        U2[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==3){
+                        U3[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==4){
+                        U4[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==5){
+                        U5[vi]=uncompPed.at(l);
+                    }
                     //std::cout<<"U APA: "<<apa<<" chan: "<<chan<<" l: "<<l<<" uncompPed.at(l): " <<uncompPed.at(l)<<" chan-apa*fChansPerAPA: "<<chan-apa*fChansPerAPA<<std::endl;
 	  			}
 				}
-      }// end of U View
+      } // end of U View
       
       //Induction Plane	  
       if( fGeom->View(chan) == geo::kV){	
 				for(unsigned int l=0;l<nADC_uncompPed;l++) {
 	  			if(uncompPed.at(l)!=0){
 	    			fTimeChanV[apa]->Fill(chan,l, uncompPed.at(l));
+                    cn=chan-apa*fChansPerAPA-fNUCh;
+                    vi=6000*cn+l;
+                    if(apa==0){
+                        V0[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==1){
+                        V1[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==2){
+                        V2[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==3){
+                        V3[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==4){
+                        V4[vi]=uncompPed.at(l);
+                    }
+                    else if(apa==5){
+                        V5[vi]=uncompPed.at(l);
+                    }
                     //std::cout<<"V APA: "<<apa<<" chan: "<<chan<<" l: "<<l<<" uncompPed.at(l): " <<uncompPed.at(l)<<" chan-apa*fChansPerAPA-fNUCh: "<<chan-apa*fChansPerAPA-fNUCh<<std::endl;
 	  			}
 				}
-      }// end of V View
+      } // end of V View
 
       if ( fGeom->View(chan) == geo::kZ){
 				for(unsigned int l=0;l<nADC_uncompPed;l++) {
@@ -470,9 +607,17 @@ namespace label_gen{
         getpdg.insert(std::pair<int,int>(trueParticle.TrackId(),trueParticle.PdgCode()));
         getE.insert(std::pair<int,double>(trueParticle.TrackId(),fEkGen));
     }
+    
+      /*for(int i=0;i<15360;i++){
+          std::cout<<"i: "<<i<<std::endl;
+          auto truth_channel = scs->at(i);
+          int channum=truth_channel.Channel();
+          std::cout<<"channum: "<<channum<<std::endl;
+      }*/
+    
     for(auto &sc : *scs){
         auto simChannelNumber = sc.Channel();
-        if ( fGeom->View(simChannelNumber) != geo::kZ) continue;
+        //if ( fGeom->View(simChannelNumber) != geo::kZ) continue;
         unsigned int apal = std::floor( simChannelNumber/fChansPerAPA );
         std::cout<<"apal: "<<apal<<std::endl;
         //std::cout<<"simChannelNumber: "<<simChannelNumber<<std::endl;
@@ -482,7 +627,13 @@ namespace label_gen{
             if((int)trackInfo.size()!=0){
                 //std::cout<<"chan: "<<simChannelNumber<<" i: "<<i<<" infosize: "<<(int)trackInfo.size()<<std::endl;
                 scid=trackInfo[0].trackID;
-                cnl=simChannelNumber-apal*fChansPerAPA-fNUCh-fNVCh;
+                if ( fGeom->View(simChannelNumber) == geo::kU){
+                    cnl=simChannelNumber-apal*fChansPerAPA;}
+                if ( fGeom->View(simChannelNumber) == geo::kV){
+                    cnl=simChannelNumber-apal*fChansPerAPA-fNUCh;}
+                if ( fGeom->View(simChannelNumber) == geo::kZ){
+                    cnl=simChannelNumber-apal*fChansPerAPA-fNUCh-fNVCh;}
+                
                 vil=6000*cnl+i;
                 for(auto &trueParticle : *mcParticles) {
                     auto mcid=trueParticle.TrackId();
@@ -513,25 +664,67 @@ namespace label_gen{
                         //pdg=getpdg[mothertemp];
                         pdgnum=getPDGnum[pdg];
                     }
-                    if(apal==0){
-                        Z0l[vil]=pdgnum;
-                    }
-                    else if(apal==1){
-                        Z1l[vil]=pdgnum;
-                    }
-                    else if(apal==2){
-                        Z2l[vil]=pdgnum;
-                    }
-                    else if(apal==3){
-                        Z3l[vil]=pdgnum;
-                    }
-                    else if(apal==4){
-                        Z4l[vil]=pdgnum;
-                    }
-                    else if(apal==5){
-                        Z5l[vil]=pdgnum;
-                    }
                     
+                    if(fGeom->View(simChannelNumber) == geo::kZ){
+                        if(apal==0){
+                            Z0l[vil]=pdgnum;
+                        }
+                        else if(apal==1){
+                            Z1l[vil]=pdgnum;
+                        }
+                        else if(apal==2){
+                            Z2l[vil]=pdgnum;
+                        }
+                        else if(apal==3){
+                            Z3l[vil]=pdgnum;
+                        }
+                        else if(apal==4){
+                            Z4l[vil]=pdgnum;
+                        }
+                        else if(apal==5){
+                            Z5l[vil]=pdgnum;
+                        }
+                    }
+                    else if(fGeom->View(simChannelNumber) == geo::kU){
+                        if(apal==0){
+                            U0l[vil]=pdgnum;
+                        }
+                        else if(apal==1){
+                            U1l[vil]=pdgnum;
+                        }
+                        else if(apal==2){
+                            U2l[vil]=pdgnum;
+                        }
+                        else if(apal==3){
+                            U3l[vil]=pdgnum;
+                        }
+                        else if(apal==4){
+                            U4l[vil]=pdgnum;
+                        }
+                        else if(apal==5){
+                            U5l[vil]=pdgnum;
+                        }
+                    }
+                    else if(fGeom->View(simChannelNumber) == geo::kV){
+                        if(apal==0){
+                            V0l[vil]=pdgnum;
+                        }
+                        else if(apal==1){
+                            V1l[vil]=pdgnum;
+                        }
+                        else if(apal==2){
+                            V2l[vil]=pdgnum;
+                        }
+                        else if(apal==3){
+                            V3l[vil]=pdgnum;
+                        }
+                        else if(apal==4){
+                            V4l[vil]=pdgnum;
+                        }
+                        else if(apal==5){
+                            V5l[vil]=pdgnum;
+                        }
+                    }
                     break;
                 }
                 
